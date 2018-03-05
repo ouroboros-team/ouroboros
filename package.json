@@ -14,6 +14,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.2",
     "concurrently": "3.1.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "14.1.0",
