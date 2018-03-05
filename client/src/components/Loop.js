@@ -22,7 +22,7 @@ class Loop extends React.Component {
       tu: this.state.tu + 1
     });
     this.handleRandomDirection();
-    this.props.reckonAndUpdate();
+    // this.props.deriveAndUpdate();
   };
 
   startGame = () => {
@@ -47,18 +47,18 @@ class Loop extends React.Component {
       return;
     }
 
-    this.props.changeSnakeDirection(0, arrowKeyCodes[code]);
+    // this.props.changeSnakeDirection(0, arrowKeyCodes[code]);
   };
 
   handleRandomDirection = () => {
     if (this.state.tu % 3 === 0) {
-      this.props.changeSnakeDirection(1, this.getRandomDir());
+      // this.props.changeSnakeDirection(1, this.getRandomDir());
     }
     if (this.state.tu % 3 === 1) {
-      this.props.changeSnakeDirection(2, this.getRandomDir());
+      // this.props.changeSnakeDirection(2, this.getRandomDir());
     }
     if (this.state.tu % 3 === 2) {
-      this.props.changeSnakeDirection(3, this.getRandomDir());
+      // this.props.changeSnakeDirection(3, this.getRandomDir());
     }
   };
 
@@ -68,11 +68,11 @@ class Loop extends React.Component {
   };
 
   handleKill = () => {
-    this.props.changeStatusCheckGameOver(0, 'dead');
+    // this.props.changeStatusCheckGameOver(0, 'dead');
   };
 
   handleRevive = () => {
-    this.props.changeStatusCheckGameOver(0, 'alive');
+    // this.props.changeStatusCheckGameOver(0, 'alive');
   };
 
   render() {
@@ -109,15 +109,6 @@ class Loop extends React.Component {
 // start/stop const mapStateToProps = state => { };
 
 const mapDispatchToProps = dispatch => ({
-  reckonAndUpdate: () => {
-    dispatch(actionCreators.reckonAndUpdate());
-  },
-  changeSnakeDirection: (id, direction) => {
-    dispatch(actionCreators.changeSnakeDirection(id, direction))
-  },
-  changeStatusCheckGameOver: (id, status) => {
-    dispatch(actionCreators.changeStatusCheckGameOver(id, status))
-  },
 });
 
 export default connect(null, mapDispatchToProps)(Loop);
