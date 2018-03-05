@@ -3,7 +3,7 @@ import { createLogger } from 'redux-logger';
 import ReduxThunk from 'redux-thunk';
 
 import infoReducer from './infoReducer';
-import snakesReducer from './snakesReducer';
+import snakesReducer from './snakeReducer';
 import boardReducer from './boardReducer';
 import displayReducer from './displayReducer';
 
