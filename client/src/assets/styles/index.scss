@@ -1,0 +1,98 @@
+@import './normalize';
+@import './skeleton';
+
+$gray: #ebebeb;
+$square-size: 1.5rem;
+$grid-size: 20;
+
+header {
+  padding: 1rem;
+  background-color: $gray;
+
+  * {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 .5rem;
+  }
+
+  .logo {
+    width: 4rem;
+  }
+}
+
+#game {
+  * {
+    box-sizing: border-box;
+  }
+
+  #player-list {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        text-align: left;
+        display: block;
+        padding: .5rem;
+        margin: 1px;
+        background-color: black;
+        color: $gray;
+      }
+    }
+  }
+
+  #board {
+    padding: 2rem 0 5rem 0;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    font-size: 0;
+
+    #grid {
+      width: $square-size * $grid-size;
+      margin: 0 auto;
+
+      .square {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        width: $square-size;
+        height: $square-size;
+        background-color: $gray;
+        border: solid white 1px;
+
+        &.snake {
+          background-color: black;
+        }
+
+        &.dead {
+          background-color: darkgray;
+        }
+      }
+    }
+  }
+
+  // Black for self
+  #board #grid .square.snake.id-0, #player-list ul li.id-0 {
+    background-color: black;
+  }
+
+  // Random colors for other players
+  $s-min: 40;
+  $s-max: 70;
+  $l-min: 30;
+  $l-max: 60;
+
+  @for $i from 1 through 50 {
+    #board #grid .square.snake.id-#{$i}, #player-list ul li.id-#{$i} {
+      background-color: hsl(random(360), $s-min+random($s-max+-$s-min), $l-min+random($l-max+-$l-min));
+    }
+  }
+}
