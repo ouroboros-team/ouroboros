@@ -43,8 +43,7 @@ class Loop extends React.Component {
       return;
     }
 
-    console.log(arrowKeyCodes[code]);
-    // this.props.changeSnakeDirection(0, arrowKeyCodes[code]);
+    this.props.changeSnakeDirection(0, arrowKeyCodes[code]);
   };
 
   handleRandomDirection = () => {
@@ -108,6 +107,9 @@ const mapStoreToProps = store => ({
 const mapDispatchToProps = dispatch => ({
   incrementTu: () => {
     dispatch(actionCreators.incrementTu());
+  },
+  changeSnakeDirection: (id, direction) => {
+    dispatch(actionCreators.changeSnakeDirection(id, direction));
   },
 });
 
