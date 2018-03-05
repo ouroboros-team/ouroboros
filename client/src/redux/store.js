@@ -2,12 +2,14 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { createLogger } from 'redux-logger';
 import ReduxThunk from 'redux-thunk';
 
-import gridReducer from './gridReducer';
 import snakesReducer from './snakesReducer';
+import boardReducer from './boardReducer';
+import displayReducer from './displayReducer';
 
 const reducer = combineReducers({
-  grid: gridReducer,
-  data: snakesReducer,
+  snakes: snakesReducer,
+  board: boardReducer,
+  displayBoard: displayReducer,
 });
 
 const logger = createLogger({

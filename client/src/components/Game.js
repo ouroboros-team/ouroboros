@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Loop from './Loop';
-import GameGrid from './GameGrid';
+import GameBoard from './GameBoard';
 import PlayerList from './PlayerList';
 
 export default class Game extends React.Component {
@@ -12,7 +12,7 @@ export default class Game extends React.Component {
     return (
       <main id='game' className='container'>
         <Loop>
-          <GameGrid
+          <GameBoard
             columns={columns}
             rows={rows}
           />
