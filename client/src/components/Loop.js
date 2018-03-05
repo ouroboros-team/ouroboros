@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as constants from '../constants';
-// import * as actionCreators from '../redux/actionCreators';
+import * as actionCreators from '../redux/actionCreators';
 
 class Loop extends React.Component {
   state = {
     timer: null,
-    tu: 0,
   };
 
   componentDidMount() {
@@ -19,12 +18,7 @@ class Loop extends React.Component {
   }
 
   tick = () => {
-    this.setState({
-      tu: this.state.tu + 1,
-    });
-    console.log(`TU: ${this.state.tu}`);
-    this.handleRandomDirection();
-    // this.props.deriveAndUpdate();
+    this.props.incrementTu();
   };
 
   startGame = () => {
@@ -66,7 +60,7 @@ class Loop extends React.Component {
   };
 
   getRandomDir = () => {
-    const options = [ 'up', 'down', 'left', 'right' ];
+    const options = ['up', 'down', 'left', 'right'];
     return options[Math.floor(Math.random() * options.length)];
   };
 
@@ -107,6 +101,14 @@ class Loop extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({});
+const mapStoreToProps = store => ({
+  tu: store.info.tu,
+});
 
-export default connect(null, mapDispatchToProps)(Loop);
+const mapDispatchToProps = dispatch => ({
+  incrementTu: () => {
+    dispatch(actionCreators.incrementTu());
+  },
+});
+
+export default connect(mapStoreToProps, mapDispatchToProps)(Loop);
