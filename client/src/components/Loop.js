@@ -1,53 +1,49 @@
 import React from 'react';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
+import * as constants from '../constants';
 import * as actionCreators from '../redux/actionCreators';
 
 class Loop extends React.Component {
   state = {
     timer: null,
-    tu: 0
   };
 
   componentDidMount() {
-    window.addEventListener("keydown", this.handleKeypress);
+    window.addEventListener('keydown', this.handleKeypress);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("keydown", this.handleKeypress);
+    window.removeEventListener('keydown', this.handleKeypress);
     clearInterval(this.state.timer);
   }
 
   tick = () => {
-    this.setState({
-      tu: this.state.tu + 1
-    });
-    this.handleRandomDirection();
-    // this.props.deriveAndUpdate();
+    this.props.incrementTu();
   };
 
   startGame = () => {
     if (!this.state.timer) { // so multiple calls don't result in multiple timers
-      let timer = setInterval(this.tick, 250);
-      this.setState({timer});
+      const timer = setInterval(this.tick, constants.LOOP_INTERVAL);
+      this.setState({ timer });
     }
   };
 
   pauseGame = () => {
     clearInterval(this.state.timer);
-    this.setState({timer: null});
+    this.setState({ timer: null });
   };
 
   handleKeypress = (e) => {
     const code = String(e.keyCode);
 
     // left: 37, up: 38, right: 39, down: 40
-    const arrowKeyCodes = {37: 'left', 38: 'up', 39: 'right', 40: 'down'};
+    const arrowKeyCodes = { 37: 'left', 38: 'up', 39: 'right', 40: 'down' };
 
     if (!Object.keys(arrowKeyCodes).includes(code)) {
       return;
     }
 
-    // this.props.changeSnakeDirection(0, arrowKeyCodes[code]);
+    this.props.changeSnakeDirection(0, arrowKeyCodes[code]);
   };
 
   handleRandomDirection = () => {
@@ -100,15 +96,21 @@ class Loop extends React.Component {
         />
         {this.props.children}
       </div>
-    )
+    );
   }
 }
 
-// todo:
-// map game state ('pregame', 'playing', 'gameover') to props for timer
-// start/stop const mapStateToProps = state => { };
-
-const mapDispatchToProps = dispatch => ({
+const mapStoreToProps = store => ({
+  tu: store.info.tu,
 });
 
-export default connect(null, mapDispatchToProps)(Loop);
+const mapDispatchToProps = dispatch => ({
+  incrementTu: () => {
+    dispatch(actionCreators.incrementTu());
+  },
+  changeSnakeDirection: (id, direction) => {
+    dispatch(actionCreators.changeSnakeDirection(id, direction));
+  },
+});
+
+export default connect(mapStoreToProps, mapDispatchToProps)(Loop);
