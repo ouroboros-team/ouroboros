@@ -44,6 +44,7 @@ class Loop extends React.Component {
   };
 
   tick = () => {
+    this.props.getNextDisplayBoard();
     this.props.incrementTu();
   };
 
@@ -84,6 +85,9 @@ const mapDispatchToProps = dispatch => ({
   },
   aggregateInitialBoard: () => {
     dispatch(actionCreators.aggregateInitialBoard());
+  },
+  getNextDisplayBoard: () => {
+    dispatch(actionCreators.getNextDisplayBoard());
   },
 });
 

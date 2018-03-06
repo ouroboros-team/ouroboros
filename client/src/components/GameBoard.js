@@ -50,7 +50,7 @@ GameBoard.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  board: state.board,
+  board: state.displayBoard,
 });
 
 export default connect(mapStateToProps)(GameBoard);
