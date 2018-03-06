@@ -16,3 +16,8 @@ export const changeSnakeDirection = (id, direction) => ({
 export const aggregateInitialBoard = () => ({
   type: actionTypes.AGGREGATE_INITIAL_BOARD,
 });
+
+// display board
+export const getNextDisplayBoard = () => ({
+  type: actionTypes.GET_NEXT_DISPLAY_BOARD,
+});
