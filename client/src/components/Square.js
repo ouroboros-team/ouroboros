@@ -15,7 +15,7 @@ Square.propTypes = {
   col: PropTypes.number.isRequired,
   row: PropTypes.number.isRequired,
   status: PropTypes.string,
-  snakeId: PropTypes.number,
+  snakeId: PropTypes.string,
 };
 
 Square.defaultProps = {
