@@ -1,7 +1,7 @@
 import * as actionTypes from './actionTypes';
 
 const defaultState = {
-  tu: 0,
+  tu: 7,
   playerList: [],
   gameStatus: 'pregame',
 };
