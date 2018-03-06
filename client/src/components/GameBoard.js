@@ -1,50 +1,56 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import Square from './Square';
-import { connect } from "react-redux";
-import { GRID_SIZE } from "../constants";
+import { GRID_SIZE } from '../constants';
 
-class GameBoard extends React.Component {
-  render() {
-    let status = 'empty';
-    let snakeId = undefined;
-    let theBoard = [];
-    for (let r = 0; r < GRID_SIZE; r++) {
-      for (let c = 0; c < GRID_SIZE; c++) {
-        theBoard.push(
-          <Square
-            col={c}
-            key={(r * GRID_SIZE) + c}
-            row={r}
-            status={(this.props.board[r] && this.props.board[r][c]) ? this.props.board[r][c].status : status}
-            snakeId={(this.props.board[r] && this.props.board[r][c]) ? this.props.board[r][c].snakeId : snakeId}
-          />
-        );
+const GameBoard = (props) => {
+  let status;
+  let snakeId;
+  const squares = [];
+
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      if (props.board[r] && props.board[r][c]) {
+        status = props.board[r][c].snake.status;
+        snakeId = props.board[r][c].id;
+      } else {
+        status = 'empty';
+        snakeId = undefined;
       }
-    }
 
-    return (
-      <div id='board' className='nine columns'>
-        <div id='board'>
-          {theBoard}
-        </div>
-      </div>
-    );
+      squares.push(
+        <Square
+          col={c}
+          key={(r * GRID_SIZE) + c}
+          row={r}
+          status={status}
+          snakeId={snakeId}
+        />,
+      );
+    }
   }
-}
+
+  return (
+    <div id='board-container' className='nine columns'>
+      <div id='board'>
+        {squares}
+      </div>
+    </div>
+  );
+};
 
 GameBoard.propTypes = {
-  board: PropTypes.array,
+  board: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 GameBoard.defaultProps = {
-  board: []
+  board: {},
 };
 
-
 const mapStateToProps = state => ({
-  board: state.displayBoard,
+  board: state.board,
 });
 
 export default connect(mapStateToProps)(GameBoard);
