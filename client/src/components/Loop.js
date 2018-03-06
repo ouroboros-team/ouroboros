@@ -10,6 +10,7 @@ class Loop extends React.Component {
 
   componentDidMount() {
     this.props.aggregateInitialBoard();
+    this.props.getInitialDisplayBoard();
     window.addEventListener('keydown', this.handleKeypress);
   }
 
@@ -85,6 +86,9 @@ const mapDispatchToProps = dispatch => ({
   },
   aggregateInitialBoard: () => {
     dispatch(actionCreators.aggregateInitialBoard());
+  },
+  getInitialDisplayBoard: () => {
+    dispatch(actionCreators.getInitialDisplayBoard());
   },
   getNextDisplayBoard: () => {
     dispatch(actionCreators.getNextDisplayBoard());
