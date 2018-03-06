@@ -39,6 +39,10 @@ const defaultState = {
 export default function snakesReducer(state = defaultState, action) {
   switch (action.type) {
     case actionTypes.CHANGE_SNAKE_DIRECTION: {
+      if (!snakeHelpers.validateDirectionChange(state[action.id].direction, action.direction)) {
+        return state;
+      }
+
       const newState = { ...state };
       newState[action.id] = { ...newState[action.id] };
       newState[action.id].direction = action.direction;
