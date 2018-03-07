@@ -48,14 +48,14 @@ header {
     }
   }
 
-  #board {
+  #board-container {
     padding: 2rem 0 5rem 0;
     display: inline-block;
     vertical-align: top;
     text-align: center;
     font-size: 0;
 
-    #grid {
+    #board {
       width: $square-size * $grid-size;
       margin: 0 auto;
 
@@ -67,32 +67,47 @@ header {
         height: $square-size;
         background-color: $gray;
         border: solid white 1px;
-
-        &.snake {
-          background-color: black;
-        }
-
-        &.dead {
-          background-color: darkgray;
-        }
       }
     }
   }
 
-  // Black for self
-  #board #grid .square.snake.id-0, #player-list ul li.id-0 {
-    background-color: black;
+  // Black for alive self, gray for dead self
+  $self: black;
+  $self-dead: darkgray;
+
+  #player-list ul li.id-0 {
+    background-color: $self;
+  }
+  #board-container #board .square.id-0 {
+    &.alive {
+      background-color: $self;
+    }
+
+    &.dead {
+      background-color: $self-dead;
+    }
   }
 
   // Random colors for other players
   $s-min: 40;
   $s-max: 70;
-  $l-min: 30;
-  $l-max: 60;
+  $l-min: 35;
+  $l-max: 45;
 
-  @for $i from 1 through 50 {
-    #board #grid .square.snake.id-#{$i}, #player-list ul li.id-#{$i} {
-      background-color: hsl(random(360), $s-min+random($s-max+-$s-min), $l-min+random($l-max+-$l-min));
+  @for $i from 1 through 25 {
+    $color: hsl(random(360), $s-min+random($s-max+-$s-min), $l-min+random($l-max+-$l-min));
+
+    #player-list ul li.id-#{$i} {
+      background-color: $color;
+    }
+
+    #board-container #board .square.id-#{$i} {
+      &.alive {
+        background-color: $color;
+      }
+      &.dead {
+        background-color: lighten($color, 30%);
+      }
     }
   }
 }

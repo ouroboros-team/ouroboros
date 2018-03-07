@@ -9,6 +9,8 @@ class Loop extends React.Component {
   };
 
   componentDidMount() {
+    this.props.aggregateInitialBoard();
+    this.props.getInitialDisplayBoard();
     window.addEventListener('keydown', this.handleKeypress);
   }
 
@@ -16,22 +18,6 @@ class Loop extends React.Component {
     window.removeEventListener('keydown', this.handleKeypress);
     clearInterval(this.state.timer);
   }
-
-  tick = () => {
-    this.props.incrementTu();
-  };
-
-  startGame = () => {
-    if (!this.state.timer) { // so multiple calls don't result in multiple timers
-      const timer = setInterval(this.tick, constants.LOOP_INTERVAL);
-      this.setState({ timer });
-    }
-  };
-
-  pauseGame = () => {
-    clearInterval(this.state.timer);
-    this.setState({ timer: null });
-  };
 
   handleKeypress = (e) => {
     const code = String(e.keyCode);
@@ -46,29 +32,21 @@ class Loop extends React.Component {
     this.props.changeSnakeDirection(0, arrowKeyCodes[code]);
   };
 
-  handleRandomDirection = () => {
-    if (this.state.tu % 3 === 0) {
-      // this.props.changeSnakeDirection(1, this.getRandomDir());
-    }
-    if (this.state.tu % 3 === 1) {
-      // this.props.changeSnakeDirection(2, this.getRandomDir());
-    }
-    if (this.state.tu % 3 === 2) {
-      // this.props.changeSnakeDirection(3, this.getRandomDir());
+  pauseGame = () => {
+    clearInterval(this.state.timer);
+    this.setState({ timer: null });
+  };
+
+  startGame = () => {
+    if (!this.state.timer) { // so multiple calls don't result in multiple timers
+      const timer = setInterval(this.tick, constants.LOOP_INTERVAL);
+      this.setState({ timer });
     }
   };
 
-  getRandomDir = () => {
-    const options = ['up', 'down', 'left', 'right'];
-    return options[Math.floor(Math.random() * options.length)];
-  };
-
-  handleKill = () => {
-    // this.props.changeStatusCheckGameOver(0, 'dead');
-  };
-
-  handleRevive = () => {
-    // this.props.changeStatusCheckGameOver(0, 'alive');
+  tick = () => {
+    this.props.getNextDisplayBoard();
+    this.props.incrementTu();
   };
 
   render() {
@@ -86,13 +64,8 @@ class Loop extends React.Component {
         />
         <input
           type='button'
-          value='Kill Snake 0'
-          onClick={this.handleKill}
-        />
-        <input
-          type='button'
-          value='Revive Snake 0'
-          onClick={this.handleRevive}
+          value='Next TU'
+          onClick={this.tick}
         />
         {this.props.children}
       </div>
@@ -100,8 +73,8 @@ class Loop extends React.Component {
   }
 }
 
-const mapStoreToProps = store => ({
-  tu: store.info.tu,
+const mapStateToProps = state => ({
+  tu: state.info.tu,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -111,6 +84,15 @@ const mapDispatchToProps = dispatch => ({
   changeSnakeDirection: (id, direction) => {
     dispatch(actionCreators.changeSnakeDirection(id, direction));
   },
+  aggregateInitialBoard: () => {
+    dispatch(actionCreators.aggregateInitialBoard());
+  },
+  getInitialDisplayBoard: () => {
+    dispatch(actionCreators.getInitialDisplayBoard());
+  },
+  getNextDisplayBoard: () => {
+    dispatch(actionCreators.getNextDisplayBoard());
+  },
 });
 
-export default connect(mapStoreToProps, mapDispatchToProps)(Loop);
+export default connect(mapStateToProps, mapDispatchToProps)(Loop);
