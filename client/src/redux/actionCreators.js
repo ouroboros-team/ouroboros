@@ -46,14 +46,25 @@ export const p2pConnectionReady = id => ({
   type: actionTypes.P2P_CONNECTION_READY,
 });
 
-export const connectToKnownPeers = () => {
+export const p2pConnectToKnownPeers = () => {
   const peers = store.getState().p2p.peers;
   peers.forEach((peerId) => {
     if (peerId !== peer.id) {
-      connections.push(peer.connect(peerId));
+      const conn = peer.connect(peerId);
+      conn.on('open', () => {
+        conn.on('data', (data) => {
+          console.log(`Connection data: ${data}`);
+        });
+        connections.push(conn);
+      });
     }
   });
 };
+
+export const p2pUpdatePeerList = id => ({
+  id,
+  type: actionTypes.P2P_UPDATE_PEER_LIST,
+});
 
 export const p2pInitialize = () => (
   (dispatch) => {
@@ -64,7 +75,18 @@ export const p2pInitialize = () => (
       .on('open', (id) => {
         console.log(`My peer ID is: ${id}`);
         dispatch(p2pConnectionReady(id));
-        connectToKnownPeers();
+        p2pConnectToKnownPeers();
+      })
+      .on('connection', (dataConnection) => {
+        dataConnection.on('open', () => {
+          dataConnection.on('data', (data) => {
+            console.log(`Connection data: ${data}`);
+          });
+          dispatch(p2pUpdatePeerList(dataConnection.peer));
+          connections.push(dataConnection);
+          dataConnection.send(store.getState().p2p.peers);
+          console.log(`Data conn open. New list of peers: ${store.getState().p2p.peers}`);
+        });
       });
   }
 );

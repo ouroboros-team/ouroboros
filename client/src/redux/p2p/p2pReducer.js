@@ -14,6 +14,11 @@ export default function p2pReducer(state = defaultState, action) {
       newState.peers.push(action.id);
       return newState;
     }
+    case actionTypes.P2P_UPDATE_PEER_LIST: {
+      const newState = metaHelpers.deepClone(state);
+      newState.peers.push(action.id);
+      return newState;
+    }
     case actionTypes.P2P_CONNECTION_READY: {
       const newState = metaHelpers.deepClone(state);
       newState.id = action.id;
