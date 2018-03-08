@@ -1,4 +1,4 @@
-import * as actionTypes from './actionTypes';
+import * as actionTypes from '../actionTypes';
 import * as boardHelpers from './boardHelpers';
 
 export default function boardReducer(state = {}, action) {
