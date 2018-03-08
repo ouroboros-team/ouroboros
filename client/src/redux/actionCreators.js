@@ -1,9 +1,11 @@
 import * as actionTypes from './actionTypes';
+import * as p2pHelpers from './p2p/p2pHelpers';
 
 // info
 export const incrementTu = () => ({
   type: actionTypes.INCREMENT_TU,
 });
+
 
 // snakes
 export const changeSnakeDirection = (id, direction) => ({
@@ -12,10 +14,12 @@ export const changeSnakeDirection = (id, direction) => ({
   type: actionTypes.CHANGE_SNAKE_DIRECTION,
 });
 
+
 // board
 export const aggregateInitialBoard = () => ({
   type: actionTypes.AGGREGATE_INITIAL_BOARD,
 });
+
 
 // display board
 export const getInitialDisplayBoard = () => ({
@@ -25,3 +29,20 @@ export const getInitialDisplayBoard = () => ({
 export const getNextDisplayBoard = () => ({
   type: actionTypes.GET_NEXT_DISPLAY_BOARD,
 });
+
+
+// P2P
+let peer;
+
+export const p2pInitialize = () => (
+  (dispatch) => {
+    peer = p2pHelpers.initializeOwnPeerObject()
+      .on('open', (id) => {
+        console.log(`My peer ID is: ${id}`);
+        dispatch({
+          type: actionTypes.P2P_CONNECTION_READY,
+          id,
+        });
+      });
+  }
+);
