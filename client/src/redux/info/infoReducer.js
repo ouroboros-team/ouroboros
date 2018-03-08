@@ -1,9 +1,10 @@
 import * as actionTypes from '../actionTypes';
+import * as constants from '../../constants';
 
 const defaultState = {
   tu: 7,
   playerList: [],
-  gameStatus: 'pregame',
+  gameStatus: constants.GAME_STATUS_PREGAME,
 };
 
 export default function infoReducer(state = defaultState, action) {
