@@ -1,6 +1,6 @@
-import store from './store';
-import * as actionTypes from './actionTypes';
-import * as helpers from './metaHelpers';
+import store from '../store';
+import * as actionTypes from '../actionTypes';
+import * as helpers from '../metaHelpers';
 import * as displayHelpers from './displayHelpers';
 
 export default function displayReducer(state = {}, action) {
