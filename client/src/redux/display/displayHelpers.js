@@ -1,6 +1,6 @@
-import store from './store';
-import * as helpers from './metaHelpers';
-import * as constants from '../constants';
+import store from '../store';
+import * as helpers from '../metaHelpers';
+import * as constants from '../../constants';
 
 export const dequeueTailMutate = (snake) => {
   const tail = snake.body.pop();

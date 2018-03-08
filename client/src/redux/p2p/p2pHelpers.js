@@ -4,11 +4,12 @@ export const initializeOwnPeerObject = () => {
   const host = window.location.hostname;
   const port = 3001;
   // const port = window.location.port || (window.location.protocol === 'https:' ? 443 : 80);
+  const path = '/peerjs';
 
   return new Peer({
     host,
     port,
-    path: '/peerjs',
+    path,
     config: {
       iceServers: [
         { url: 'stun:stun1.l.google.com:19302' },

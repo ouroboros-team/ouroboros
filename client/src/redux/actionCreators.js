@@ -40,8 +40,8 @@ export const p2pInitialize = () => (
       .on('open', (id) => {
         console.log(`My peer ID is: ${id}`);
         dispatch({
-          type: actionTypes.P2P_CONNECTION_READY,
           id,
+          type: actionTypes.P2P_CONNECTION_READY,
         });
       });
   }
