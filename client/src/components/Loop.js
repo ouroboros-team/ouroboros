@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+
 import * as constants from '../constants';
 import * as actionCreators from '../redux/actionCreators';
 
@@ -9,6 +10,7 @@ class Loop extends React.Component {
   };
 
   componentDidMount() {
+    this.props.p2pInitialize();
     this.props.aggregateInitialBoard();
     this.props.getInitialDisplayBoard();
     window.addEventListener('keydown', this.handleKeypress);
@@ -73,8 +75,8 @@ class Loop extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  tu: state.info.tu,
+const mapStateToProps = store => ({
+  peerId: store.p2p.id,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -83,6 +85,9 @@ const mapDispatchToProps = dispatch => ({
   },
   changeSnakeDirection: (id, direction) => {
     dispatch(actionCreators.changeSnakeDirection(id, direction));
+  },
+  p2pInitialize: () => {
+    dispatch(actionCreators.p2pInitialize());
   },
   aggregateInitialBoard: () => {
     dispatch(actionCreators.aggregateInitialBoard());
