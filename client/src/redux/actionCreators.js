@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import * as p2pHelpers from './p2p/p2pHelpers';
+import store from './store';
 
 // info
 export const incrementTu = () => ({
@@ -33,21 +34,37 @@ export const getNextDisplayBoard = () => ({
 
 // P2P
 let peer;
+const connections = [];
 
-export const p2pGetPeerIdFromURL = (id) => ({
+export const p2pGetPeerIdFromURL = id => ({
   id,
   type: actionTypes.P2P_GET_PEERID_FROM_URL,
 });
 
+export const p2pConnectionReady = id => ({
+  id,
+  type: actionTypes.P2P_CONNECTION_READY,
+});
+
+export const connectToKnownPeers = () => {
+  const peers = store.getState().p2p.peers;
+  peers.forEach((peerId) => {
+    if (peerId !== peer.id) {
+      connections.push(peer.connect(peerId));
+    }
+  });
+};
+
 export const p2pInitialize = () => (
   (dispatch) => {
     peer = p2pHelpers.initializeOwnPeerObject()
+      .on('error', (error) => {
+        console.log(`PeerJS error: ${error}`);
+      })
       .on('open', (id) => {
         console.log(`My peer ID is: ${id}`);
-        dispatch({
-          id,
-          type: actionTypes.P2P_CONNECTION_READY,
-        });
+        dispatch(p2pConnectionReady(id));
+        connectToKnownPeers();
       });
   }
 );
