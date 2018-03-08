@@ -34,6 +34,11 @@ export const getNextDisplayBoard = () => ({
 // P2P
 let peer;
 
+export const p2pGetPeerIdFromURL = (id) => ({
+  id,
+  type: actionTypes.P2P_GET_PEERID_FROM_URL,
+});
+
 export const p2pInitialize = () => (
   (dispatch) => {
     peer = p2pHelpers.initializeOwnPeerObject()

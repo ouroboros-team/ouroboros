@@ -1,4 +1,5 @@
 import * as actionTypes from '../actionTypes';
+import * as metaHelpers from '../metaHelpers';
 
 const defaultState = {
   id: '',
@@ -8,11 +9,16 @@ const defaultState = {
 
 export default function p2pReducer(state = defaultState, action) {
   switch (action.type) {
+    case actionTypes.P2P_GET_PEERID_FROM_URL: {
+      const newState = metaHelpers.deepClone(state);
+      newState.peers.push(action.id);
+      return newState;
+    }
     case actionTypes.P2P_CONNECTION_READY: {
-      const newState = { ...state };
+      const newState = metaHelpers.deepClone(state);
       newState.id = action.id;
       newState.ready = true;
-      newState.peers = [ action.id ];
+      newState.peers.push(action.id);
       return newState;
     }
     default: {
