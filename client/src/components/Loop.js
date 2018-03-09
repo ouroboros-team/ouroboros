@@ -10,7 +10,6 @@ class Loop extends React.Component {
   };
 
   componentDidMount() {
-    this.props.p2pInitialize();
     this.props.aggregateInitialBoard();
     this.props.getInitialDisplayBoard();
     window.addEventListener('keydown', this.handleKeypress);
@@ -85,9 +84,6 @@ const mapDispatchToProps = dispatch => ({
   },
   changeSnakeDirection: (id, direction) => {
     dispatch(actionCreators.changeSnakeDirection(id, direction));
-  },
-  p2pInitialize: () => {
-    dispatch(actionCreators.p2pInitialize());
   },
   aggregateInitialBoard: () => {
     dispatch(actionCreators.aggregateInitialBoard());
