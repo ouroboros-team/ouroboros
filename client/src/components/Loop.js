@@ -43,14 +43,14 @@ class Loop extends React.Component {
       direction: 'down',
       status: 'alive',
       positions: [ // queue
-        { row: 1, column: 9, tu: 7 },
-        { row: 0, column: 9, tu: 6 },
-        { row: 0, column: 8, tu: 5 },
-        { row: 0, column: 7, tu: 4 },
-        { row: 1, column: 7, tu: 3 },
-        { row: 2, column: 7, tu: 2 },
-        { row: 3, column: 7, tu: 1 },
-        { row: 4, column: 7, tu: 0 },
+        { row: 1, column: 9, tu: 4 },
+        { row: 0, column: 9, tu: 3 },
+        { row: 0, column: 8, tu: 2 },
+        { row: 0, column: 7, tu: 1 },
+        { row: 1, column: 7, tu: 0 },
+        { row: 2, column: 7, tu: -1 },
+        { row: 3, column: 7, tu: -2 },
+        { row: 4, column: 7, tu: -3 },
       ],
     };
     this.props.receivePeerSnakeData(1, data);
