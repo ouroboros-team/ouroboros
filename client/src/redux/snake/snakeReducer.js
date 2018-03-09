@@ -6,13 +6,11 @@ const defaultState = {
   0: {
     direction: 'left',
     status: 'alive',
-    body: [ // queue
+    positions: [ // queue
       { row: 5, column: 5, tu: 7 },
       { row: 5, column: 6, tu: 6 },
       { row: 4, column: 6, tu: 5 },
       { row: 4, column: 7, tu: 4 },
-    ],
-    history: [ // queue
       { row: 4, column: 8, tu: 3 },
       { row: 4, column: 9, tu: 2 },
       { row: 4, column: 10, tu: 1 },
@@ -22,13 +20,11 @@ const defaultState = {
   1: {
     direction: 'right',
     status: 'alive',
-    body: [ // queue
+    positions: [ // queue
       { row: 0, column: 9, tu: 6 },
       { row: 0, column: 8, tu: 5 },
       { row: 0, column: 7, tu: 4 },
       { row: 1, column: 7, tu: 3 },
-    ],
-    history: [ // queue
       { row: 2, column: 7, tu: 2 },
       { row: 3, column: 7, tu: 1 },
       { row: 4, column: 7, tu: 0 },
@@ -57,8 +53,8 @@ export default function snakesReducer(state = defaultState, action) {
         return newState;
       }
 
-      const mostRecentTu = Number(state[id].body[0].tu);
-      const newDataTu = Number(action.data.body[0].tu);
+      const mostRecentTu = Number(state[id].positions[0].tu);
+      const newDataTu = Number(action.data.positions[0].tu);
 
       // if data TU is more recent than most recent TU for this snake,
       // incorporate new data
