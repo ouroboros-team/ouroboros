@@ -5,9 +5,17 @@ import * as constants from '../../constants';
 
 export default function boardReducer(state = {}, action) {
   switch (action.type) {
-    case actionTypes.AGGREGATE_INITIAL_BOARD: {
+    case actionTypes.AGGREGATE_BOARDS: {
       const newState = helpers.deepClone(state);
-      newState[constants.INITIAL_TU] = boardHelpers.aggregateInitialBoard();
+
+      if (action.id) {
+        // only aggregate for snakes[action.id]
+        boardHelpers.aggregateBoards(newState, Number(action.id));
+      } else {
+        // aggregate for all snakes (before game begins)
+        boardHelpers.aggregateAllBoards(newState);
+      }
+
       return newState;
     }
     default: {
