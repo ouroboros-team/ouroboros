@@ -10,7 +10,7 @@ class Loop extends React.Component {
   };
 
   componentDidMount() {
-    this.props.aggregateInitialBoard();
+    this.props.aggregateBoards();
     this.props.getInitialDisplayBoard();
     window.addEventListener('keydown', this.handleKeypress);
   }
@@ -55,7 +55,7 @@ class Loop extends React.Component {
         { row: 4, column: 7, tu: 0 },
       ],
     };
-    this.props.updatePeerSnakeData(1, data);
+    this.props.receivePeerSnakeData(1, data);
   };
 
   startGame = () => {
@@ -112,8 +112,8 @@ const mapDispatchToProps = dispatch => ({
   changeSnakeDirection: (id, direction) => {
     dispatch(actionCreators.changeSnakeDirection(id, direction));
   },
-  aggregateInitialBoard: () => {
-    dispatch(actionCreators.aggregateInitialBoard());
+  aggregateBoards: () => {
+    dispatch(actionCreators.aggregateBoards());
   },
   getInitialDisplayBoard: () => {
     dispatch(actionCreators.getInitialDisplayBoard());
@@ -121,8 +121,8 @@ const mapDispatchToProps = dispatch => ({
   getNextDisplayBoard: () => {
     dispatch(actionCreators.getNextDisplayBoard());
   },
-  updatePeerSnakeData: (id, data) => {
-    dispatch(actionCreators.updatePeerSnakeData(id, data));
+  receivePeerSnakeData: (id, data) => {
+    dispatch(actionCreators.receivePeerSnakeData(id, data));
   },
 });
 

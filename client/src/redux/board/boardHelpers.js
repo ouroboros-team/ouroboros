@@ -33,28 +33,28 @@ export const removeCoordinatesMutate = (board, coords) => {
   }
 };
 
-export const aggregateInitialBoard = () => {
-  const board = {};
+export const aggregateBoards = (boards, id, snake = undefined) => {
+  if (!snake) {
+    snake = store.getState().snakes[id];
+  }
+
+  snake.body.forEach((coords) => {
+
+    if (boards[coords.tu] === undefined) {
+      boards[coords.tu] = {};
+    }
+
+    addCoordinatesMutate(boards[coords.tu], coords, snake, id);
+  });
+};
+
+export const aggregateAllBoards = (boards) => {
   const snakesObj = store.getState().snakes;
   const snakeIds = Object.keys(snakesObj);
-  let row;
-  let col;
 
   snakeIds.forEach((id) => {
-    snakesObj[id].body.forEach((coords) => {
-      row = coords.row;
-      col = coords.column;
-
-      if (board[row] === undefined) {
-        board[row] = {};
-      }
-
-      board[row][col] = {
-        id,
-        snake: snakesObj[id],
-      };
-    });
+    aggregateBoards(boards, id, snakesObj[id]);
   });
 
-  return board;
+  return boards;
 };

@@ -23,12 +23,9 @@ export const updatePeerSnakeData = (id, data) => ({
 
 
 // board
-export const aggregateInitialBoard = () => ({
-  type: actionTypes.AGGREGATE_INITIAL_BOARD,
-});
-
-export const updateBoardsWithSnakeData = (id) => ({
-  type: actionTypes.UPDATE_BOARDS_WITH_SNAKE_DATA,
+export const aggregateBoards = (id = undefined) => ({
+  id,
+  type: actionTypes.AGGREGATE_BOARDS,
 });
 
 
@@ -131,6 +128,6 @@ export const p2pInitialize = () => (
 export const receivePeerSnakeData = (id, data) => (
   (dispatch) => {
     dispatch(updatePeerSnakeData(id, data));
-    dispatch(updateBoardsWithSnakeData(id));
+    dispatch(aggregateBoards(id));
   }
 );
