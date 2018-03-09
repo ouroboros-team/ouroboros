@@ -38,6 +38,26 @@ class Loop extends React.Component {
     this.setState({ timer: null });
   };
 
+  simulateNewPeerData = () => {
+    const data = {
+      direction: 'down',
+      status: 'alive',
+      body: [ // queue
+        { row: 1, column: 9, tu: 7 },
+        { row: 0, column: 9, tu: 6 },
+        { row: 0, column: 8, tu: 5 },
+        { row: 0, column: 7, tu: 4 },
+      ],
+      history: [ // queue
+        { row: 1, column: 7, tu: 3 },
+        { row: 2, column: 7, tu: 2 },
+        { row: 3, column: 7, tu: 1 },
+        { row: 4, column: 7, tu: 0 },
+      ],
+    };
+    this.props.updatePeerSnakeData(1, data);
+  };
+
   startGame = () => {
     if (!this.state.timer) { // so multiple calls don't result in multiple timers
       const timer = setInterval(this.tick, constants.LOOP_INTERVAL);
@@ -69,6 +89,11 @@ class Loop extends React.Component {
             value='Next TU'
             onClick={this.tick}
           />
+          <input
+            type='button'
+            value='Simulate New Peer Data'
+            onClick={this.simulateNewPeerData}
+          />
         </div>
         {this.props.children}
       </div>
@@ -95,6 +120,9 @@ const mapDispatchToProps = dispatch => ({
   },
   getNextDisplayBoard: () => {
     dispatch(actionCreators.getNextDisplayBoard());
+  },
+  updatePeerSnakeData: (id, data) => {
+    dispatch(actionCreators.updatePeerSnakeData(id, data));
   },
 });
 
