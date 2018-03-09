@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import * as p2pHelpers from './p2p/p2pHelpers';
+import * as constants from '../constants';
 import store from './store';
 
 // info
@@ -48,6 +49,7 @@ export const handleTuTick = () => (
 
 // P2P
 let peer;
+const peerConnections = {};
 
 export const p2pGetPeerIdFromURL = id => ({
   id,
@@ -73,6 +75,13 @@ export const p2pAddCloseListener = (connection, dispatch) => {
   connection.on('close', () => {
     console.log(`Removing peer: ${connection.peer}`);
     dispatch(p2pRemovePeerFromList(connection.peer));
+    delete peerConnections[connection.peer];
+  });
+};
+
+export const p2pSendHeartbeatToPeers = () => {
+  Object.values(peerConnections).forEach((connection) => {
+    connection.send(`Heartbeat from ${peer.id}`);
   });
 };
 
@@ -85,9 +94,11 @@ export const p2pConnectToNewPeers = (list, dispatch) => {
     const dataConnection = peer.connect(peerId);
     dataConnection.on('open', () => {
       dataConnection.on('data', (data) => {
+        console.log(`Received ${data}`);
       });
 
       dispatch(p2pUpdatePeerList(dataConnection.peer));
+      peerConnections[peerId] = dataConnection;
     });
     p2pAddCloseListener(dataConnection, dispatch);
   });
@@ -100,8 +111,14 @@ export const p2pConnectToKnownPeers = (dispatch) => {
       const dataConnection = peer.connect(peerId);
       dataConnection.on('open', () => {
         dataConnection.on('data', (data) => {
-          p2pConnectToNewPeers(data, dispatch);
+          if (store.getState().info.gameStatus !== constants.GAME_STATUS_PLAYING) {
+            p2pConnectToNewPeers(data, dispatch);
+          } else {
+            console.log(`Received ${data}`);
+          }
         });
+
+        peerConnections[peerId] = dataConnection;
       });
       p2pAddCloseListener(dataConnection, dispatch);
     }
@@ -122,7 +139,11 @@ export const p2pInitialize = () => (
       .on('connection', (dataConnection) => {
         dataConnection.on('open', () => {
           dataConnection.on('data', (data) => {
-            p2pConnectToNewPeers(data, dispatch);
+            if (store.getState().info.gameStatus !== constants.GAME_STATUS_PLAYING) {
+              p2pConnectToNewPeers(data, dispatch);
+            } else {
+              console.log(`Received ${data}`);
+            }
           });
           dispatch(p2pUpdatePeerList(dataConnection.peer));
           dataConnection.send(Object.keys(store.getState().p2p.peers));
