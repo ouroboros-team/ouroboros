@@ -2,14 +2,16 @@
 @import './skeleton';
 
 $gray: #ebebeb;
+$black: #000;
 $square-size: 1.5rem;
 $grid-size: 20;
 
 header {
   padding: 1rem;
   background-color: $gray;
+  margin-bottom: 2rem;
 
-  * {
+  > * {
     display: inline-block;
     vertical-align: middle;
     margin: 0 .5rem;
@@ -29,6 +31,7 @@ header {
     margin: 0;
     padding: 0;
     display: inline-block;
+    width: 100%;
     vertical-align: top;
     text-align: center;
 
@@ -38,12 +41,17 @@ header {
       padding: 0;
 
       li {
-        text-align: left;
+        text-align: center;
         display: block;
         padding: .5rem;
         margin: 1px;
-        background-color: black;
+        background-color: $black;
         color: $gray;
+        
+        &.label {
+          background-color: transparent;
+          color: $black;
+        }
       }
     }
   }
@@ -71,8 +79,8 @@ header {
     }
   }
 
-  // Black for alive self, gray for dead self
-  $self: black;
+  // $black for alive self, gray for dead self
+  $self: $black;
   $self-dead: darkgray;
 
   #player-list ul li.id-0 {
