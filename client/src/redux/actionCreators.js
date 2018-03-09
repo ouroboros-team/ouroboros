@@ -34,7 +34,6 @@ export const getNextDisplayBoard = () => ({
 
 // P2P
 let peer;
-const connections = [];
 
 export const p2pGetPeerIdFromURL = id => ({
   id,
@@ -46,25 +45,40 @@ export const p2pConnectionReady = id => ({
   type: actionTypes.P2P_CONNECTION_READY,
 });
 
-export const p2pConnectToKnownPeers = () => {
-  const peers = store.getState().p2p.peers;
-  peers.forEach((peerId) => {
-    if (peerId !== peer.id) {
-      const conn = peer.connect(peerId);
-      conn.on('open', () => {
-        conn.on('data', (data) => {
-          console.log(`Connection data: ${data}`);
-        });
-        connections.push(conn);
-      });
-    }
-  });
-};
-
 export const p2pUpdatePeerList = id => ({
   id,
   type: actionTypes.P2P_UPDATE_PEER_LIST,
 });
+
+export const p2pConnectToNewPeers = (list, dispatch) => {
+  list.forEach((peerId) => {
+    if (store.getState().p2p.peers[peerId] || peerId === peer.id) {
+      return;
+    }
+
+    const dataConnection = peer.connect(peerId);
+    dataConnection.on('open', () => {
+      dataConnection.on('data', (data) => {
+      });
+
+      dispatch(p2pUpdatePeerList(dataConnection.peer));
+    });
+  });
+};
+
+export const p2pConnectToKnownPeers = (dispatch) => {
+  const peerIds = Object.keys(store.getState().p2p.peers);
+  peerIds.forEach((peerId) => {
+    if (peerId !== peer.id) {
+      const dataConnection = peer.connect(peerId);
+      dataConnection.on('open', () => {
+        dataConnection.on('data', (data) => {
+          p2pConnectToNewPeers(data, dispatch);
+        });
+      });
+    }
+  });
+};
 
 export const p2pInitialize = () => (
   (dispatch) => {
@@ -75,17 +89,15 @@ export const p2pInitialize = () => (
       .on('open', (id) => {
         console.log(`My peer ID is: ${id}`);
         dispatch(p2pConnectionReady(id));
-        p2pConnectToKnownPeers();
+        p2pConnectToKnownPeers(dispatch);
       })
       .on('connection', (dataConnection) => {
         dataConnection.on('open', () => {
           dataConnection.on('data', (data) => {
-            console.log(`Connection data: ${data}`);
+            p2pConnectToNewPeers(data, dispatch);
           });
           dispatch(p2pUpdatePeerList(dataConnection.peer));
-          connections.push(dataConnection);
-          dataConnection.send(store.getState().p2p.peers);
-          console.log(`Data conn open. New list of peers: ${store.getState().p2p.peers}`);
+          dataConnection.send(Object.keys(store.getState().p2p.peers));
         });
       });
   }
