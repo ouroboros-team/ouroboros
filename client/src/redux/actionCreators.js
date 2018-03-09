@@ -27,6 +27,10 @@ export const aggregateInitialBoard = () => ({
   type: actionTypes.AGGREGATE_INITIAL_BOARD,
 });
 
+export const updateBoardsWithSnakeData = (id) => ({
+  type: actionTypes.UPDATE_BOARDS_WITH_SNAKE_DATA,
+});
+
 
 // display board
 export const getInitialDisplayBoard = () => ({
@@ -121,5 +125,12 @@ export const p2pInitialize = () => (
         });
         p2pAddCloseListener(dataConnection, dispatch);
       });
+  }
+);
+
+export const receivePeerSnakeData = (id, data) => (
+  (dispatch) => {
+    dispatch(updatePeerSnakeData(id, data));
+    dispatch(updateBoardsWithSnakeData(id));
   }
 );
