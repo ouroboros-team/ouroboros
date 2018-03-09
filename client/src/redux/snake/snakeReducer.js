@@ -1,5 +1,6 @@
 import * as actionTypes from '../actionTypes';
 import * as snakeHelpers from './snakeHelpers';
+import * as metaHelpers from '../metaHelpers';
 
 const defaultState = {
   0: {
@@ -43,8 +44,7 @@ export default function snakesReducer(state = defaultState, action) {
         return state;
       }
 
-      const newState = { ...state };
-      newState[action.id] = { ...newState[action.id] };
+      const newState = metaHelpers.deepClone(state);
       newState[action.id].direction = action.direction;
       return newState;
     }
