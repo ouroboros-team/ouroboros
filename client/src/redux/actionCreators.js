@@ -15,6 +15,12 @@ export const changeSnakeDirection = (id, direction) => ({
   type: actionTypes.CHANGE_SNAKE_DIRECTION,
 });
 
+export const updatePeerSnakeData = (id, data) => ({
+  id,
+  data,
+  type: actionTypes.UPDATE_PEER_SNAKE_DATA,
+});
+
 
 // board
 export const aggregateInitialBoard = () => ({
