@@ -1,4 +1,5 @@
 /*
+* ** Customization of **
 * Skeleton V2.0.4
 * Copyright 2014, Dave Gamache
 * www.getskeleton.com
@@ -48,8 +49,8 @@
     padding: 0; }
 }
 
-/* For devices larger than 550px */
-@media (min-width: 550px) {
+/* For devices larger than 750px */
+@media (min-width: 750px) {
   .container {
     width: 80%; }
   .column,
@@ -141,8 +142,7 @@ h4 { font-size: 2.4rem; line-height: 1.35; letter-spacing: -.08rem; }
 h5 { font-size: 1.8rem; line-height: 1.5;  letter-spacing: -.05rem; }
 h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
 
-/* Larger than phablet */
-@media (min-width: 550px) {
+@media (min-width: 750px) {
   h1 { font-size: 5.0rem; }
   h2 { font-size: 4.2rem; }
   h3 { font-size: 3.6rem; }
@@ -405,10 +405,7 @@ there.
 /* Larger than mobile */
 @media (min-width: 400px) {}
 
-/* Larger than phablet (also point when grid becomes active) */
-@media (min-width: 550px) {}
-
-/* Larger than tablet */
+/* Larger than tablet (also point when grid becomes active) */
 @media (min-width: 750px) {}
 
 /* Larger than desktop */
