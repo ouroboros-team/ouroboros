@@ -38,7 +38,7 @@ export const aggregateBoards = (boards, id, snake = undefined) => {
     snake = store.getState().snakes[id];
   }
 
-  snake.body.forEach((coords) => {
+  snake.positions.forEach((coords) => {
 
     if (boards[coords.tu] === undefined) {
       boards[coords.tu] = {};

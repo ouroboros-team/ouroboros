@@ -24,19 +24,17 @@ export const validateDirectionChange = (oldDir, newDir) => {
 export const updateSnakeDataMutate = (newSnake, data) => {
   newSnake.direction = data.direction;
 
-  const gap = Math.abs(newSnake.body[0].tu - data.body[0].tu);
+  const gap = Math.abs(newSnake.positions[0].tu - data.positions[0].tu);
   let counter = gap;
 
   while (counter > 0) {
     // add new coordinates
-    newSnake.body.unshift(data.body[gap - 1]);
+    newSnake.positions.unshift(data.positions[gap - 1]);
 
-    // move tail to history
-    newSnake.history.unshift(newSnake.body.pop());
-
-    // purge history
-    if (newSnake.history.length > constants.HISTORY_LENGTH) {
-      newSnake.history.length = constants.HISTORY_LENGTH;
+    // purge surplus history
+    const keepCount = constants.getHistoryLength(newSnake.positions[0].tu);
+    if (newSnake.positions.length > keepCount) {
+      newSnake.positions.length = keepCount;
     }
 
     counter -= 1;
