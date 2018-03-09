@@ -12,7 +12,7 @@ const reducer = combineReducers({
   p2p: p2pReducer,
   info: infoReducer,
   snakes: snakesReducer,
-  board: boardReducer,
+  boards: boardReducer,
   displayBoard: displayReducer,
 });
 

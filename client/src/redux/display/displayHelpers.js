@@ -63,13 +63,13 @@ export const calculateNextCoords = (direction, oldCoords) => {
 
 export const getNextDisplayBoard = () => {
   const state = store.getState();
+  const tu = state.info.tu;
 
   // deep clone allows free mutation
-  const newBoard = helpers.deepClone(state.board);
+  const newBoard = helpers.deepClone(state.boards[tu - 1] || {});
   const snakesObj = helpers.deepClone(state.snakes);
 
   const snakeIds = Object.keys(snakesObj);
-  const tu = state.info.tu;
 
   let snake;
   let tail;
