@@ -1,5 +1,9 @@
 import * as constants from '../../constants';
 
+export const getSnakeLength = (tu) => (
+  constants.INITIAL_SNAKE_LENGTH
+);
+
 export const validateDirectionChange = (oldDir, newDir) => {
   switch (oldDir) {
     case 'down':
@@ -32,7 +36,7 @@ export const updateSnakeDataMutate = (newSnake, data) => {
     newSnake.positions.unshift(data.positions[gap - 1]);
 
     // purge surplus history
-    const keepCount = constants.getHistoryLength(newSnake.positions[0].tu);
+    const keepCount = getSnakeLength(newSnake.positions[0].tu) + constants.HISTORY_LENGTH;
     if (newSnake.positions.length > keepCount) {
       newSnake.positions.length = keepCount;
     }
@@ -40,7 +44,3 @@ export const updateSnakeDataMutate = (newSnake, data) => {
     counter -= 1;
   }
 };
-
-export const getSnakeLength = (tu) => (
-  constants.INITIAL_SNAKE_LENGTH
-);
