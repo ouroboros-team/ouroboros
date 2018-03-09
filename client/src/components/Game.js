@@ -24,8 +24,12 @@ const Game = (props) => {
 
   return (
     <main id='game' className='container'>
-      {display}
-      <PlayerList />
+      <div className='nine columns'>
+        {display}
+      </div>
+      <div className='three columns'>
+        <PlayerList peers={props.peers} />
+      </div>
     </main>
   );
 };
