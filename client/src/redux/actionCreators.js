@@ -50,6 +50,18 @@ export const p2pUpdatePeerList = id => ({
   type: actionTypes.P2P_UPDATE_PEER_LIST,
 });
 
+export const p2pRemovePeerFromList = id => ({
+  id,
+  type: actionTypes.P2P_REMOVE_PEER_FROM_LIST,
+});
+
+export const p2pAddCloseListener = (connection, dispatch) => {
+  connection.on('close', () => {
+    console.log(`Removing peer: ${connection.peer}`);
+    dispatch(p2pRemovePeerFromList(connection.peer));
+  });
+};
+
 export const p2pConnectToNewPeers = (list, dispatch) => {
   list.forEach((peerId) => {
     if (store.getState().p2p.peers[peerId] || peerId === peer.id) {
@@ -63,6 +75,7 @@ export const p2pConnectToNewPeers = (list, dispatch) => {
 
       dispatch(p2pUpdatePeerList(dataConnection.peer));
     });
+    p2pAddCloseListener(dataConnection, dispatch);
   });
 };
 
@@ -76,6 +89,7 @@ export const p2pConnectToKnownPeers = (dispatch) => {
           p2pConnectToNewPeers(data, dispatch);
         });
       });
+      p2pAddCloseListener(dataConnection, dispatch);
     }
   });
 };
@@ -99,6 +113,7 @@ export const p2pInitialize = () => (
           dispatch(p2pUpdatePeerList(dataConnection.peer));
           dataConnection.send(Object.keys(store.getState().p2p.peers));
         });
+        p2pAddCloseListener(dataConnection, dispatch);
       });
   }
 );
