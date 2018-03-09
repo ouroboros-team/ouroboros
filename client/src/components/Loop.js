@@ -42,13 +42,11 @@ class Loop extends React.Component {
     const data = {
       direction: 'down',
       status: 'alive',
-      body: [ // queue
+      positions: [ // queue
         { row: 1, column: 9, tu: 7 },
         { row: 0, column: 9, tu: 6 },
         { row: 0, column: 8, tu: 5 },
         { row: 0, column: 7, tu: 4 },
-      ],
-      history: [ // queue
         { row: 1, column: 7, tu: 3 },
         { row: 2, column: 7, tu: 2 },
         { row: 3, column: 7, tu: 1 },
@@ -66,8 +64,7 @@ class Loop extends React.Component {
   };
 
   tick = () => {
-    this.props.getNextDisplayBoard();
-    this.props.incrementTu();
+    this.props.handleTuTick();
   };
 
   render() {
@@ -106,8 +103,8 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  incrementTu: () => {
-    dispatch(actionCreators.incrementTu());
+  handleTuTick: () => {
+    dispatch(actionCreators.handleTuTick());
   },
   changeSnakeDirection: (id, direction) => {
     dispatch(actionCreators.changeSnakeDirection(id, direction));
@@ -117,9 +114,6 @@ const mapDispatchToProps = dispatch => ({
   },
   getInitialDisplayBoard: () => {
     dispatch(actionCreators.getInitialDisplayBoard());
-  },
-  getNextDisplayBoard: () => {
-    dispatch(actionCreators.getNextDisplayBoard());
   },
   receivePeerSnakeData: (id, data) => {
     dispatch(actionCreators.receivePeerSnakeData(id, data));

@@ -38,6 +38,13 @@ export const getNextDisplayBoard = () => ({
   type: actionTypes.GET_NEXT_DISPLAY_BOARD,
 });
 
+export const handleTuTick = () => (
+  (dispatch) => {
+    dispatch(incrementTu());
+    dispatch(getNextDisplayBoard());
+  }
+);
+
 
 // P2P
 let peer;
