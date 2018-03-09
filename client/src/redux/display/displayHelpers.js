@@ -1,4 +1,5 @@
 import store from '../store';
+import * as boardHelpers from '../board/boardHelpers';
 import * as helpers from '../metaHelpers';
 import * as constants from '../../constants';
 
@@ -11,23 +12,6 @@ export const dequeueTailMutate = (snake) => {
 export const enqueueHeadMutate = (snake, nextPosition) => {
   snake.body.unshift(nextPosition);
   return nextPosition;
-};
-
-export const addCoordinatesMutate = (board, coords, snake, snakeId) => {
-  if (board[coords.row] === undefined) {
-    board[coords.row] = {};
-  }
-
-  board[coords.row][coords.column] = {
-    snake,
-    id: snakeId,
-  };
-};
-
-export const removeCoordinatesMutate = (board, coords) => {
-  if (board[coords.row] && board[coords.row][coords.column]) {
-    delete board[coords.row][coords.column];
-  }
 };
 
 export const calculateNextCoords = (direction, oldCoords) => {
@@ -84,7 +68,7 @@ export const getNextDisplayBoard = () => {
       tail = dequeueTailMutate(snake);
 
       // remove tail from newBoard
-      removeCoordinatesMutate(newBoard, tail);
+      boardHelpers.removeCoordinatesMutate(newBoard, tail);
 
       // calculate next coordinates (predicted)
       next = calculateNextCoords(snake.direction, snake.body[0]);
@@ -93,7 +77,7 @@ export const getNextDisplayBoard = () => {
       enqueueHeadMutate(snake, next);
 
       // add next position to newBoard
-      addCoordinatesMutate(newBoard, next, snake, id);
+      boardHelpers.addCoordinatesMutate(newBoard, next, snake, id);
     }
   });
 

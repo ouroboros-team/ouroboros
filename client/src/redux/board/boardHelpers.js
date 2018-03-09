@@ -16,6 +16,23 @@ import store from '../store';
 //   }
 // };
 
+export const addCoordinatesMutate = (board, coords, snake, snakeId) => {
+  if (board[coords.row] === undefined) {
+    board[coords.row] = {};
+  }
+
+  board[coords.row][coords.column] = {
+    snake,
+    id: snakeId,
+  };
+};
+
+export const removeCoordinatesMutate = (board, coords) => {
+  if (board[coords.row] && board[coords.row][coords.column]) {
+    delete board[coords.row][coords.column];
+  }
+};
+
 export const aggregateInitialBoard = () => {
   const board = {};
   const snakesObj = store.getState().snakes;
