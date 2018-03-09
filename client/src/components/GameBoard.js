@@ -33,7 +33,7 @@ const GameBoard = (props) => {
   }
 
   return (
-    <div id='board-container' className='nine columns'>
+    <div id='board-container'>
       <div id='board'>
         {squares}
       </div>
