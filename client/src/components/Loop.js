@@ -53,21 +53,23 @@ class Loop extends React.Component {
   render() {
     return (
       <div id='loop'>
-        <input
-          type='button'
-          value='Start'
-          onClick={this.startGame}
-        />
-        <input
-          type='button'
-          value='Pause'
-          onClick={this.pauseGame}
-        />
-        <input
-          type='button'
-          value='Next TU'
-          onClick={this.tick}
-        />
+        <div>
+          <input
+            type='button'
+            value='Start'
+            onClick={this.startGame}
+          />
+          <input
+            type='button'
+            value='Pause'
+            onClick={this.pauseGame}
+          />
+          <input
+            type='button'
+            value='Next TU'
+            onClick={this.tick}
+          />
+        </div>
         {this.props.children}
       </div>
     );

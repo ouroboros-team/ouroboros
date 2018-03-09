@@ -6,6 +6,7 @@ import '../assets/styles/index.scss';
 
 import Header from './Header';
 import Game from './Game';
+
 // TODO: routes for informational screens
 
 class App extends React.Component {
@@ -25,9 +26,7 @@ class App extends React.Component {
               this.props.p2pGetPeerIdFromURL(match.params.peerId);
             }
             return (
-              <Game
-                status={this.props.gameStatus}
-              />
+              <Game />
             );
           }}
         />
@@ -35,10 +34,6 @@ class App extends React.Component {
     );
   }
 }
-
-const mapStateToProps = state => ({
-  gameStatus: state.info.gameStatus,
-});
 
 const mapDispatchToProps = dispatch => ({
   p2pGetPeerIdFromURL: (id) => {
@@ -49,4 +44,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(null, mapDispatchToProps)(App);
