@@ -12,7 +12,7 @@ const GameBoard = (props) => {
 
   for (let r = 0; r < GRID_SIZE; r++) {
     for (let c = 0; c < GRID_SIZE; c++) {
-      if (props.board[r] && props.board[r][c]) {
+      if (props.board[r] && props.board[r][c] && props.board[r][c].snake) {
         status = props.board[r][c].snake.status;
         snakeId = props.board[r][c].id;
       } else {
