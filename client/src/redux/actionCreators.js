@@ -25,6 +25,11 @@ export const updatePeerSnakeData = (id, data) => ({
   type: actionTypes.UPDATE_PEER_SNAKE_DATA,
 });
 
+export const addNewSnake = id => ({
+  id,
+  type: actionTypes.ADD_NEW_SNAKE,
+});
+
 
 // board
 export const aggregateBoards = (id = undefined) => ({
@@ -70,6 +75,13 @@ export const p2pUpdatePeerList = id => ({
   type: actionTypes.P2P_UPDATE_PEER_LIST,
 });
 
+export const addPeerToGame = id => (
+  (dispatch) => {
+    dispatch(p2pUpdatePeerList(id));
+    dispatch(addNewSnake(id));
+  }
+);
+
 export const p2pRemovePeerFromList = id => ({
   id,
   type: actionTypes.P2P_REMOVE_PEER_FROM_LIST,
@@ -110,7 +122,7 @@ export const p2pConnectToNewPeers = (list, dispatch) => {
     const dataConnection = peer.connect(peerId);
     dataConnection.on('open', () => {
       p2pSetDataListener(dataConnection, dispatch);
-      dispatch(p2pUpdatePeerList(dataConnection.peer));
+      dispatch(addPeerToGame(dataConnection.peer));
       peerConnections[peerId] = dataConnection;
     });
     p2pAddCloseListener(dataConnection, dispatch);
@@ -161,7 +173,7 @@ export const p2pInitialize = () => (
       .on('connection', (dataConnection) => {
         dataConnection.on('open', () => {
           p2pSetDataListener(dataConnection, dispatch);
-          dispatch(p2pUpdatePeerList(dataConnection.peer));
+          dispatch(addPeerToGame(dataConnection.peer));
           peerConnections[dataConnection.peer] = dataConnection;
           dataConnection.send(Object.keys(store.getState().p2p.peers));
         });

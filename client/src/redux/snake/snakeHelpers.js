@@ -4,6 +4,12 @@ export const getSnakeLength = (tu) => (
   constants.INITIAL_SNAKE_LENGTH
 );
 
+export const emptySnakeObject = () => ({
+  direction: 'left',
+  status: 'alive',
+  positions: [],
+});
+
 export const validateDirectionChange = (oldDir, newDir) => {
   switch (oldDir) {
     case 'down':
