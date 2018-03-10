@@ -15,10 +15,17 @@ export const changeSnakeDirection = (id, direction) => ({
   type: actionTypes.CHANGE_SNAKE_DIRECTION,
 });
 
+export const updatePeerSnakeData = (id, data) => ({
+  id,
+  data,
+  type: actionTypes.UPDATE_PEER_SNAKE_DATA,
+});
+
 
 // board
-export const aggregateInitialBoard = () => ({
-  type: actionTypes.AGGREGATE_INITIAL_BOARD,
+export const aggregateBoards = (id = undefined) => ({
+  id,
+  type: actionTypes.AGGREGATE_BOARDS,
 });
 
 
@@ -30,6 +37,13 @@ export const getInitialDisplayBoard = () => ({
 export const getNextDisplayBoard = () => ({
   type: actionTypes.GET_NEXT_DISPLAY_BOARD,
 });
+
+export const handleTuTick = () => (
+  (dispatch) => {
+    dispatch(incrementTu());
+    dispatch(getNextDisplayBoard());
+  }
+);
 
 
 // P2P
@@ -115,5 +129,12 @@ export const p2pInitialize = () => (
         });
         p2pAddCloseListener(dataConnection, dispatch);
       });
+  }
+);
+
+export const receivePeerSnakeData = (id, data) => (
+  (dispatch) => {
+    dispatch(updatePeerSnakeData(id, data));
+    dispatch(aggregateBoards(id));
   }
 );

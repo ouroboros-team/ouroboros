@@ -16,28 +16,45 @@ import store from '../store';
 //   }
 // };
 
-export const aggregateInitialBoard = () => {
-  const board = {};
+export const addCoordinatesMutate = (board, coords, snake, snakeId) => {
+  if (board[coords.row] === undefined) {
+    board[coords.row] = {};
+  }
+
+  board[coords.row][coords.column] = {
+    snake,
+    id: snakeId,
+  };
+};
+
+export const removeCoordinatesMutate = (board, coords) => {
+  if (board[coords.row] && board[coords.row][coords.column]) {
+    delete board[coords.row][coords.column];
+  }
+};
+
+export const aggregateBoards = (boards, id, snake = undefined) => {
+  if (!snake) {
+    snake = store.getState().snakes[id];
+  }
+
+  snake.positions.forEach((coords) => {
+
+    if (boards[coords.tu] === undefined) {
+      boards[coords.tu] = {};
+    }
+
+    addCoordinatesMutate(boards[coords.tu], coords, snake, id);
+  });
+};
+
+export const aggregateAllBoards = (boards) => {
   const snakesObj = store.getState().snakes;
   const snakeIds = Object.keys(snakesObj);
-  let row;
-  let col;
 
   snakeIds.forEach((id) => {
-    snakesObj[id].body.forEach((coords) => {
-      row = coords.row;
-      col = coords.column;
-
-      if (board[row] === undefined) {
-        board[row] = {};
-      }
-
-      board[row][col] = {
-        id,
-        snake: snakesObj[id],
-      };
-    });
+    aggregateBoards(boards, id, snakesObj[id]);
   });
 
-  return board;
+  return boards;
 };

@@ -10,7 +10,7 @@ class Loop extends React.Component {
   };
 
   componentDidMount() {
-    this.props.aggregateInitialBoard();
+    this.props.aggregateBoards();
     this.props.getInitialDisplayBoard();
     window.addEventListener('keydown', this.handleKeypress);
   }
@@ -38,6 +38,24 @@ class Loop extends React.Component {
     this.setState({ timer: null });
   };
 
+  simulateNewPeerData = () => {
+    const data = {
+      direction: 'down',
+      status: 'alive',
+      positions: [ // queue
+        { row: 1, column: 9, tu: 4 },
+        { row: 0, column: 9, tu: 3 },
+        { row: 0, column: 8, tu: 2 },
+        { row: 0, column: 7, tu: 1 },
+        { row: 1, column: 7, tu: 0 },
+        { row: 2, column: 7, tu: -1 },
+        { row: 3, column: 7, tu: -2 },
+        { row: 4, column: 7, tu: -3 },
+      ],
+    };
+    this.props.receivePeerSnakeData(1, data);
+  };
+
   startGame = () => {
     if (!this.state.timer) { // so multiple calls don't result in multiple timers
       const timer = setInterval(this.tick, constants.LOOP_INTERVAL);
@@ -46,8 +64,7 @@ class Loop extends React.Component {
   };
 
   tick = () => {
-    this.props.getNextDisplayBoard();
-    this.props.incrementTu();
+    this.props.handleTuTick();
   };
 
   render() {
@@ -69,6 +86,11 @@ class Loop extends React.Component {
             value='Next TU'
             onClick={this.tick}
           />
+          <input
+            type='button'
+            value='Simulate New Peer Data'
+            onClick={this.simulateNewPeerData}
+          />
         </div>
         {this.props.children}
       </div>
@@ -81,20 +103,20 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  incrementTu: () => {
-    dispatch(actionCreators.incrementTu());
+  handleTuTick: () => {
+    dispatch(actionCreators.handleTuTick());
   },
   changeSnakeDirection: (id, direction) => {
     dispatch(actionCreators.changeSnakeDirection(id, direction));
   },
-  aggregateInitialBoard: () => {
-    dispatch(actionCreators.aggregateInitialBoard());
+  aggregateBoards: () => {
+    dispatch(actionCreators.aggregateBoards());
   },
   getInitialDisplayBoard: () => {
     dispatch(actionCreators.getInitialDisplayBoard());
   },
-  getNextDisplayBoard: () => {
-    dispatch(actionCreators.getNextDisplayBoard());
+  receivePeerSnakeData: (id, data) => {
+    dispatch(actionCreators.receivePeerSnakeData(id, data));
   },
 });
 
