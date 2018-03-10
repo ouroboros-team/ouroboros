@@ -141,17 +141,33 @@ export const p2pConnectToNewPeers = (list, dispatch) => {
 };
 
 export const p2pSetDataListener = (connection, dispatch) => {
-  connection.on('data', (data) => {
-    console.log(`received data from ${connection.peer}`);
+  const status = store.getState().info.status;
+  const id = connection.peer;
 
-    if (store.getState().info.gameStatus !== constants.GAME_STATUS_PLAYING) {
-      if (typeof data === 'string') {
-        dispatch(updateGameStatus(data));
-      } else {
-        p2pConnectToNewPeers(data, dispatch);
-      }
+  connection.on('data', (data) => {
+    console.log(`received data from ${id}`);
+
+    if (typeof data === 'string') {
+      dispatch(updateGameStatus(data));
     } else {
-      // This is where we'll process peer snakes received
+      switch (status) {
+        case constants.GAME_STATUS_PREGAME: {
+          // if pregame, receive starting positions
+          dispatch(receivePeerStartingPositions(id, data));
+          break;
+        }
+        case constants.GAME_STATUS_PLAYING: {
+          // if playing, receive snake data
+          dispatch(receivePeerSnakeData(id, data));
+          break;
+        }
+        case constants.GAME_STATUS_LOBBY:
+        case constants.GAME_STATUS_POSTGAME:
+        default: {
+          // if lobby or postgame, connect to new peers
+          p2pConnectToNewPeers(data, dispatch);
+        }
+      }
     }
   });
 };
@@ -201,3 +217,34 @@ export const receivePeerSnakeData = (id, data) => (
     dispatch(aggregateBoards(id));
   }
 );
+
+export const receivePeerStartingPositions = (id, data) => {
+  console.log('not yet implemented: receivePeerStartingPositions');
+  // receive position
+  // check own position against peer positions
+  // randomize new position for self if there is a collision
+};
+
+export const p2pReceivePeerData = (id, data, dispatch) => {
+  const status = store.getState().info.status;
+  console.log('status', status);
+
+  switch (status) {
+    case constants.GAME_STATUS_PREGAME: {
+      // if pregame, receive starting positions
+      dispatch(receivePeerStartingPositions(id, data));
+      break;
+    }
+    case constants.GAME_STATUS_PLAYING: {
+      // if playing, receive snake data
+      dispatch(receivePeerSnakeData(id, data));
+      break;
+    }
+    case constants.GAME_STATUS_LOBBY:
+    case constants.GAME_STATUS_POSTGAME:
+    default: {
+      // if lobby or postgame, connect to new peers
+      p2pConnectToNewPeers(data, dispatch);
+    }
+  }
+};

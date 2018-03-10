@@ -4,8 +4,12 @@ import * as actionCreators from '../redux/actionCreators';
 import * as constants from '../constants';
 
 class Lobby extends React.Component {
-  handleStartClick = () => {
+  handlePregameClick = () => {
     this.props.p2pSendGameStatus(constants.GAME_STATUS_PREGAME);
+  };
+
+  handlePlayingClick = () => {
+    this.props.p2pSendGameStatus(constants.GAME_STATUS_PLAYING);
   };
 
   render() {
@@ -18,8 +22,13 @@ class Lobby extends React.Component {
         <br />
         <input
           type='button'
-          value='Start Game'
-          onClick={this.handleStartClick}
+          value='Pregame'
+          onClick={this.handlePregameClick}
+        />
+        <input
+          type='button'
+          value='Play'
+          onClick={this.handlePlayingClick}
         />
       </div>
     );
