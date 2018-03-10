@@ -5,7 +5,7 @@ import * as metaHelpers from '../metaHelpers';
 const defaultState = {
   tu: constants.INITIAL_TU,
   playerList: [],
-  gameStatus: constants.GAME_STATUS_PREGAME,
+  gameStatus: constants.GAME_STATUS_LOBBY,
 };
 
 export default function infoReducer(state = defaultState, action) {
