@@ -1,4 +1,5 @@
 export const INCREMENT_TU = 'INCREMENT_TU';
+export const UPDATE_GAME_STATUS = 'UPDATE_GAME_STATUS';
 
 // snakes
 export const CHANGE_SNAKE_DIRECTION = 'CHANGE_SNAKE_DIRECTION';
