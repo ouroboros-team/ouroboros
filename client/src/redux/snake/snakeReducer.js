@@ -44,23 +44,21 @@ export default function snakesReducer(state = defaultState, action) {
       return newState;
     }
     case actionTypes.UPDATE_PEER_SNAKE_DATA: {
-      const id = Number(action.id);
-
       // if no snake data is held for this snake, simply add received data
-      if (!state[id]) {
+      if (!state[action.id]) {
         const newState = helpers.deepClone(state);
-        newState[id] = action.data;
+        newState[action.id] = action.data;
         return newState;
       }
 
-      const mostRecentTu = Number(state[id].positions[0].tu);
+      const mostRecentTu = Number(state[action.id].positions[0].tu);
       const newDataTu = Number(action.data.positions[0].tu);
 
       // if data TU is more recent than most recent TU for this snake,
       // incorporate new data
       if (newDataTu > mostRecentTu) {
         const newState = helpers.deepClone(state);
-        snakeHelpers.updateSnakeDataMutate(newState[id], action.data);
+        snakeHelpers.updateSnakeDataMutate(newState[action.id], action.data);
         return newState;
       }
 
