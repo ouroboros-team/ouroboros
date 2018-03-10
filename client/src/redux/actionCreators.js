@@ -1,7 +1,8 @@
+import store from './store';
 import * as actionTypes from './actionTypes';
 import * as p2pHelpers from './p2p/p2pHelpers';
+import * as snakeHelpers from './snake/snakeHelpers';
 import * as constants from '../constants';
-import store from './store';
 
 // info
 export const incrementTu = () => ({
@@ -12,6 +13,8 @@ export const updateGameStatus = status => ({
   status,
   type: actionTypes.UPDATE_GAME_STATUS,
 });
+
+
 // snakes
 export const changeSnakeDirection = (id, direction) => ({
   id,
@@ -25,10 +28,18 @@ export const updatePeerSnakeData = (id, data) => ({
   type: actionTypes.UPDATE_PEER_SNAKE_DATA,
 });
 
-export const addNewSnake = id => ({
+export const addNewSnake = (id, positions = []) => ({
   id,
+  positions,
   type: actionTypes.ADD_NEW_SNAKE,
 });
+
+export const initializeOwnSnake = id => (
+  (dispatch) => {
+    const randomStartPositions = snakeHelpers.randomizeStartPosition();
+    dispatch(addNewSnake(id, randomStartPositions));
+  }
+);
 
 
 // board
@@ -152,6 +163,7 @@ export const p2pConnectToKnownPeers = (dispatch) => {
       const dataConnection = peer.connect(peerId);
       dataConnection.on('open', () => {
         p2pSetDataListener(dataConnection, dispatch);
+        dispatch(addPeerToGame(peerId));
         peerConnections[peerId] = dataConnection;
       });
       p2pAddCloseListener(dataConnection, dispatch);
@@ -168,6 +180,7 @@ export const p2pInitialize = () => (
       .on('open', (id) => {
         console.log(`My peer ID is: ${id}`);
         dispatch(p2pConnectionReady(id));
+        dispatch(initializeOwnSnake(id));
         p2pConnectToKnownPeers(dispatch);
       })
       .on('connection', (dataConnection) => {
