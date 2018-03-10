@@ -5,7 +5,7 @@ import * as metaHelpers from '../metaHelpers';
 const defaultState = {
   tu: constants.INITIAL_TU,
   playerList: [],
-  gameStatus: constants.GAME_STATUS_PLAYING,
+  gameStatus: constants.GAME_STATUS_PREGAME,
 };
 
 export default function infoReducer(state = defaultState, action) {
@@ -13,6 +13,11 @@ export default function infoReducer(state = defaultState, action) {
     case actionTypes.INCREMENT_TU: {
       const newState = metaHelpers.deepClone(state);
       newState.tu += 1;
+      return newState;
+    }
+    case actionTypes.UPDATE_GAME_STATUS: {
+      const newState = metaHelpers.deepClone(state);
+      newState.gameStatus = action.status;
       return newState;
     }
     default: {
