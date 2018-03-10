@@ -7,11 +7,10 @@ import * as actionCreators from '../redux/actionCreators';
 class Loop extends React.Component {
   state = {
     timer: null,
+    initialized: false,
   };
 
   componentDidMount() {
-    this.props.aggregateBoards();
-    this.props.getInitialDisplayBoard();
     window.addEventListener('keydown', this.handleKeypress);
   }
 
@@ -31,6 +30,11 @@ class Loop extends React.Component {
     }
 
     this.props.changeSnakeDirection(0, arrowKeyCodes[code]);
+  };
+
+  initializeGame = () => {
+    this.props.aggregateBoards();
+    this.props.getInitialDisplayBoard();
   };
 
   pauseGame = () => {
@@ -57,6 +61,12 @@ class Loop extends React.Component {
   };
 
   startGame = () => {
+    if (!this.state.initialized) {
+      this.props.aggregateBoards();
+      this.props.getInitialDisplayBoard();
+      this.setState({ initialized: true });
+    }
+
     if (!this.state.timer) { // so multiple calls don't result in multiple timers
       const timer = setInterval(this.tick, constants.LOOP_INTERVAL);
       this.setState({ timer });
@@ -71,6 +81,11 @@ class Loop extends React.Component {
     return (
       <div id='loop'>
         <div>
+          <input
+            type='button'
+            value='Initialize'
+            onClick={this.initializeGame}
+          />
           <input
             type='button'
             value='Start'
