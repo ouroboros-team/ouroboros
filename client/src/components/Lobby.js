@@ -5,13 +5,13 @@ import * as constants from '../constants';
 
 class Lobby extends React.Component {
   handleStartClick = () => {
-    this.props.p2pSendGameStatus(constants.GAME_STATUS_PLAYING);
+    this.props.p2pSendGameStatus(constants.GAME_STATUS_PREGAME);
   };
 
   render() {
     return (
       <div>
-        <h1>Welcome</h1>
+        <h1>{this.props.status === constants.GAME_STATUS_LOBBY ? 'Welcome' : 'Preparing Game'}</h1>
         <a href={`${window.location.origin}/${this.props.ownPeerId}`}>
           {`${window.location.origin}/${this.props.ownPeerId}`}
         </a>
@@ -28,6 +28,7 @@ class Lobby extends React.Component {
 
 const mapStateToProps = state => ({
   ownPeerId: state.p2p.id,
+  status: state.info.gameStatus,
 });
 
 const mapDispatchToProps = dispatch => ({
