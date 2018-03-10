@@ -6,6 +6,7 @@ export const INITIAL_TU = 0;
 // number of TUs retained for snakes and boards
 // beyond what is currently displayed (according to snake length)
 export const HISTORY_LENGTH = 10;
+export const HEARTBEAT_INTERVAL = 4;
 
 export const INITIAL_SNAKE_LENGTH = 4;
 
