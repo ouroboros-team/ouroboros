@@ -15,6 +15,27 @@ export const updateGameStatus = status => ({
   type: actionTypes.UPDATE_GAME_STATUS,
 });
 
+export const handleGameStatusChange = newStatus => (
+  (dispatch) => {
+    dispatch(updateGameStatus(newStatus));
+
+    switch (newStatus) {
+      case constants.GAME_STATUS_PREGAME: {
+        p2pBroadcastSnakeData();
+        break;
+      }
+      case constants.GAME_STATUS_PLAYING: {
+        break;
+      }
+      case constants.GAME_STATUS_LOBBY:
+      case constants.GAME_STATUS_POSTGAME:
+      default: {
+        break;
+      }
+    }
+  }
+);
+
 
 // snakes
 export const changeSnakeDirection = (id, direction) => ({
