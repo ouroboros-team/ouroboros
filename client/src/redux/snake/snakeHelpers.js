@@ -1,4 +1,5 @@
 import random from 'lodash/random';
+import store from '../store';
 import * as constants from '../../constants';
 
 export const getSnakeLength = (tu) => (
@@ -10,6 +11,12 @@ export const emptySnakeObject = (positions = []) => ({
   status: 'alive',
   positions,
 });
+
+export const getOwnSnakeData = () => {
+  const state = store.getState();
+  const id = state.p2p.id;
+  return state.snakes[id];
+};
 
 export const randomizeStartPosition = () => {
   const randomRow = random(0, constants.GRID_SIZE - 1);

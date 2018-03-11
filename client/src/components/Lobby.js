@@ -5,11 +5,11 @@ import * as constants from '../constants';
 
 class Lobby extends React.Component {
   handlePregameClick = () => {
-    this.props.p2pSendGameStatus(constants.GAME_STATUS_PREGAME);
+    this.props.p2pBroadcastGameStatus(constants.GAME_STATUS_PREGAME);
   };
 
   handlePlayingClick = () => {
-    this.props.p2pSendGameStatus(constants.GAME_STATUS_PLAYING);
+    this.props.p2pBroadcastGameStatus(constants.GAME_STATUS_PLAYING);
   };
 
   render() {
@@ -41,8 +41,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  p2pSendGameStatus: (status) => {
-    dispatch(actionCreators.p2pSendGameStatus(status));
+  p2pBroadcastGameStatus: (status) => {
+    dispatch(actionCreators.p2pBroadcastGameStatus(status));
   },
 });
 

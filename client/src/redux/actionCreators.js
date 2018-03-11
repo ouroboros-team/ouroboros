@@ -62,7 +62,7 @@ export const handleTuTick = () => (
   (dispatch) => {
     dispatch(incrementTu());
     dispatch(getNextDisplayBoard());
-    p2pSendHeartbeatToPeers();
+    p2pBroadcastHeartbeatToPeers();
   }
 );
 
@@ -106,22 +106,28 @@ export const p2pAddCloseListener = (connection, dispatch) => {
   });
 };
 
-export const p2pSendGameStatus = status => (
+export const p2pBroadcast = (data) => {
+  Object.values(peerConnections).forEach((connection) => {
+    connection.send(data);
+  });
+};
+
+export const p2pBroadcastGameStatus = status => (
   (dispatch) => {
-    Object.values(peerConnections).forEach((connection) => {
-      connection.send(status);
-    });
-    dispatch(updateGameStatus(status));
+    p2pBroadcast(status);
+    dispatch(handleGameStatusChange(status));
   }
 );
 
-export const p2pSendHeartbeatToPeers = () => {
+export const p2pBroadcastHeartbeatToPeers = () => {
   if (store.getState().info.tu % constants.HEARTBEAT_INTERVAL === 0) {
-    Object.values(peerConnections).forEach((connection) => {
-      console.log(`sending heartbeat to ${connection.peer}`);
-      connection.send(`Heartbeat from ${peer.id}`);
-    });
+    p2pBroadcast(`Heartbeat from ${peer.id}`);
   }
+};
+
+export const p2pBroadcastSnakeData = () => {
+  console.log('sending starting snake position to peers');
+  p2pBroadcast(snakeHelpers.getOwnSnakeData());
 };
 
 export const p2pConnectToNewPeers = (list, dispatch) => {
