@@ -95,6 +95,7 @@ export const p2pSendGameStatus = status => (
 export const p2pSendHeartbeatToPeers = () => {
   if (store.getState().info.tu % constants.HEARTBEAT_INTERVAL === 0) {
     Object.values(peerConnections).forEach((connection) => {
+      console.log(`sending heartbeat to ${connection.peer}`);
       connection.send(`Heartbeat from ${peer.id}`);
     });
   }
@@ -118,6 +119,8 @@ export const p2pConnectToNewPeers = (list, dispatch) => {
 
 export const p2pSetDataListener = (connection, dispatch) => {
   connection.on('data', (data) => {
+    console.log(`received data from ${connection.peer}`);
+
     if (store.getState().info.gameStatus !== constants.GAME_STATUS_PLAYING) {
       if (typeof data === 'string') {
         dispatch(updateGameStatus(data));
