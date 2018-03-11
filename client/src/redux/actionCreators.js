@@ -3,6 +3,7 @@ import * as actionTypes from './actionTypes';
 import * as p2pHelpers from './p2p/p2pHelpers';
 import * as snakeHelpers from './snake/snakeHelpers';
 import * as constants from '../constants';
+/* eslint no-use-before-define: 0 */  // --> OFF
 
 // info
 export const incrementTu = () => ({
