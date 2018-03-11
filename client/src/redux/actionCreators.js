@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import * as p2pHelpers from './p2p/p2pHelpers';
+import * as constants from '../constants';
 import store from './store';
 
 // info
@@ -7,7 +8,10 @@ export const incrementTu = () => ({
   type: actionTypes.INCREMENT_TU,
 });
 
-
+export const updateGameStatus = status => ({
+  status,
+  type: actionTypes.UPDATE_GAME_STATUS,
+});
 // snakes
 export const changeSnakeDirection = (id, direction) => ({
   id,
@@ -42,12 +46,14 @@ export const handleTuTick = () => (
   (dispatch) => {
     dispatch(incrementTu());
     dispatch(getNextDisplayBoard());
+    p2pSendHeartbeatToPeers();
   }
 );
 
 
 // P2P
 let peer;
+const peerConnections = {};
 
 export const p2pGetPeerIdFromURL = id => ({
   id,
@@ -73,7 +79,26 @@ export const p2pAddCloseListener = (connection, dispatch) => {
   connection.on('close', () => {
     console.log(`Removing peer: ${connection.peer}`);
     dispatch(p2pRemovePeerFromList(connection.peer));
+    delete peerConnections[connection.peer];
   });
+};
+
+export const p2pSendGameStatus = status => (
+  (dispatch) => {
+    Object.values(peerConnections).forEach((connection) => {
+      connection.send(status);
+    });
+    dispatch(updateGameStatus(status));
+  }
+);
+
+export const p2pSendHeartbeatToPeers = () => {
+  if (store.getState().info.tu % constants.HEARTBEAT_INTERVAL === 0) {
+    Object.values(peerConnections).forEach((connection) => {
+      console.log(`sending heartbeat to ${connection.peer}`);
+      connection.send(`Heartbeat from ${peer.id}`);
+    });
+  }
 };
 
 export const p2pConnectToNewPeers = (list, dispatch) => {
@@ -84,12 +109,27 @@ export const p2pConnectToNewPeers = (list, dispatch) => {
 
     const dataConnection = peer.connect(peerId);
     dataConnection.on('open', () => {
-      dataConnection.on('data', (data) => {
-      });
-
+      p2pSetDataListener(dataConnection, dispatch);
       dispatch(p2pUpdatePeerList(dataConnection.peer));
+      peerConnections[peerId] = dataConnection;
     });
     p2pAddCloseListener(dataConnection, dispatch);
+  });
+};
+
+export const p2pSetDataListener = (connection, dispatch) => {
+  connection.on('data', (data) => {
+    console.log(`received data from ${connection.peer}`);
+
+    if (store.getState().info.gameStatus !== constants.GAME_STATUS_PLAYING) {
+      if (typeof data === 'string') {
+        dispatch(updateGameStatus(data));
+      } else {
+        p2pConnectToNewPeers(data, dispatch);
+      }
+    } else {
+      // This is where we'll process peer snakes received
+    }
   });
 };
 
@@ -99,9 +139,8 @@ export const p2pConnectToKnownPeers = (dispatch) => {
     if (peerId !== peer.id) {
       const dataConnection = peer.connect(peerId);
       dataConnection.on('open', () => {
-        dataConnection.on('data', (data) => {
-          p2pConnectToNewPeers(data, dispatch);
-        });
+        p2pSetDataListener(dataConnection, dispatch);
+        peerConnections[peerId] = dataConnection;
       });
       p2pAddCloseListener(dataConnection, dispatch);
     }
@@ -121,10 +160,9 @@ export const p2pInitialize = () => (
       })
       .on('connection', (dataConnection) => {
         dataConnection.on('open', () => {
-          dataConnection.on('data', (data) => {
-            p2pConnectToNewPeers(data, dispatch);
-          });
+          p2pSetDataListener(dataConnection, dispatch);
           dispatch(p2pUpdatePeerList(dataConnection.peer));
+          peerConnections[dataConnection.peer] = dataConnection;
           dataConnection.send(Object.keys(store.getState().p2p.peers));
         });
         p2pAddCloseListener(dataConnection, dispatch);

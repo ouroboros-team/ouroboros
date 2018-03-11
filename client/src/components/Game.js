@@ -45,7 +45,7 @@ Game.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  gameStatus: state.info.gameStatus,
+  status: state.info.gameStatus,
   peers: state.p2p.peers,
 });
 
