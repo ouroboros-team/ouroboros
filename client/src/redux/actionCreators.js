@@ -252,27 +252,3 @@ export const receivePeerStartingPositions = (id, data) => {
   // check own position against peer positions
   // randomize new position for self if there is a collision
 };
-
-export const p2pReceivePeerData = (id, data, dispatch) => {
-  const status = store.getState().info.status;
-  console.log('status', status);
-
-  switch (status) {
-    case constants.GAME_STATUS_PREGAME: {
-      // if pregame, receive starting positions
-      dispatch(receivePeerStartingPositions(id, data));
-      break;
-    }
-    case constants.GAME_STATUS_PLAYING: {
-      // if playing, receive snake data
-      dispatch(receivePeerSnakeData(id, data));
-      break;
-    }
-    case constants.GAME_STATUS_LOBBY:
-    case constants.GAME_STATUS_POSTGAME:
-    default: {
-      // if lobby or postgame, connect to new peers
-      p2pConnectToNewPeers(data, dispatch);
-    }
-  }
-};
