@@ -172,9 +172,8 @@ export const p2pSetDataListener = (connection, dispatch) => {
   const id = connection.peer;
 
   connection.on('data', (data) => {
-
     if (typeof data === 'string') {
-      dispatch(updateGameStatus(data));
+      dispatch(handleGameStatusChange(data));
     } else {
       const status = store.getState().info.gameStatus;
 
