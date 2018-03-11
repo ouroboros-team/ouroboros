@@ -169,19 +169,19 @@ export const p2pConnectToNewPeers = (list, dispatch) => {
 };
 
 export const p2pSetDataListener = (connection, dispatch) => {
-  const status = store.getState().info.status;
   const id = connection.peer;
 
   connection.on('data', (data) => {
-    console.log(`received data from ${id}`);
 
     if (typeof data === 'string') {
       dispatch(updateGameStatus(data));
     } else {
+      const status = store.getState().info.gameStatus;
+
       switch (status) {
         case constants.GAME_STATUS_PREGAME: {
           // if pregame, receive starting positions
-          dispatch(receivePeerStartingPositions(id, data));
+          receivePeerStartingPositions(id, data);
           break;
         }
         case constants.GAME_STATUS_PLAYING: {
