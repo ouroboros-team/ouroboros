@@ -72,13 +72,14 @@ export const initializeOwnSnake = (id, row) => (
 export const writeOwnSnakePosition = () => (
   (dispatch) => {
     const snakes = store.getState().snakes;
-    const snakeClone = helpers.deepClone(snakes[peer.id]);
+    const newSnake = { ...snakes[peer.id] };
+    newSnake.positions = [ ...newSnake.positions ];
 
-    const coords = displayHelpers.calculateNextCoords(snakeClone.direction, snakeClone.positions[0]);
+    const coords = displayHelpers.calculateNextCoords(newSnake.direction, newSnake.positions[0]);
+    newSnake.positions.unshift(coords);
 
-    snakeClone.positions.unshift(coords);
-
-    dispatch(updateSnakeData(peer.id, snakeClone));
+    dispatch(updateSnakeData(peer.id, newSnake));
+    p2pBroadcastSnakeData();
   }
 );
 
@@ -105,7 +106,6 @@ export const handleTuTick = () => (
     dispatch(aggregateBoards(peer.id));
     dispatch(incrementTu());
     dispatch(getNextDisplayBoard());
-    p2pBroadcastHeartbeatToPeers();
   }
 );
 
@@ -168,12 +168,6 @@ export const p2pBroadcastGameStatus = status => (
     }
   }
 );
-
-export const p2pBroadcastHeartbeatToPeers = () => {
-  if (store.getState().info.tu % constants.HEARTBEAT_INTERVAL === 0) {
-    p2pBroadcast(`Heartbeat from ${peer.id}`);
-  }
-};
 
 export const p2pBroadcastSnakeData = () => {
   p2pBroadcast(snakeHelpers.getOwnSnakeData());
