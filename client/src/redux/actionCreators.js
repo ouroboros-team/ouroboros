@@ -4,6 +4,7 @@ import * as actionTypes from './actionTypes';
 import * as p2pHelpers from './p2p/p2pHelpers';
 import * as snakeHelpers from './snake/snakeHelpers';
 import * as constants from '../constants';
+import * as displayHelpers from './display/displayHelpers';
 /* eslint no-use-before-define: 0 */  // --> OFF
 
 // info
@@ -61,6 +62,19 @@ export const initializeOwnSnake = (id, row) => (
   }
 );
 
+export const writeOwnSnakePosition = () => (
+  (dispatch) => {
+    const snakes = store.getState().snakes;
+    const snakeClone = helpers.deepClone(snakes[peer.id]);
+
+    const coords = displayHelpers.calculateNextCoords(snakeClone.direction, snakeClone.positions[0]);
+
+    snakeClone.positions.unshift(coords);
+
+    dispatch(updateSnakeData(peer.id, snakeClone));
+  }
+);
+
 
 // board
 export const aggregateBoards = (id = undefined) => ({
@@ -80,6 +94,8 @@ export const getNextDisplayBoard = () => ({
 
 export const handleTuTick = () => (
   (dispatch) => {
+    dispatch(writeOwnSnakePosition());
+    dispatch(aggregateBoards(peer.id));
     dispatch(incrementTu());
     dispatch(getNextDisplayBoard());
     p2pBroadcastHeartbeatToPeers();
