@@ -27,12 +27,6 @@ export const addCoordinatesMutate = (board, coords, snake, snakeId) => {
   };
 };
 
-export const removeCoordinatesMutate = (board, coords) => {
-  if (board[coords.row] && board[coords.row][coords.column]) {
-    delete board[coords.row][coords.column];
-  }
-};
-
 export const aggregateBoards = (boards, id, snake = undefined) => {
   if (!snake) {
     snake = store.getState().snakes[id];
