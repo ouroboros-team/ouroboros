@@ -7,17 +7,17 @@ import { GRID_SIZE } from '../constants';
 
 const GameBoard = (props) => {
   let status;
-  let snakeId;
+  let styleId;
   const squares = [];
 
   for (let r = 0; r < GRID_SIZE; r++) {
     for (let c = 0; c < GRID_SIZE; c++) {
       if (props.board[r] && props.board[r][c] && props.board[r][c].snake) {
         status = props.board[r][c].snake.status;
-        snakeId = props.board[r][c].id;
+        styleId = props.board[r][c].snake.styleId;
       } else {
         status = 'empty';
-        snakeId = undefined;
+        styleId = undefined;
       }
 
       squares.push(
@@ -26,7 +26,7 @@ const GameBoard = (props) => {
           key={(r * GRID_SIZE) + c}
           row={r}
           status={status}
-          snakeId={snakeId}
+          styleId={styleId}
         />,
       );
     }
