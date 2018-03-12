@@ -11,6 +11,8 @@ class Loop extends React.Component {
   };
 
   componentDidMount() {
+    this.props.aggregateBoards();
+    this.props.getInitialDisplayBoard();
     window.addEventListener('keydown', this.handleKeypress);
   }
 
@@ -29,12 +31,7 @@ class Loop extends React.Component {
       return;
     }
 
-    this.props.changeSnakeDirection(0, arrowKeyCodes[code]);
-  };
-
-  initializeGame = () => {
-    this.props.aggregateBoards();
-    this.props.getInitialDisplayBoard();
+    this.props.changeSnakeDirection(this.props.peerId, arrowKeyCodes[code]);
   };
 
   pauseGame = () => {
@@ -63,11 +60,6 @@ class Loop extends React.Component {
     return (
       <div id='loop'>
         <div>
-          <input
-            type='button'
-            value='Initialize'
-            onClick={this.initializeGame}
-          />
           <input
             type='button'
             value='Start'
