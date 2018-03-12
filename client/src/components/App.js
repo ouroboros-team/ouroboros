@@ -22,7 +22,6 @@ class App extends React.Component {
           <Route
             path='/:peerId'
             render={({ match }) => {
-              console.log(match);
               // save peerId to redux store
               if (match.params.peerId) {
                 this.props.p2pGetPeerIdFromURL(match.params.peerId);
