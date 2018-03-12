@@ -4,7 +4,6 @@ import * as metaHelpers from '../metaHelpers';
 
 const defaultState = {
   tu: constants.INITIAL_TU,
-  playerList: [],
   gameStatus: constants.GAME_STATUS_LOBBY,
 };
 

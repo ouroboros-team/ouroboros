@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Square = (props) => {
-  const idClass = props.snakeId ? `id-${props.snakeId}` : '';
+  const idClass = props.styleId ? `id-${props.styleId}` : '';
   return (
     <div
       className={`square ${props.status} ${idClass}`}
@@ -15,12 +15,12 @@ Square.propTypes = {
   col: PropTypes.number.isRequired,
   row: PropTypes.number.isRequired,
   status: PropTypes.string,
-  snakeId: PropTypes.string,
+  styleId: PropTypes.number,
 };
 
 Square.defaultProps = {
   status: 'empty',
-  snakeId: null,
+  styleId: null,
 };
 
 export default Square;
