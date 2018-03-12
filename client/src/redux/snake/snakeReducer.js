@@ -34,11 +34,6 @@ import * as helpers from '../metaHelpers';
 
 export default function snakesReducer(state = {}, action) {
   switch (action.type) {
-    case actionTypes.ADD_NEW_SNAKE: {
-      const newState = helpers.deepClone(state);
-      newState[action.id] = snakeHelpers.emptySnakeObject(action.positions);
-      return newState;
-    }
     case actionTypes.CHANGE_SNAKE_DIRECTION: {
       if (!snakeHelpers.validateDirectionChange(state[action.id].direction, action.direction)) {
         return state;
@@ -48,7 +43,7 @@ export default function snakesReducer(state = {}, action) {
       newState[action.id].direction = action.direction;
       return newState;
     }
-    case actionTypes.UPDATE_PEER_SNAKE_DATA: {
+    case actionTypes.UPDATE_SNAKE_DATA: {
       // if no snake data is held for this snake, simply add received data
       if (!state[action.id]) {
         const newState = helpers.deepClone(state);
