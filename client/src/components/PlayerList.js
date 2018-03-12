@@ -19,7 +19,7 @@ const PlayerList = (props) => {
   return (
     <div id='player-list'>
       <ul>
-        <li className='label'>Connected Players</li>
+        <li className='label label-text'>Connected Players</li>
         {list}
       </ul>
     </div>
