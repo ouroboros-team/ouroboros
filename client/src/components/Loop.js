@@ -42,24 +42,6 @@ class Loop extends React.Component {
     this.setState({ timer: null });
   };
 
-  simulateNewPeerData = () => {
-    const data = {
-      direction: 'down',
-      status: 'alive',
-      positions: [ // queue
-        { row: 1, column: 9, tu: 4 },
-        { row: 0, column: 9, tu: 3 },
-        { row: 0, column: 8, tu: 2 },
-        { row: 0, column: 7, tu: 1 },
-        { row: 1, column: 7, tu: 0 },
-        { row: 2, column: 7, tu: -1 },
-        { row: 3, column: 7, tu: -2 },
-        { row: 4, column: 7, tu: -3 },
-      ],
-    };
-    this.props.receivePeerSnakeData(1, data);
-  };
-
   startGame = () => {
     if (!this.state.initialized) {
       this.props.aggregateBoards();
@@ -101,11 +83,6 @@ class Loop extends React.Component {
             value='Next TU'
             onClick={this.tick}
           />
-          <input
-            type='button'
-            value='Simulate New Peer Data'
-            onClick={this.simulateNewPeerData}
-          />
         </div>
         {this.props.children}
       </div>
@@ -129,9 +106,6 @@ const mapDispatchToProps = dispatch => ({
   },
   getInitialDisplayBoard: () => {
     dispatch(actionCreators.getInitialDisplayBoard());
-  },
-  receivePeerSnakeData: (id, data) => {
-    dispatch(actionCreators.receivePeerSnakeData(id, data));
   },
 });
 
