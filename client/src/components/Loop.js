@@ -31,7 +31,7 @@ class Loop extends React.Component {
       return;
     }
 
-    this.props.changeSnakeDirection(this.props.peerId, arrowKeyCodes[code]);
+    this.props.handleChangeSnakeDirection(this.props.peerId, arrowKeyCodes[code]);
   };
 
   pauseGame = () => {
@@ -90,8 +90,8 @@ const mapDispatchToProps = dispatch => ({
   handleTuTick: () => {
     dispatch(actionCreators.handleTuTick());
   },
-  changeSnakeDirection: (id, direction) => {
-    dispatch(actionCreators.changeSnakeDirection(id, direction));
+  handleChangeSnakeDirection: (id, direction) => {
+    dispatch(actionCreators.handleChangeSnakeDirection(id, direction));
   },
   aggregateBoards: () => {
     dispatch(actionCreators.aggregateBoards());
