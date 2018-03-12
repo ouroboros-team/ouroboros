@@ -4,6 +4,7 @@ import * as actionTypes from './actionTypes';
 import * as p2pHelpers from './p2p/p2pHelpers';
 import * as snakeHelpers from './snake/snakeHelpers';
 import * as constants from '../constants';
+import * as displayHelpers from './display/displayHelpers';
 /* eslint no-use-before-define: 0 */  // --> OFF
 
 // info
@@ -45,6 +46,13 @@ export const changeSnakeDirection = (id, direction) => ({
   type: actionTypes.CHANGE_SNAKE_DIRECTION,
 });
 
+export const handleChangeSnakeDirection = (id, direction) => (
+  (dispatch) => {
+    dispatch(changeSnakeDirection(id, direction));
+    p2pBroadcastSnakeData();
+  }
+);
+
 export const updateSnakeData = (id, data) => ({
   id,
   data,
@@ -57,6 +65,20 @@ export const initializeOwnSnake = (id, row) => (
     const snake = snakeHelpers.emptySnakeObject(positions);
 
     dispatch(updateSnakeData(id, snake));
+    p2pBroadcastSnakeData();
+  }
+);
+
+export const writeOwnSnakePosition = () => (
+  (dispatch) => {
+    const snakes = store.getState().snakes;
+    const newSnake = { ...snakes[peer.id] };
+    newSnake.positions = [ ...newSnake.positions ];
+
+    const coords = displayHelpers.calculateNextCoords(newSnake.direction, newSnake.positions[0]);
+    newSnake.positions.unshift(coords);
+
+    dispatch(updateSnakeData(peer.id, newSnake));
     p2pBroadcastSnakeData();
   }
 );
@@ -80,9 +102,10 @@ export const getNextDisplayBoard = () => ({
 
 export const handleTuTick = () => (
   (dispatch) => {
+    dispatch(writeOwnSnakePosition());
+    dispatch(aggregateBoards(peer.id));
     dispatch(incrementTu());
     dispatch(getNextDisplayBoard());
-    p2pBroadcastHeartbeatToPeers();
   }
 );
 
@@ -145,12 +168,6 @@ export const p2pBroadcastGameStatus = status => (
     }
   }
 );
-
-export const p2pBroadcastHeartbeatToPeers = () => {
-  if (store.getState().info.tu % constants.HEARTBEAT_INTERVAL === 0) {
-    p2pBroadcast(`Heartbeat from ${peer.id}`);
-  }
-};
 
 export const p2pBroadcastSnakeData = () => {
   p2pBroadcast(snakeHelpers.getOwnSnakeData());
