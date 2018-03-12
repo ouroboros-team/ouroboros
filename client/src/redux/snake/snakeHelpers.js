@@ -18,15 +18,14 @@ export const getOwnSnakeData = () => {
   return state.snakes[id];
 };
 
-export const randomizeStartPosition = () => {
-  const randomRow = random(0, constants.GRID_SIZE - 1);
+export const setStartPosition = (row) => {
   const randomColumn = random(0, constants.GRID_SIZE - 1);
 
   return [
-    { row: randomRow, column: randomColumn, tu: 0 },
-    { row: randomRow, column: randomColumn + 1, tu: -1 },
-    { row: randomRow, column: randomColumn + 2, tu: -2 },
-    { row: randomRow, column: randomColumn + 3, tu: -3 },
+    { row, column: randomColumn, tu: 0 },
+    { row, column: randomColumn + 1, tu: -1 },
+    { row, column: randomColumn + 2, tu: -2 },
+    { row, column: randomColumn + 3, tu: -3 },
   ];
 };
 
