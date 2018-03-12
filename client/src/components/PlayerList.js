@@ -2,32 +2,35 @@ import React from 'react';
 import propTypes from 'prop-types';
 
 const PlayerList = (props) => {
-  const list = [];
-  let username = '';
-  let playerName = '';
+  const players = [];
   let className = '';
   const peerIds = Object.keys(props.peers);
 
   peerIds.forEach((peerId) => {
-    username = props.peers[peerId].username;
-    playerName = `Player ${username}`;
-    className = `id-${username}`;
+    className = `id-${props.peers[peerId].styleId}`;
 
-    list.push(<li key={username} className={className}>{playerName}</li>);
+    players.push(
+      <li
+        key={peerId}
+        className={className}
+      >
+        {props.peers[peerId].username}
+      </li>,
+    );
   });
 
   return (
     <div id='player-list'>
       <ul>
-        <li className='label'>Connected Players</li>
-        {list}
+        <li className='label label-text'>Connected Players</li>
+        {players}
       </ul>
     </div>
   );
 };
 
 PlayerList.propTypes = {
-  peers: propTypes.object,
+  peers: propTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 PlayerList.defaultProps = {
