@@ -2,8 +2,7 @@ import Peer from 'peerjs';
 
 export const initializeOwnPeerObject = () => {
   const host = window.location.hostname;
-  const port = 3001;
-  // const port = window.location.port || (window.location.protocol === 'https:' ? 443 : 80);
+  const port = window.location.port || (window.location.protocol === 'https:' ? 443 : 80);
   const path = '/peerjs';
 
   return new Peer({
