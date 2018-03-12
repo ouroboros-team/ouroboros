@@ -15,8 +15,8 @@ export const initializeOwnPeerObject = () => {
         { url: 'stun:stun1.l.google.com:19302' },
         {
           url: 'turn:numb.viagenie.ca',
-          credential: 'conclave-rulez',
-          username: 'sunnysurvies@gmail.com',
+          credential: 'Asp8&Viper',
+          username: 'sienna.m.wood@gmail.com',
         },
       ],
     },

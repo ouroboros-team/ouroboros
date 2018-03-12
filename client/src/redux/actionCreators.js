@@ -1,7 +1,10 @@
+import store from './store';
+import * as helpers from './metaHelpers';
 import * as actionTypes from './actionTypes';
 import * as p2pHelpers from './p2p/p2pHelpers';
+import * as snakeHelpers from './snake/snakeHelpers';
 import * as constants from '../constants';
-import store from './store';
+/* eslint no-use-before-define: 0 */  // --> OFF
 
 // info
 export const incrementTu = () => ({
@@ -12,6 +15,29 @@ export const updateGameStatus = status => ({
   status,
   type: actionTypes.UPDATE_GAME_STATUS,
 });
+
+export const handleGameStatusChange = newStatus => (
+  (dispatch) => {
+    dispatch(updateGameStatus(newStatus));
+
+    switch (newStatus) {
+      case constants.GAME_STATUS_PREGAME: {
+        break;
+      }
+      case constants.GAME_STATUS_PLAYING: {
+        p2pBroadcastSnakeData();
+        break;
+      }
+      case constants.GAME_STATUS_LOBBY:
+      case constants.GAME_STATUS_POSTGAME:
+      default: {
+        break;
+      }
+    }
+  }
+);
+
+
 // snakes
 export const changeSnakeDirection = (id, direction) => ({
   id,
@@ -19,11 +45,21 @@ export const changeSnakeDirection = (id, direction) => ({
   type: actionTypes.CHANGE_SNAKE_DIRECTION,
 });
 
-export const updatePeerSnakeData = (id, data) => ({
+export const updateSnakeData = (id, data) => ({
   id,
   data,
-  type: actionTypes.UPDATE_PEER_SNAKE_DATA,
+  type: actionTypes.UPDATE_SNAKE_DATA,
 });
+
+export const initializeOwnSnake = (id, row) => (
+  (dispatch) => {
+    const positions = snakeHelpers.setStartPosition(row);
+    const snake = snakeHelpers.emptySnakeObject(positions);
+
+    dispatch(updateSnakeData(id, snake));
+    p2pBroadcastSnakeData();
+  }
+);
 
 
 // board
@@ -46,7 +82,7 @@ export const handleTuTick = () => (
   (dispatch) => {
     dispatch(incrementTu());
     dispatch(getNextDisplayBoard());
-    p2pSendHeartbeatToPeers();
+    p2pBroadcastHeartbeatToPeers();
   }
 );
 
@@ -83,22 +119,41 @@ export const p2pAddCloseListener = (connection, dispatch) => {
   });
 };
 
-export const p2pSendGameStatus = status => (
+export const p2pBroadcast = (data) => {
+  Object.values(peerConnections).forEach((connection) => {
+    connection.send(data);
+  });
+};
+
+export const p2pBroadcastGameStatus = status => (
   (dispatch) => {
-    Object.values(peerConnections).forEach((connection) => {
-      connection.send(status);
-    });
-    dispatch(updateGameStatus(status));
+    p2pBroadcast(status);
+    dispatch(handleGameStatusChange(status));
+
+    if (status === constants.GAME_STATUS_PREGAME) {
+      // player who set new game status to pregame
+      // chooses random starting row positions for all peers
+      let row;
+      Object.values(peerConnections).forEach((connection) => {
+        row = helpers.randomUniqueRow();
+        console.log(`sending row ${row} to ${connection.peer}`);
+        connection.send(row);
+      });
+
+      // initialize own snake
+      dispatch(initializeOwnSnake(peer.id, helpers.randomUniqueRow()));
+    }
   }
 );
 
-export const p2pSendHeartbeatToPeers = () => {
+export const p2pBroadcastHeartbeatToPeers = () => {
   if (store.getState().info.tu % constants.HEARTBEAT_INTERVAL === 0) {
-    Object.values(peerConnections).forEach((connection) => {
-      console.log(`sending heartbeat to ${connection.peer}`);
-      connection.send(`Heartbeat from ${peer.id}`);
-    });
+    p2pBroadcast(`Heartbeat from ${peer.id}`);
   }
+};
+
+export const p2pBroadcastSnakeData = () => {
+  p2pBroadcast(snakeHelpers.getOwnSnakeData());
 };
 
 export const p2pConnectToNewPeers = (list, dispatch) => {
@@ -118,17 +173,42 @@ export const p2pConnectToNewPeers = (list, dispatch) => {
 };
 
 export const p2pSetDataListener = (connection, dispatch) => {
-  connection.on('data', (data) => {
-    console.log(`received data from ${connection.peer}`);
+  const id = connection.peer;
 
-    if (store.getState().info.gameStatus !== constants.GAME_STATUS_PLAYING) {
-      if (typeof data === 'string') {
-        dispatch(updateGameStatus(data));
-      } else {
-        p2pConnectToNewPeers(data, dispatch);
-      }
+  connection.on('data', (data) => {
+    console.log(`received ${data} from ${id}`);
+
+    if (typeof data === 'string') {
+      dispatch(handleGameStatusChange(data));
     } else {
-      // This is where we'll process peer snakes received
+      const status = store.getState().info.gameStatus;
+
+      switch (status) {
+        case constants.GAME_STATUS_PREGAME: {
+          if (typeof data === 'number') {
+            // receive starting row and initialize own snake
+            // then send snake data to peers
+            dispatch(initializeOwnSnake(peer.id, data));
+            p2pBroadcastSnakeData();
+          } else {
+            // receive snake data from peers
+            dispatch(receiveSnakeData(connection.peer, data));
+          }
+
+          break;
+        }
+        case constants.GAME_STATUS_PLAYING: {
+          // if playing, receive snake data
+          dispatch(receiveSnakeData(id, data));
+          break;
+        }
+        case constants.GAME_STATUS_LOBBY:
+        case constants.GAME_STATUS_POSTGAME:
+        default: {
+          // if lobby or postgame, connect to new peers
+          p2pConnectToNewPeers(data, dispatch);
+        }
+      }
     }
   });
 };
@@ -140,6 +220,7 @@ export const p2pConnectToKnownPeers = (dispatch) => {
       const dataConnection = peer.connect(peerId);
       dataConnection.on('open', () => {
         p2pSetDataListener(dataConnection, dispatch);
+        dispatch(p2pUpdatePeerList(peerId));
         peerConnections[peerId] = dataConnection;
       });
       p2pAddCloseListener(dataConnection, dispatch);
@@ -170,9 +251,9 @@ export const p2pInitialize = () => (
   }
 );
 
-export const receivePeerSnakeData = (id, data) => (
+export const receiveSnakeData = (id, data) => (
   (dispatch) => {
-    dispatch(updatePeerSnakeData(id, data));
+    dispatch(updateSnakeData(id, data));
     dispatch(aggregateBoards(id));
   }
 );
