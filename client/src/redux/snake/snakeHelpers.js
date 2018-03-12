@@ -1,4 +1,5 @@
 import random from 'lodash/random';
+import merge from 'lodash/merge';
 import store from '../store';
 import * as constants from '../../constants';
 
@@ -59,13 +60,12 @@ export const updateSnakeDataMutate = (newSnake, data) => {
   while (counter > 0) {
     // add new coordinates
     newSnake.positions.unshift(data.positions[gap - 1]);
-
-    // purge surplus history
-    const keepCount = getSnakeLength(newSnake.positions[0].tu) + constants.HISTORY_LENGTH;
-    if (newSnake.positions.length > keepCount) {
-      newSnake.positions.length = keepCount;
-    }
-
     counter -= 1;
+  }
+
+  // purge surplus history
+  const keepCount = getSnakeLength(newSnake.positions[0].tu) + constants.HISTORY_LENGTH;
+  if (newSnake.positions.length > keepCount) {
+    newSnake.positions.length = keepCount;
   }
 };
