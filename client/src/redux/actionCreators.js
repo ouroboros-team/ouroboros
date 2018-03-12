@@ -46,6 +46,13 @@ export const changeSnakeDirection = (id, direction) => ({
   type: actionTypes.CHANGE_SNAKE_DIRECTION,
 });
 
+export const handleChangeSnakeDirection = (id, direction) => (
+  (dispatch) => {
+    dispatch(changeSnakeDirection(id, direction));
+    p2pBroadcastSnakeData();
+  }
+);
+
 export const updateSnakeData = (id, data) => ({
   id,
   data,
