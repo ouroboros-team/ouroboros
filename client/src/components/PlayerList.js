@@ -3,17 +3,17 @@ import propTypes from 'prop-types';
 
 const PlayerList = (props) => {
   const list = [];
-  let localId = '';
+  let username = '';
   let playerName = '';
   let className = '';
   const peerIds = Object.keys(props.peers);
 
   peerIds.forEach((peerId) => {
-    localId = props.peers[peerId].localId;
-    playerName = `Player ${localId}`;
-    className = `id-${localId}`;
+    username = props.peers[peerId].username;
+    playerName = `Player ${username}`;
+    className = `id-${username}`;
 
-    list.push(<li key={localId} className={className}>{playerName}</li>);
+    list.push(<li key={username} className={className}>{playerName}</li>);
   });
 
   return (

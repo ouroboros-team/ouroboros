@@ -7,6 +7,7 @@ import * as actionCreators from '../redux/actionCreators';
 class Loop extends React.Component {
   state = {
     timer: null,
+    initialized: false,
   };
 
   componentDidMount() {
@@ -30,7 +31,7 @@ class Loop extends React.Component {
       return;
     }
 
-    this.props.changeSnakeDirection(0, arrowKeyCodes[code]);
+    this.props.changeSnakeDirection(this.props.peerId, arrowKeyCodes[code]);
   };
 
   pauseGame = () => {
@@ -38,25 +39,13 @@ class Loop extends React.Component {
     this.setState({ timer: null });
   };
 
-  simulateNewPeerData = () => {
-    const data = {
-      direction: 'down',
-      status: 'alive',
-      positions: [ // queue
-        { row: 1, column: 9, tu: 4 },
-        { row: 0, column: 9, tu: 3 },
-        { row: 0, column: 8, tu: 2 },
-        { row: 0, column: 7, tu: 1 },
-        { row: 1, column: 7, tu: 0 },
-        { row: 2, column: 7, tu: -1 },
-        { row: 3, column: 7, tu: -2 },
-        { row: 4, column: 7, tu: -3 },
-      ],
-    };
-    this.props.receivePeerSnakeData(1, data);
-  };
-
   startGame = () => {
+    if (!this.state.initialized) {
+      this.props.aggregateBoards();
+      this.props.getInitialDisplayBoard();
+      this.setState({ initialized: true });
+    }
+
     if (!this.state.timer) { // so multiple calls don't result in multiple timers
       const timer = setInterval(this.tick, constants.LOOP_INTERVAL);
       this.setState({ timer });
@@ -86,11 +75,6 @@ class Loop extends React.Component {
             value='Next TU'
             onClick={this.tick}
           />
-          <input
-            type='button'
-            value='Simulate New Peer Data'
-            onClick={this.simulateNewPeerData}
-          />
         </div>
         {this.props.children}
       </div>
@@ -114,9 +98,6 @@ const mapDispatchToProps = dispatch => ({
   },
   getInitialDisplayBoard: () => {
     dispatch(actionCreators.getInitialDisplayBoard());
-  },
-  receivePeerSnakeData: (id, data) => {
-    dispatch(actionCreators.receivePeerSnakeData(id, data));
   },
 });
 

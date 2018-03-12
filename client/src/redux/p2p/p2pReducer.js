@@ -5,7 +5,7 @@ const defaultState = {
   id: '',
   ready: false,
   peers: {},
-  nextLocalId: 0,
+  tempUsername: 0,
 };
 
 export default function p2pReducer(state = defaultState, action) {
@@ -14,8 +14,8 @@ export default function p2pReducer(state = defaultState, action) {
     case actionTypes.P2P_UPDATE_PEER_LIST: {
       const newState = metaHelpers.deepClone(state);
       newState.peers[action.id] = {};
-      newState.peers[action.id].localId = newState.nextLocalId;
-      newState.nextLocalId += 1;
+      newState.peers[action.id].username = newState.tempUsername;
+      newState.tempUsername += 1;
       return newState;
     }
     case actionTypes.P2P_REMOVE_PEER_FROM_LIST: {
@@ -28,8 +28,8 @@ export default function p2pReducer(state = defaultState, action) {
       newState.id = action.id;
       newState.ready = true;
       newState.peers[action.id] = {};
-      newState.peers[action.id].localId = newState.nextLocalId;
-      newState.nextLocalId += 1;
+      newState.peers[action.id].username = newState.tempUsername;
+      newState.tempUsername += 1;
       return newState;
     }
     default: {

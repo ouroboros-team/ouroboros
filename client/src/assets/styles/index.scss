@@ -98,6 +98,11 @@ header {
   #player-list ul li.id-0 {
     background-color: $self;
   }
+
+  #board-container #board .square.alive {
+    background-color: $black;
+  };
+
   #board-container #board .square.id-0 {
     &.alive {
       background-color: $self;

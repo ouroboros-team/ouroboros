@@ -10,7 +10,7 @@ export default function boardReducer(state = {}, action) {
 
       if (action.id) {
         // only aggregate for snakes[action.id]
-        boardHelpers.aggregateBoards(newState, Number(action.id));
+        boardHelpers.aggregateBoards(newState, action.id);
       } else {
         // aggregate for all snakes (before game begins)
         boardHelpers.aggregateAllBoards(newState);

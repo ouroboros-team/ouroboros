@@ -1,8 +1,33 @@
+import random from 'lodash/random';
+import store from '../store';
 import * as constants from '../../constants';
 
 export const getSnakeLength = (tu) => (
   constants.INITIAL_SNAKE_LENGTH
 );
+
+export const emptySnakeObject = (positions = []) => ({
+  direction: 'left',
+  status: 'alive',
+  positions,
+});
+
+export const getOwnSnakeData = () => {
+  const state = store.getState();
+  const id = state.p2p.id;
+  return state.snakes[id];
+};
+
+export const setStartPosition = (row) => {
+  const randomColumn = random(0, constants.GRID_SIZE - 1);
+
+  return [
+    { row, column: randomColumn, tu: 0 },
+    { row, column: randomColumn + 1, tu: -1 },
+    { row, column: randomColumn + 2, tu: -2 },
+    { row, column: randomColumn + 3, tu: -3 },
+  ];
+};
 
 export const validateDirectionChange = (oldDir, newDir) => {
   switch (oldDir) {

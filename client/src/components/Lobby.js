@@ -4,22 +4,31 @@ import * as actionCreators from '../redux/actionCreators';
 import * as constants from '../constants';
 
 class Lobby extends React.Component {
-  handleStartClick = () => {
-    this.props.p2pSendGameStatus(constants.GAME_STATUS_PLAYING);
+  handlePregameClick = () => {
+    this.props.p2pBroadcastGameStatus(constants.GAME_STATUS_PREGAME);
+  };
+
+  handlePlayingClick = () => {
+    this.props.p2pBroadcastGameStatus(constants.GAME_STATUS_PLAYING);
   };
 
   render() {
     return (
       <div>
-        <h1>Welcome</h1>
+        <h1>{this.props.status === constants.GAME_STATUS_LOBBY ? 'Welcome' : 'Preparing Game'}</h1>
         <a href={`${window.location.origin}/${this.props.ownPeerId}`}>
           {`${window.location.origin}/${this.props.ownPeerId}`}
         </a>
         <br />
         <input
           type='button'
-          value='Start Game'
-          onClick={this.handleStartClick}
+          value='Pregame'
+          onClick={this.handlePregameClick}
+        />
+        <input
+          type='button'
+          value='Play'
+          onClick={this.handlePlayingClick}
         />
       </div>
     );
@@ -28,11 +37,12 @@ class Lobby extends React.Component {
 
 const mapStateToProps = state => ({
   ownPeerId: state.p2p.id,
+  status: state.info.gameStatus,
 });
 
 const mapDispatchToProps = dispatch => ({
-  p2pSendGameStatus: (status) => {
-    dispatch(actionCreators.p2pSendGameStatus(status));
+  p2pBroadcastGameStatus: (status) => {
+    dispatch(actionCreators.p2pBroadcastGameStatus(status));
   },
 });
 
