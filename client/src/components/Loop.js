@@ -7,12 +7,13 @@ import * as actionCreators from '../redux/actionCreators';
 class Loop extends React.Component {
   state = {
     timer: null,
-    initialized: false,
+    countdown: 12,
   };
 
   componentDidMount() {
     this.props.aggregateBoards();
     this.props.getInitialDisplayBoard();
+    this.startGame();
     window.addEventListener('keydown', this.handleKeypress);
   }
 
@@ -40,12 +41,6 @@ class Loop extends React.Component {
   };
 
   startGame = () => {
-    if (!this.state.initialized) {
-      this.props.aggregateBoards();
-      this.props.getInitialDisplayBoard();
-      this.setState({ initialized: true });
-    }
-
     if (!this.state.timer) { // so multiple calls don't result in multiple timers
       const timer = setInterval(this.tick, constants.LOOP_INTERVAL);
       this.setState({ timer });
@@ -53,12 +48,24 @@ class Loop extends React.Component {
   };
 
   tick = () => {
-    this.props.handleTuTick();
+    if (this.state.countdown > 0) {
+      this.setState({ countdown: this.state.countdown - 1 });
+    } else {
+      this.props.handleTuTick();
+    }
   };
 
   render() {
+    let countdown = '';
+    if (this.state.countdown > 0) {
+      const num = Math.ceil((this.state.countdown * constants.LOOP_INTERVAL) / 1000);
+      countdown = <p className='label-text alert-text'>Game starts in {num}</p>;
+    }
     return (
       <div id='loop'>
+        <div id='messages'>
+          {countdown}
+        </div>
         <div>
           <input
             type='button'
