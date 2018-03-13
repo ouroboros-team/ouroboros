@@ -230,19 +230,12 @@ export const p2pSetDataListener = (connection, dispatch) => {
   });
 };
 
-export const p2pConnectToKnownPeers = (dispatch) => {
-  const peerIds = Object.keys(store.getState().p2p.peers);
-  peerIds.forEach((peerId) => {
-    if (peerId !== peer.id) {
-      const dataConnection = peer.connect(peerId);
-      dataConnection.on('open', () => {
-        p2pSetDataListener(dataConnection, dispatch);
-        dispatch(p2pUpdatePeerList(peerId));
-        peerConnections[peerId] = dataConnection;
-      });
-      p2pAddCloseListener(dataConnection, dispatch);
-    }
-  });
+export const p2pConnectToURLPeer = (dispatch) => {
+  const id = store.getState().p2p.sharedPeerId;
+
+  if (id && id !== '') {
+    p2pConnectToNewPeers([ id ], dispatch);
+  }
 };
 
 export const p2pInitialize = () => (
@@ -254,7 +247,8 @@ export const p2pInitialize = () => (
       .on('open', (id) => {
         console.log(`My peer ID is: ${id}`);
         dispatch(p2pConnectionReady(id));
-        p2pConnectToKnownPeers(dispatch);
+        dispatch(p2pUpdatePeerList(id));
+        p2pConnectToURLPeer(dispatch);
       })
       .on('connection', (dataConnection) => {
         dataConnection.on('open', () => {
