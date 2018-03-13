@@ -14,12 +14,6 @@ import * as constants from '../constants';
 /* eslint no-use-before-define: 0 */  // --> OFF
 
 // board
-export const aggregateBoards = (id = undefined) => ({
-  id,
-  type: actionTypes.AGGREGATE_BOARDS,
-});
-
-
 // display board
 export const getInitialDisplayBoard = () => ({
   type: actionTypes.GET_INITIAL_DISPLAY_BOARD,
@@ -32,7 +26,7 @@ export const getNextDisplayBoard = () => ({
 export const handleTuTick = () => (
   (dispatch) => {
     dispatch(snakeActions.writeOwnSnakePosition(peer.id));
-    dispatch(aggregateBoards(peer.id));
+    dispatch(boardActions.aggregateBoards(peer.id));
     dispatch(infoActions.incrementTu());
     dispatch(getNextDisplayBoard());
   }
@@ -194,6 +188,6 @@ export const p2pInitialize = () => (
 export const receiveSnakeData = (id, data) => (
   (dispatch) => {
     dispatch(snakeActions.updateSnakeData(id, data));
-    dispatch(aggregateBoards(id));
+    dispatch(boardActions.aggregateBoards(id));
   }
 );
