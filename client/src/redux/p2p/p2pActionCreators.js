@@ -1,15 +1,14 @@
-import store from './store';
-import * as constants from '../constants';
+import store from '../store';
+import * as constants from '../../constants';
+import * as actionTypes from '../actionTypes';
 
-import * as boardActions from './board/boardActionCreators';
-import * as displayActions from './display/displayActionCreators';
-import * as infoActions from './info/infoActionCreators';
-import * as snakeActions from './snake/snakeActionCreators';
+import * as boardActions from '../board/boardActionCreators';
+import * as infoActions from '../info/infoActionCreators';
+import * as snakeActions from '../snake/snakeActionCreators';
 
-import * as helpers from './metaHelpers';
-import * as actionTypes from './actionTypes';
-import * as p2pHelpers from './p2p/p2pHelpers';
-import * as snakeHelpers from './snake/snakeHelpers';
+import * as helpers from '../metaHelpers';
+import * as p2pHelpers from './p2pHelpers';
+import * as snakeHelpers from '../snake/snakeHelpers';
 
 /* eslint no-use-before-define: 0 */  // --> OFF
 

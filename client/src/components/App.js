@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import * as actionCreators from '../redux/actionCreators';
+import * as p2pActions from '../redux/p2p/p2pActionCreators';
 import '../assets/styles/index.scss';
 
 import Header from './Header';
@@ -40,10 +40,10 @@ class App extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
   p2pGetPeerIdFromURL: (id) => {
-    dispatch(actionCreators.p2pGetPeerIdFromURL(id));
+    dispatch(p2pActions.p2pGetPeerIdFromURL(id));
   },
   p2pInitialize: () => {
-    dispatch(actionCreators.p2pInitialize());
+    dispatch(p2pActions.p2pInitialize());
   },
 });
 

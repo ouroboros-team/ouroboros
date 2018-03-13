@@ -2,8 +2,7 @@ import store from '../store';
 import * as actionTypes from '../actionTypes';
 import * as snakeHelpers from './snakeHelpers';
 import * as displayHelpers from '../display/displayHelpers';
-import * as p2pActions from '../actionCreators';
-
+import * as p2pActions from '../p2p/p2pActionCreators';
 
 export const changeSnakeDirection = (id, direction) => ({
   id,

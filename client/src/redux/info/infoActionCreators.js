@@ -1,5 +1,5 @@
 import * as actionTypes from '../actionTypes';
-import * as p2pActions from '../actionCreators';
+import * as p2pActions from '../p2p/p2pActionCreators';
 import * as constants from '../../constants';
 
 export const incrementTu = () => ({
