@@ -1,4 +1,3 @@
-import store from '../store';
 import * as actionTypes from '../actionTypes';
 import * as snakeHelpers from './snakeHelpers';
 import * as helpers from '../metaHelpers';
@@ -7,7 +6,6 @@ import * as helpers from '../metaHelpers';
 //   0: {
 //     direction: 'left',
 //     status: 'alive',
-//     styleId: 0,
 //     positions: [ // queue
 //       { row: 5, column: 5, tu: 4 },
 //       { row: 5, column: 6, tu: 3 },
@@ -22,7 +20,6 @@ import * as helpers from '../metaHelpers';
 //   1: {
 //     direction: 'right',
 //     status: 'alive',
-//     styleId: 1,
 //     positions: [ // queue
 //       { row: 0, column: 9, tu: 3 },
 //       { row: 0, column: 8, tu: 2 },
@@ -51,9 +48,6 @@ export default function snakesReducer(state = {}, action) {
       if (!state[action.id]) {
         const newState = helpers.deepClone(state);
         newState[action.id] = action.data;
-        // copy style id from p2p.peers (denormalized for speed)
-        const styleId = store.getState().p2p.peers[action.id].styleId;
-        newState[action.id].styleId = styleId;
         return newState;
       }
 
