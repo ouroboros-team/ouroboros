@@ -11,7 +11,7 @@
     "start": "concurrently \"yarn run server\" \"yarn run client\"",
     "server": "node server.js",
     "client": "node start-client.js",
-    "heroku-postbuild": "cd client && yarn --production=false && yarn run build",
+    "heroku-postbuild": "cd client && yarn install && yarn build",
     "dev": "echo \"This command has been deprecated. Use 'yarn start'\" && exit 1",
     "lint": "eslint ."
   },
