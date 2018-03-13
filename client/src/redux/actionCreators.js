@@ -1,4 +1,5 @@
 import store from './store';
+import * as constants from '../constants';
 
 import * as boardActions from './board/boardActionCreators';
 import * as displayActions from './display/displayActionCreators';
@@ -9,31 +10,9 @@ import * as helpers from './metaHelpers';
 import * as actionTypes from './actionTypes';
 import * as p2pHelpers from './p2p/p2pHelpers';
 import * as snakeHelpers from './snake/snakeHelpers';
-import * as constants from '../constants';
 
 /* eslint no-use-before-define: 0 */  // --> OFF
 
-// board
-// display board
-export const getInitialDisplayBoard = () => ({
-  type: actionTypes.GET_INITIAL_DISPLAY_BOARD,
-});
-
-export const getNextDisplayBoard = () => ({
-  type: actionTypes.GET_NEXT_DISPLAY_BOARD,
-});
-
-export const handleTuTick = () => (
-  (dispatch) => {
-    dispatch(snakeActions.writeOwnSnakePosition(peer.id));
-    dispatch(boardActions.aggregateBoards(peer.id));
-    dispatch(infoActions.incrementTu());
-    dispatch(getNextDisplayBoard());
-  }
-);
-
-
-// P2P
 let peer;
 const peerConnections = {};
 
