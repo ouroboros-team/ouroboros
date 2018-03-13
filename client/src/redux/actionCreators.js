@@ -232,14 +232,9 @@ export const p2pSetDataListener = (connection, dispatch) => {
 
 export const p2pConnectToURLPeer = (dispatch) => {
   const id = store.getState().p2p.sharedPeerId;
-  if (id) {
-    const dataConnection = peer.connect(id);
-    dataConnection.on('open', () => {
-      p2pSetDataListener(dataConnection, dispatch);
-      dispatch(p2pUpdatePeerList(id));
-      peerConnections[id] = dataConnection;
-    });
-    p2pAddCloseListener(dataConnection, dispatch);
+
+  if (id && id !== '') {
+    p2pConnectToNewPeers([ id ], dispatch);
   }
 };
 
