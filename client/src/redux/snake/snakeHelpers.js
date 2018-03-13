@@ -1,9 +1,8 @@
 import random from 'lodash/random';
-import merge from 'lodash/merge';
 import store from '../store';
 import * as constants from '../../constants';
 
-export const getSnakeLength = (tu) => (
+export const getSnakeLength = tu => (
   constants.INITIAL_SNAKE_LENGTH
 );
 
