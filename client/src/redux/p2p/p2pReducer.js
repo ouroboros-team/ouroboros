@@ -33,9 +33,6 @@ export default function p2pReducer(state = defaultState, action) {
       const newState = helpers.deepClone(state);
       newState.id = action.id;
       newState.ready = true;
-      newState.peers[action.id] = {};
-      newState.peers[action.id].username = newState.tempUsername;
-      newState.tempUsername += 1;
       return newState;
     }
     default: {
