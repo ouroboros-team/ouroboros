@@ -1,7 +1,6 @@
 import * as actionTypes from '../actionTypes';
 import * as boardHelpers from './boardHelpers';
 import * as helpers from '../metaHelpers';
-import * as constants from '../../constants';
 
 export default function boardReducer(state = {}, action) {
   switch (action.type) {
