@@ -16,8 +16,8 @@ class Lobby extends React.Component {
     return (
       <div>
         <h1>{this.props.status === constants.GAME_STATUS_LOBBY ? 'Welcome' : 'Preparing Game'}</h1>
-        <a href={`${window.location.origin}/#/${this.props.ownPeerId}`}>
-          {`${window.location.origin}/#/${this.props.ownPeerId}`}
+        <a href={`${window.location.origin}/${this.props.ownPeerId}`}>
+          {`${window.location.origin}/${this.props.ownPeerId}`}
         </a>
         <br />
         <input
