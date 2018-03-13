@@ -10,51 +10,8 @@ import * as actionTypes from './actionTypes';
 import * as p2pHelpers from './p2p/p2pHelpers';
 import * as snakeHelpers from './snake/snakeHelpers';
 import * as constants from '../constants';
-import * as displayHelpers from './display/displayHelpers';
+
 /* eslint no-use-before-define: 0 */  // --> OFF
-
-// snakes
-export const changeSnakeDirection = (id, direction) => ({
-  id,
-  direction,
-  type: actionTypes.CHANGE_SNAKE_DIRECTION,
-});
-
-export const handleChangeSnakeDirection = (id, direction) => (
-  (dispatch) => {
-    dispatch(changeSnakeDirection(id, direction));
-    p2pBroadcastSnakeData();
-  }
-);
-
-export const updateSnakeData = (id, data) => ({
-  id,
-  data,
-  type: actionTypes.UPDATE_SNAKE_DATA,
-});
-
-export const initializeOwnSnake = (id, row) => (
-  (dispatch) => {
-    const positions = snakeHelpers.setStartPosition(row);
-    const snake = snakeHelpers.emptySnakeObject(positions);
-
-    dispatch(updateSnakeData(id, snake));
-    p2pBroadcastSnakeData();
-  }
-);
-
-export const writeOwnSnakePosition = () => (
-  (dispatch) => {
-    const newSnake = { ...store.getState().snakes[peer.id] };
-
-    const coords = displayHelpers.calculateNextCoords(newSnake.direction, newSnake.positions[0]);
-    newSnake.positions = [ coords ];
-
-    dispatch(updateSnakeData(peer.id, newSnake));
-    p2pBroadcastSnakeData();
-  }
-);
-
 
 // board
 export const aggregateBoards = (id = undefined) => ({
@@ -74,7 +31,7 @@ export const getNextDisplayBoard = () => ({
 
 export const handleTuTick = () => (
   (dispatch) => {
-    dispatch(writeOwnSnakePosition());
+    dispatch(snakeActions.writeOwnSnakePosition(peer.id));
     dispatch(aggregateBoards(peer.id));
     dispatch(infoActions.incrementTu());
     dispatch(getNextDisplayBoard());
@@ -136,7 +93,7 @@ export const p2pBroadcastGameStatus = status => (
       });
 
       // initialize own snake
-      dispatch(initializeOwnSnake(peer.id, helpers.randomUniqueRow()));
+      dispatch(snakeActions.initializeOwnSnake(peer.id, helpers.randomUniqueRow()));
     }
   }
 );
@@ -177,7 +134,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
           if (typeof data === 'number') {
             // receive starting row and initialize own snake
             // then send snake data to peers
-            dispatch(initializeOwnSnake(peer.id, data));
+            dispatch(snakeActions.initializeOwnSnake(peer.id, data));
             p2pBroadcastSnakeData();
           } else {
             // receive snake data from peers
@@ -236,7 +193,7 @@ export const p2pInitialize = () => (
 
 export const receiveSnakeData = (id, data) => (
   (dispatch) => {
-    dispatch(updateSnakeData(id, data));
+    dispatch(snakeActions.updateSnakeData(id, data));
     dispatch(aggregateBoards(id));
   }
 );

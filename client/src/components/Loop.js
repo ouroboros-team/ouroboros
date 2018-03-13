@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import * as constants from '../constants';
 import * as actionCreators from '../redux/actionCreators';
+import * as snakeActions from '../redux/snake/snakeActionCreators';
 
 class Loop extends React.Component {
   state = {
@@ -98,7 +99,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(actionCreators.handleTuTick());
   },
   handleChangeSnakeDirection: (id, direction) => {
-    dispatch(actionCreators.handleChangeSnakeDirection(id, direction));
+    dispatch(snakeActions.handleChangeSnakeDirection(id, direction));
   },
   aggregateBoards: () => {
     dispatch(actionCreators.aggregateBoards());
