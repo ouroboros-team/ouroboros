@@ -1,4 +1,10 @@
 import store from './store';
+
+import * as boardActions from './board/boardActionCreators';
+import * as displayActions from './display/displayActionCreators';
+import * as infoActions from './info/infoActionCreators';
+import * as snakeActions from './snake/snakeActionCreators';
+
 import * as helpers from './metaHelpers';
 import * as actionTypes from './actionTypes';
 import * as p2pHelpers from './p2p/p2pHelpers';
@@ -6,38 +12,6 @@ import * as snakeHelpers from './snake/snakeHelpers';
 import * as constants from '../constants';
 import * as displayHelpers from './display/displayHelpers';
 /* eslint no-use-before-define: 0 */  // --> OFF
-
-// info
-export const incrementTu = () => ({
-  type: actionTypes.INCREMENT_TU,
-});
-
-export const updateGameStatus = status => ({
-  status,
-  type: actionTypes.UPDATE_GAME_STATUS,
-});
-
-export const handleGameStatusChange = newStatus => (
-  (dispatch) => {
-    dispatch(updateGameStatus(newStatus));
-
-    switch (newStatus) {
-      case constants.GAME_STATUS_PREGAME: {
-        break;
-      }
-      case constants.GAME_STATUS_PLAYING: {
-        p2pBroadcastSnakeData();
-        break;
-      }
-      case constants.GAME_STATUS_LOBBY:
-      case constants.GAME_STATUS_POSTGAME:
-      default: {
-        break;
-      }
-    }
-  }
-);
-
 
 // snakes
 export const changeSnakeDirection = (id, direction) => ({
@@ -102,7 +76,7 @@ export const handleTuTick = () => (
   (dispatch) => {
     dispatch(writeOwnSnakePosition());
     dispatch(aggregateBoards(peer.id));
-    dispatch(incrementTu());
+    dispatch(infoActions.incrementTu());
     dispatch(getNextDisplayBoard());
   }
 );
@@ -149,7 +123,7 @@ export const p2pBroadcast = (data) => {
 export const p2pBroadcastGameStatus = status => (
   (dispatch) => {
     p2pBroadcast(status);
-    dispatch(handleGameStatusChange(status));
+    dispatch(infoActions.handleGameStatusChange(status));
 
     if (status === constants.GAME_STATUS_PREGAME) {
       // player who set new game status to pregame
@@ -194,7 +168,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
     console.log(`received ${data} from ${id}`);
 
     if (typeof data === 'string') {
-      dispatch(handleGameStatusChange(data));
+      dispatch(infoActions.handleGameStatusChange(data));
     } else {
       const status = store.getState().info.gameStatus;
 
