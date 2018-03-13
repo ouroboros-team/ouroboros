@@ -3,7 +3,7 @@ import store from '../store';
 import * as constants from '../../constants';
 
 export const getSnakeLength = tu => (
-  constants.INITIAL_SNAKE_LENGTH
+  constants.INITIAL_SNAKE_LENGTH + Math.floor(tu / 10)
 );
 
 export const emptySnakeObject = (positions = []) => ({
