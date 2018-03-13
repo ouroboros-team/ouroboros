@@ -73,7 +73,7 @@ export const writeOwnSnakePosition = () => (
   (dispatch) => {
     const snakes = store.getState().snakes;
     const newSnake = { ...snakes[peer.id] };
-    newSnake.positions = [...newSnake.positions];
+    newSnake.positions = [ ...newSnake.positions ];
 
     const coords = displayHelpers.calculateNextCoords(newSnake.direction, newSnake.positions[0]);
     newSnake.positions.unshift(coords);
@@ -230,17 +230,19 @@ export const p2pSetDataListener = (connection, dispatch) => {
   });
 };
 
-export const p2pConnectToURLPeer = (dispatch) => {
-  const id = store.getState().p2p.sharedPeerId;
-  if (id) {
-    const dataConnection = peer.connect(id);
-    dataConnection.on('open', () => {
-      p2pSetDataListener(dataConnection, dispatch);
-      dispatch(p2pUpdatePeerList(id));
-      peerConnections[id] = dataConnection;
-    });
-    p2pAddCloseListener(dataConnection, dispatch);
-  }
+export const p2pConnectToKnownPeers = (dispatch) => {
+  const peerIds = Object.keys(store.getState().p2p.peers);
+  peerIds.forEach((peerId) => {
+    if (peerId !== peer.id) {
+      const dataConnection = peer.connect(peerId);
+      dataConnection.on('open', () => {
+        p2pSetDataListener(dataConnection, dispatch);
+        dispatch(p2pUpdatePeerList(peerId));
+        peerConnections[peerId] = dataConnection;
+      });
+      p2pAddCloseListener(dataConnection, dispatch);
+    }
+  });
 };
 
 export const p2pInitialize = () => (
@@ -252,8 +254,7 @@ export const p2pInitialize = () => (
       .on('open', (id) => {
         console.log(`My peer ID is: ${id}`);
         dispatch(p2pConnectionReady(id));
-        dispatch(p2pUpdatePeerList(id));
-        p2pConnectToURLPeer(dispatch);
+        p2pConnectToKnownPeers(dispatch);
       })
       .on('connection', (dataConnection) => {
         dataConnection.on('open', () => {

@@ -3,7 +3,6 @@
 
 $gray: #ebebeb;
 $black: #000;
-$darkgray: #555;
 $square-size: 1rem;
 $grid-size: 40;
 
@@ -59,7 +58,7 @@ header {
         
         &.label {
           background-color: transparent;
-          color: $darkgray;
+          color: $black;
         }
       }
     }
@@ -136,21 +135,4 @@ header {
       }
     }
   }
-}
-
-#messages {
-  height: 3rem;
-}
-
-.label-text {
-  color: $darkgray;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 38px;
-  letter-spacing: .1rem;
-  text-transform: uppercase;
-}
-
-.alert-text {
-  color: red;
 }
