@@ -20,7 +20,7 @@ class App extends React.Component {
         <Header />
         <Switch>
           <Route
-            path='/:peerId'
+            path='/:peerId?'
             render={({ match }) => {
               // save peerId to redux store
               if (match.params.peerId) {
@@ -31,7 +31,6 @@ class App extends React.Component {
               );
             }}
           />
-          <Route exact path='/' component={Game} />
         </Switch>
       </div>
     );
