@@ -2,8 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import * as constants from '../constants';
-import * as actionCreators from '../redux/actionCreators';
 import * as snakeActions from '../redux/snake/snakeActionCreators';
+import * as boardActions from '../redux/board/boardActionCreators';
+import * as displayActions from '../redux/display/displayActionCreators';
+import * as metaActions from '../redux/metaActionCreators';
 
 class Loop extends React.Component {
   state = {
@@ -52,7 +54,7 @@ class Loop extends React.Component {
     if (this.state.countdown > 0) {
       this.setState({ countdown: this.state.countdown - 1 });
     } else {
-      this.props.handleTuTick();
+      this.props.handleTuTick(this.props.peerId);
     }
   };
 
@@ -95,17 +97,17 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  handleTuTick: () => {
-    dispatch(actionCreators.handleTuTick());
+  handleTuTick: (id) => {
+    dispatch(metaActions.handleTuTick(id));
   },
   handleChangeSnakeDirection: (id, direction) => {
     dispatch(snakeActions.handleChangeSnakeDirection(id, direction));
   },
   aggregateBoards: () => {
-    dispatch(actionCreators.aggregateBoards());
+    dispatch(boardActions.aggregateBoards());
   },
   getInitialDisplayBoard: () => {
-    dispatch(actionCreators.getInitialDisplayBoard());
+    dispatch(displayActions.getInitialDisplayBoard());
   },
 });
 
