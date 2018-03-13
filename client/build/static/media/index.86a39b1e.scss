@@ -1,0 +1,156 @@
+@import './normalize';
+@import './skeleton';
+
+$gray: #ebebeb;
+$black: #000;
+$darkgray: #555;
+$square-size: 1rem;
+$grid-size: 40;
+
+.container {
+  min-width: $grid-size * $square-size;
+}
+
+header {
+  padding: 1rem;
+  background-color: $gray;
+  margin-bottom: 2rem;
+
+  > * {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 .5rem;
+  }
+
+  .logo {
+    width: 4rem;
+  }
+}
+
+#game {
+  * {
+    box-sizing: border-box;
+  }
+
+  #player-list {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    width: 100%;
+    vertical-align: top;
+    text-align: center;
+
+    ul {
+      width: 100%;
+      text-align: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        width: 100%;
+        max-width: $grid-size * $square-size;
+        text-align: center;
+        display: block;
+        padding: .5rem;
+        margin: 1px auto;
+        background-color: $black;
+        color: $gray;
+        
+        &.label {
+          background-color: transparent;
+          color: $darkgray;
+        }
+      }
+    }
+  }
+
+  #loop {
+    text-align: center;
+  }
+
+  #board-container {
+    padding: 2rem 0 5rem 0;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    font-size: 0;
+
+    #board {
+      width: $square-size * $grid-size;
+      margin: 0 auto;
+
+      .square {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        width: $square-size;
+        height: $square-size;
+        background-color: $gray;
+        border: solid white 1px;
+      }
+    }
+  }
+
+  // $black for alive self, gray for dead self
+  $self: $black;
+  $self-dead: darkgray;
+
+  #player-list ul li.id-0 {
+    background-color: $self;
+  }
+
+  #board-container #board .square.alive {
+    background-color: $black;
+  };
+
+  #board-container #board .square.id-0 {
+    &.alive {
+      background-color: $self;
+    }
+
+    &.dead {
+      background-color: $self-dead;
+    }
+  }
+
+  // Random colors for other players
+  $s-min: 40;
+  $s-max: 70;
+  $l-min: 35;
+  $l-max: 45;
+
+  @for $i from 1 through 25 {
+    $color: hsl(random(360), $s-min+random($s-max+-$s-min), $l-min+random($l-max+-$l-min));
+
+    #player-list ul li.id-#{$i} {
+      background-color: $color;
+    }
+
+    #board-container #board .square.id-#{$i} {
+      &.alive {
+        background-color: $color;
+      }
+      &.dead {
+        background-color: lighten($color, 30%);
+      }
+    }
+  }
+}
+
+#messages {
+  height: 3rem;
+}
+
+.label-text {
+  color: $darkgray;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+}
+
+.alert-text {
+  color: red;
+}
