@@ -15,3 +15,10 @@ export const handleTuTick = id => (
     dispatch(displayActions.getNextDisplayBoard());
   }
 );
+
+export const receiveSnakeData = (id, data) => (
+  (dispatch) => {
+    dispatch(snakeActions.updateSnakeData(id, data));
+    dispatch(boardActions.aggregateBoards(id));
+  }
+);
