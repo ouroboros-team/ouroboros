@@ -71,12 +71,10 @@ export const initializeOwnSnake = (id, row) => (
 
 export const writeOwnSnakePosition = () => (
   (dispatch) => {
-    const snakes = store.getState().snakes;
-    const newSnake = { ...snakes[peer.id] };
-    newSnake.positions = [ ...newSnake.positions ];
+    const newSnake = { ...store.getState().snakes[peer.id] };
 
     const coords = displayHelpers.calculateNextCoords(newSnake.direction, newSnake.positions[0]);
-    newSnake.positions.unshift(coords);
+    newSnake.positions = [ coords ];
 
     dispatch(updateSnakeData(peer.id, newSnake));
     p2pBroadcastSnakeData();
