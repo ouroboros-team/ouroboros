@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as actionCreators from '../redux/actionCreators';
+import * as p2pActions from '../redux/p2p/p2pActionCreators';
 import * as constants from '../constants';
 
 class Lobby extends React.Component {
@@ -42,7 +42,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   p2pBroadcastGameStatus: (status) => {
-    dispatch(actionCreators.p2pBroadcastGameStatus(status));
+    dispatch(p2pActions.p2pBroadcastGameStatus(status));
   },
 });
 
