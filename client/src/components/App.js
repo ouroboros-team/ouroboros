@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import * as actionCreators from '../redux/actionCreators';
 import '../assets/styles/index.scss';
 
@@ -18,21 +18,18 @@ class App extends React.Component {
     return (
       <div>
         <Header />
-        <Switch>
-          <Route
-            path='/:peerId'
-            render={({ match }) => {
-              // save peerId to redux store
-              if (match.params.peerId) {
-                this.props.p2pGetPeerIdFromURL(match.params.peerId);
-              }
-              return (
-                <Game />
-              );
-            }}
-          />
-          <Route exact path='/' component={Game} />
-        </Switch>
+        <Route
+          path='/:peerId?'
+          render={({ match }) => {
+            // save peerId to redux store
+            if (match.params.peerId) {
+              this.props.p2pGetPeerIdFromURL(match.params.peerId);
+            }
+            return (
+              <Game />
+            );
+          }}
+        />
       </div>
     );
   }
