@@ -7,6 +7,12 @@ const port = process.env.PORT || 3001;
 
 app.set('port', port);
 
+const server = app.listen(app.get('port'));
+
+app.use('/peerjs', peer.ExpressPeerServer(server, {
+  debug: true,
+}));
+
 // Express only serves static assets in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client/build')));
@@ -15,9 +21,3 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 }
-
-const server = app.listen(app.get('port'));
-
-app.use('/peerjs', peer.ExpressPeerServer(server, {
-  debug: true,
-}));
