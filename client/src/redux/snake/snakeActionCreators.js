@@ -3,6 +3,7 @@ import * as actionTypes from '../actionTypes';
 import * as snakeHelpers from './snakeHelpers';
 import * as displayHelpers from '../display/displayHelpers';
 import * as p2pActions from '../p2p/p2pActionCreators';
+import * as helpers from "../metaHelpers";
 
 export const changeSnakeDirection = (id, direction) => ({
   id,
@@ -23,8 +24,9 @@ export const updateSnakeData = (id, data) => ({
   type: actionTypes.UPDATE_SNAKE_DATA,
 });
 
-export const initializeOwnSnake = (id, row) => (
+export const initializeOwnSnake = id => (
   (dispatch) => {
+    const row = helpers.randomUniqueRow();
     const positions = snakeHelpers.setStartPosition(row);
     const snake = snakeHelpers.emptySnakeObject(positions);
 
