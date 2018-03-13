@@ -1,4 +1,5 @@
 import random from 'lodash/random';
+import merge from 'lodash/merge';
 import store from '../store';
 import * as constants from '../../constants';
 
