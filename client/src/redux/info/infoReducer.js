@@ -17,6 +17,9 @@ export default function infoReducer(state = defaultState, action) {
     case actionTypes.UPDATE_GAME_STATUS: {
       const newState = metaHelpers.deepClone(state);
       newState.gameStatus = action.status;
+      if (action.status === constants.GAME_STATUS_LOBBY) {
+        newState.tu = 0;
+      }
       return newState;
     }
     default: {
