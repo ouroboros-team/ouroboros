@@ -3,7 +3,7 @@ import * as actionTypes from '../actionTypes';
 import * as snakeHelpers from './snakeHelpers';
 import * as helpers from '../metaHelpers';
 
-// const defaultState = {
+// {
 //   0: {
 //     direction: 'left',
 //     status: 'alive',
@@ -69,6 +69,9 @@ export default function snakesReducer(state = {}, action) {
       }
 
       return state;
+    }
+    case actionTypes.RESET_SNAKE_DATA: {
+      return {};
     }
     default: {
       return state;
