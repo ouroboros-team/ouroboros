@@ -24,6 +24,10 @@ export const updateSnakeData = (id, data) => ({
   type: actionTypes.UPDATE_SNAKE_DATA,
 });
 
+export const resetSnakeData = () => ({
+  type: actionTypes.RESET_SNAKE_DATA,
+});
+
 export const initializeOwnSnake = id => (
   (dispatch) => {
     const row = helpers.randomUniqueRow();

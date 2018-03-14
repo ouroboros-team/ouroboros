@@ -90,6 +90,13 @@ export const p2pBroadcastSnakeData = () => {
   p2pBroadcast(snakeHelpers.getOwnSnakeData());
 };
 
+export const broadcastResetGame = () => (
+  (dispatch) => {
+    dispatch(p2pBroadcastGameStatus(constants.GAME_STATUS_LOBBY));
+    dispatch(metaActions.resetGameData());
+  }
+);
+
 export const p2pSetCloseListener = (connection, dispatch) => {
   connection.on('close', () => {
     console.log(`Removing peer: ${connection.peer}`);
@@ -128,7 +135,6 @@ export const p2pSetDataListener = (connection, dispatch) => {
           break;
         }
         case constants.GAME_STATUS_LOBBY:
-        case constants.GAME_STATUS_POSTGAME:
         default: {
           // if lobby or postgame, connect to new peers
           p2pConnectToNewPeers(data, dispatch);

@@ -9,6 +9,9 @@ export default function displayReducer(state = {}, action) {
     case actionTypes.GET_NEXT_DISPLAY_BOARD: {
       return displayHelpers.getNextDisplayBoard();
     }
+    case actionTypes.RESET_DISPLAY_DATA: {
+      return {};
+    }
     default: {
       return state;
     }

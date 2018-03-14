@@ -17,6 +17,9 @@ export default function boardReducer(state = {}, action) {
 
       return newState;
     }
+    case actionTypes.RESET_BOARD_DATA: {
+      return {};
+    }
     default: {
       return state;
     }
