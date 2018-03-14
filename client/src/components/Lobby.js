@@ -32,7 +32,7 @@ export default class Lobby extends React.Component {
         </div>
         <input
           type='button'
-          value='Play'
+          value='Play with Connected Players'
           onClick={this.handlePlayClick}
         />
       </div>
