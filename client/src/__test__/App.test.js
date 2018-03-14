@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 
 import MockRouter from 'react-mock-router';
 
-import App from '../App';
+import App from '../components/App';
 
 const initialState = {};
 const mockStore = configureStore([ thunk ]);
