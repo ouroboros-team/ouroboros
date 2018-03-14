@@ -1,49 +1,41 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import * as p2pActions from '../redux/p2p/p2pActionCreators';
+import propTypes from 'prop-types';
+
 import * as constants from '../constants';
 
-class Lobby extends React.Component {
-  handlePregameClick = () => {
-    this.props.p2pBroadcastGameStatus(constants.GAME_STATUS_PREGAME);
+export default class Lobby extends React.Component {
+  static propTypes = {
+    ownPeerId: propTypes.string,
+    changeGameStatus: propTypes.func,
   };
 
-  handlePlayingClick = () => {
-    this.props.p2pBroadcastGameStatus(constants.GAME_STATUS_PLAYING);
+  static defaultProps = {
+    ownPeerId: '',
+    changeGameStatus: () => {
+    },
+  };
+
+  handlePlayClick = () => {
+    this.props.changeGameStatus(constants.GAME_STATUS_PREGAME);
   };
 
   render() {
     return (
       <div>
-        <h1>{this.props.status === constants.GAME_STATUS_LOBBY ? 'Welcome' : 'Preparing Game'}</h1>
-        <a href={`${window.location.origin}/${this.props.ownPeerId}`}>
-          {`${window.location.origin}/${this.props.ownPeerId}`}
-        </a>
-        <br />
-        <input
-          type='button'
-          value='Pregame'
-          onClick={this.handlePregameClick}
-        />
+        <h1>Welcome</h1>
+        <div id='messages'>
+          <p>Sharing link: <a
+            href={`${window.location.origin}/${this.props.ownPeerId}`}>
+            {`${window.location.origin}/${this.props.ownPeerId}`}
+          </a>
+          </p>
+        </div>
         <input
           type='button'
           value='Play'
-          onClick={this.handlePlayingClick}
+          onClick={this.handlePlayClick}
         />
       </div>
     );
   }
 }
-
-const mapStateToProps = state => ({
-  ownPeerId: state.p2p.id,
-  status: state.info.gameStatus,
-});
-
-const mapDispatchToProps = dispatch => ({
-  p2pBroadcastGameStatus: (status) => {
-    dispatch(p2pActions.p2pBroadcastGameStatus(status));
-  },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Lobby);

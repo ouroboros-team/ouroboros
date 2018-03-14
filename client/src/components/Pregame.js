@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 
 import * as constants from '../constants';
 
-export default class Postgame extends React.Component {
+export default class Pregame extends React.Component {
   static propTypes = {
     changeGameStatus: propTypes.func,
   };
@@ -13,21 +13,22 @@ export default class Postgame extends React.Component {
     },
   };
 
-  handlePlayAgainClick = () => {
-    this.props.changeGameStatus(constants.GAME_STATUS_LOBBY);
+  handleStartClick = () => {
+    this.props.changeGameStatus(constants.GAME_STATUS_PLAYING);
   };
+
 
   render() {
     return (
       <div>
-        <h1>Game Over</h1>
+        <h1>Preparing Game</h1>
         <div id='messages'>
-          <p className='label-text alert-text'>(Username) is the winner!</p>
+          <p>Waiting for other players</p>
         </div>
         <input
           type='button'
-          value='Play Again'
-          onClick={this.handlePlayAgainClick}
+          value='Start Game'
+          onClick={this.handleStartClick}
         />
       </div>
     );

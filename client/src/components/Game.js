@@ -6,23 +6,50 @@ import Loop from './Loop';
 import GameBoard from './GameBoard';
 import PlayerList from './PlayerList';
 import Lobby from './Lobby';
+import Pregame from './Pregame';
 import Postgame from './Postgame';
 
 import * as constants from '../constants';
+import * as p2pActions from '../redux/p2p/p2pActionCreators';
 
 const Game = (props) => {
   let display;
 
-  if (props.status === constants.GAME_STATUS_LOBBY || props.status === constants.GAME_STATUS_PREGAME) {
-    display = <Lobby />;
-  } else if (props.status === constants.GAME_STATUS_POSTGAME) {
-    display = <Postgame />;
-  } else {
-    display = (
-      <Loop>
-        <GameBoard />
-      </Loop>
-    );
+  switch (props.status) {
+    case constants.GAME_STATUS_PREGAME: {
+      display = (
+        <Pregame
+          changeGameStatus={props.p2pBroadcastGameStatus}
+        />
+      );
+      break;
+    }
+    case constants.GAME_STATUS_PLAYING: {
+      display = (
+        <Loop>
+          <GameBoard />
+        </Loop>
+      );
+      break;
+    }
+    case constants.GAME_STATUS_POSTGAME: {
+      display = (
+        <Postgame
+          changeGameStatus={props.p2pBroadcastGameStatus}
+        />
+      );
+      break;
+    }
+    case constants.GAME_STATUS_LOBBY:
+    default: {
+      display = (
+        <Lobby
+          ownPeerId={props.ownPeerId}
+          changeGameStatus={props.p2pBroadcastGameStatus}
+        />
+      );
+      break;
+    }
   }
 
   return (
@@ -38,18 +65,27 @@ const Game = (props) => {
 };
 
 Game.propTypes = {
+  ownPeerId: propTypes.string,
   status: propTypes.string,
   peers: propTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 Game.defaultProps = {
+  ownPeerId: '',
   status: constants.GAME_STATUS_PREGAME,
   peers: {},
 };
 
 const mapStateToProps = state => ({
+  ownPeerId: state.p2p.id,
   status: state.info.gameStatus,
   peers: state.p2p.peers,
 });
 
-export default connect(mapStateToProps)(Game);
+const mapDispatchToProps = dispatch => ({
+  p2pBroadcastGameStatus: (status) => {
+    dispatch(p2pActions.p2pBroadcastGameStatus(status));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
