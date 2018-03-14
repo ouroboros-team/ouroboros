@@ -1,6 +1,7 @@
 import * as actionTypes from '../actionTypes';
 import * as p2pActions from '../p2p/p2pActionCreators';
 import * as constants from '../../constants';
+import * as metaActions from '../metaActionCreators';
 
 export const incrementTu = () => ({
   type: actionTypes.INCREMENT_TU,
@@ -23,8 +24,11 @@ export const handleGameStatusChange = newStatus => (
         p2pActions.p2pBroadcastSnakeData();
         break;
       }
+      case constants.GAME_STATUS_POSTGAME: {
+        dispatch(metaActions.resetGameData());
+        break;
+      }
       case constants.GAME_STATUS_LOBBY:
-      case constants.GAME_STATUS_POSTGAME:
       default: {
         break;
       }
