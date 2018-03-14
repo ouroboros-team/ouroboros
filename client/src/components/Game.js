@@ -16,10 +16,12 @@ const Game = (props) => {
   let display;
 
   switch (props.status) {
-    case constants.GAME_STATUS_PREGAME: {
+    case constants.GAME_STATUS_PREGAME:
+    case constants.GAME_STATUS_READY_TO_PLAY: {
       display = (
         <Pregame
           changeGameStatus={props.p2pBroadcastGameStatus}
+          status={props.status}
         />
       );
       break;
