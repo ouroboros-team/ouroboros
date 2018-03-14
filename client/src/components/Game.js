@@ -6,14 +6,17 @@ import Loop from './Loop';
 import GameBoard from './GameBoard';
 import PlayerList from './PlayerList';
 import Lobby from './Lobby';
+import Postgame from './Postgame';
 
 import * as constants from '../constants';
 
 const Game = (props) => {
   let display;
 
-  if (props.status !== constants.GAME_STATUS_PLAYING) {
+  if (props.status === constants.GAME_STATUS_LOBBY || props.status === constants.GAME_STATUS_PREGAME) {
     display = <Lobby />;
+  } else if (props.status === constants.GAME_STATUS_POSTGAME) {
+    display = <Postgame />;
   } else {
     display = (
       <Loop>
