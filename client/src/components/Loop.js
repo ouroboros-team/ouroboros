@@ -5,6 +5,7 @@ import * as constants from '../constants';
 import * as snakeActions from '../redux/snake/snakeActionCreators';
 import * as boardActions from '../redux/board/boardActionCreators';
 import * as displayActions from '../redux/display/displayActionCreators';
+import * as p2pActions from '../redux/p2p/p2pActionCreators';
 import * as metaActions from '../redux/metaActionCreators';
 
 class Loop extends React.Component {
@@ -36,6 +37,11 @@ class Loop extends React.Component {
     }
 
     this.props.handleChangeSnakeDirection(this.props.peerId, arrowKeyCodes[code]);
+  };
+
+  endGame = () => {
+    this.pauseGame();
+    this.props.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME);
   };
 
   pauseGame = () => {
@@ -85,6 +91,11 @@ class Loop extends React.Component {
             value='Next TU'
             onClick={this.tick}
           />
+          <input
+            type='button'
+            value='End Game'
+            onClick={this.endGame}
+          />
         </div>
         {this.props.children}
       </div>
@@ -108,6 +119,9 @@ const mapDispatchToProps = dispatch => ({
   },
   getInitialDisplayBoard: () => {
     dispatch(displayActions.getInitialDisplayBoard());
+  },
+  p2pBroadcastGameStatus: (status) => {
+    dispatch(p2pActions.p2pBroadcastGameStatus(status));
   },
 });
 
