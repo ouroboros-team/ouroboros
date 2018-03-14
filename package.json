@@ -13,7 +13,8 @@
     "client": "node start-client.js",
     "heroku-postbuild": "cd client && yarn install && yarn build",
     "dev": "echo \"This command has been deprecated. Use 'yarn start'\" && exit 1",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "cd client && yarn test"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.2",
