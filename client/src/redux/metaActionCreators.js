@@ -1,9 +1,6 @@
-import * as constants from '../constants';
-
 import * as boardActions from './board/boardActionCreators';
 import * as displayActions from './display/displayActionCreators';
 import * as infoActions from './info/infoActionCreators';
-import * as p2pActions from './p2p/p2pActionCreators';
 import * as snakeActions from './snake/snakeActionCreators';
 
 export const handleTuTick = id => (
