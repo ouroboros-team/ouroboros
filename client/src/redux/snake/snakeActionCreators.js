@@ -3,7 +3,6 @@ import * as actionTypes from '../actionTypes';
 import * as snakeHelpers from './snakeHelpers';
 import * as p2pActions from '../p2p/p2pActionCreators';
 import * as helpers from '../metaHelpers';
-import * as constants from '../../constants';
 
 export const changeSnakeDirection = (id, direction) => ({
   id,
@@ -28,37 +27,6 @@ export const resetSnakeData = () => ({
   type: actionTypes.RESET_SNAKE_DATA,
 });
 
-export const calculateNextCoords = (direction, oldCoords) => {
-  let row = oldCoords.row;
-  let column = oldCoords.column;
-
-  switch (direction) {
-    case 'up':
-      row -= 1;
-      if (row < 0) {
-        row += constants.GRID_SIZE;
-      }
-      break;
-    case 'down':
-      row += 1;
-      row %= constants.GRID_SIZE;
-      break;
-    case 'left':
-      column -= 1;
-      if (column < 0) {
-        column += constants.GRID_SIZE;
-      }
-      break;
-    case 'right':
-    default:
-      column += 1;
-      column %= constants.GRID_SIZE;
-      break;
-  }
-
-  return { row, column };
-};
-
 export const initializeOwnSnake = id => (
   (dispatch) => {
     const row = helpers.randomUniqueRow();
@@ -76,7 +44,7 @@ export const writeOwnSnakePosition = id => (
     const newSnake = { ...state.snakes[id] };
     const tu = state.info.tu;
 
-    const coords = calculateNextCoords(newSnake.direction, newSnake.positions[String(tu)]);
+    const coords = snakeHelpers.calculateNextCoords(newSnake.direction, newSnake.positions[String(tu)]);
     newSnake.positions = {};
     newSnake.positions[tu + 1] = coords;
 

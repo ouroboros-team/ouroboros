@@ -56,6 +56,36 @@ export const validateDirectionChange = (oldDir, newDir) => {
   return false;
 };
 
+export const calculateNextCoords = (direction, oldCoords) => {
+  let row = oldCoords.row;
+  let column = oldCoords.column;
+
+  switch (direction) {
+    case 'up':
+      row -= 1;
+      if (row < 0) {
+        row += constants.GRID_SIZE;
+      }
+      break;
+    case 'down':
+      row += 1;
+      row %= constants.GRID_SIZE;
+      break;
+    case 'left':
+      column -= 1;
+      if (column < 0) {
+        column += constants.GRID_SIZE;
+      }
+      break;
+    case 'right':
+    default:
+      column += 1;
+      column %= constants.GRID_SIZE;
+      break;
+  }
+
+  return { row, column };
+};
 
 // data is assumed to be in the same format as snakes in the Redux store
 export const updateSnakeDataMutate = (newSnake, data) => {
