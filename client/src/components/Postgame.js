@@ -22,7 +22,7 @@ export default class Postgame extends React.Component {
       <div>
         <h1>Game Over</h1>
         <div id='messages'>
-          <p className='label-text alert-text'>(Username) is the winner!</p>
+          <p className='label alert-text'>(Username) is the winner!</p>
         </div>
         <input
           type='button'

@@ -66,7 +66,7 @@ class Loop extends React.Component {
     let countdown = '';
     if (this.state.countdown > 0) {
       const num = Math.ceil((this.state.countdown * constants.LOOP_INTERVAL) / 1000);
-      countdown = <p className='label-text alert-text'>Game starts in {num}</p>;
+      countdown = <p className='label alert-text'>Game starts in {num}</p>;
     }
     return (
       <div id='loop'>

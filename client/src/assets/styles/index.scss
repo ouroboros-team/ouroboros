@@ -1,9 +1,12 @@
 @import './normalize';
 @import './skeleton';
 
-$gray: #ebebeb;
 $black: #000;
 $darkgray: #555;
+$gray: #999;
+$lightgray: #ebebeb;
+$white: #FFF;
+
 $square-size: 1rem;
 $grid-size: 40;
 
@@ -13,7 +16,7 @@ $grid-size: 40;
 
 header {
   padding: 1rem;
-  background-color: $gray;
+  background-color: $lightgray;
   margin-bottom: 2rem;
 
   > * {
@@ -55,7 +58,7 @@ header {
         padding: .5rem;
         margin: 1px auto;
         background-color: $black;
-        color: $gray;
+        color: $lightgray;
 
         &.label {
           background-color: transparent;
@@ -86,7 +89,7 @@ header {
         display: inline-block;
         width: $square-size;
         height: $square-size;
-        background-color: $gray;
+        background-color: $lightgray;
         border: solid white 1px;
       }
     }
@@ -102,7 +105,8 @@ header {
 
   #board-container #board .square.alive {
     background-color: $black;
-  };
+  }
+;
 
   #board-container #board .square.id-0 {
     &.alive {
@@ -142,7 +146,7 @@ header {
   height: 3rem;
 }
 
-.label-text {
+p, .label {
   color: $darkgray;
   font-size: 11px;
   font-weight: 600;
@@ -152,4 +156,10 @@ header {
 
 .alert-text {
   color: red;
+}
+
+.button, button, input[type="submit"], input[type="reset"], input[type="button"] {
+  &:disabled {
+    color: $gray;
+  }
 }
