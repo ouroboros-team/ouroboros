@@ -1,4 +1,5 @@
 import random from 'lodash/random';
+import merge from 'lodash/merge';
 import store from '../store';
 import * as constants from '../../constants';
 
@@ -6,7 +7,7 @@ export const getSnakeLength = tu => (
   constants.INITIAL_SNAKE_LENGTH + Math.floor(tu / 10)
 );
 
-export const emptySnakeObject = (positions = []) => ({
+export const emptySnakeObject = (positions = {}) => ({
   direction: 'left',
   status: 'alive',
   positions,
@@ -18,15 +19,22 @@ export const getOwnSnakeData = () => {
   return state.snakes[id];
 };
 
+export const getMostRecentTu = (id) => {
+  const snake = store.getState().snakes[id];
+  const tus = Object.keys(snake.positions).map(string => (Number(string)));
+
+  return Math.max(...tus);
+};
+
 export const setStartPosition = (row) => {
   const randomColumn = random(0, constants.GRID_SIZE - 1);
 
-  return [
-    { row, column: randomColumn, tu: 0 },
-    { row, column: randomColumn + 1, tu: -1 },
-    { row, column: randomColumn + 2, tu: -2 },
-    { row, column: randomColumn + 3, tu: -3 },
-  ];
+  return {
+    '0': { row, column: randomColumn },
+    '-1': { row, column: randomColumn + 1 },
+    '-2': { row, column: randomColumn + 2 },
+    '-3': { row, column: randomColumn + 3 },
+  };
 };
 
 export const validateDirectionChange = (oldDir, newDir) => {
@@ -53,18 +61,9 @@ export const validateDirectionChange = (oldDir, newDir) => {
 export const updateSnakeDataMutate = (newSnake, data) => {
   newSnake.direction = data.direction;
 
-  const gap = Math.abs(newSnake.positions[0].tu - data.positions[0].tu);
-  let counter = gap;
+  newSnake.positions = merge(newSnake.positions, data.positions);
 
-  while (counter > 0) {
-    // add new coordinates
-    newSnake.positions.unshift(data.positions[gap - 1]);
-    counter -= 1;
-  }
-
-  // purge surplus history
-  const keepCount = getSnakeLength(newSnake.positions[0].tu) + constants.HISTORY_LENGTH;
-  if (newSnake.positions.length > keepCount) {
-    newSnake.positions.length = keepCount;
-  }
+  // TODO: purge surplus history
+  // const keepCount = getSnakeLength(newSnake.positions[0].tu) +
+  // constants.HISTORY_LENGTH;
 };
