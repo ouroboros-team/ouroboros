@@ -99,6 +99,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
     console.log(`received ${data} from ${id}`);
 
     if (typeof data === 'string') {
+      console.log('received new game status', data);
       dispatch(infoActions.handleGameStatusChange(data, peer.id));
     } else {
       const status = store.getState().info.gameStatus;
@@ -113,7 +114,12 @@ export const p2pSetDataListener = (connection, dispatch) => {
           } else {
             // receive snake data from peers
             dispatch(metaActions.receiveSnakeData(connection.peer, data));
+            // check readiness (do I have snake data for all peers?)
+            dispatch(metaActions.checkReadiness());
           }
+          break;
+        }
+        case constants.GAME_STATUS_READY_TO_PLAY: {
           break;
         }
         case constants.GAME_STATUS_PLAYING: {

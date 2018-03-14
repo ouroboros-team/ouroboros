@@ -25,6 +25,9 @@ export const handleGameStatusChange = (newStatus, id) => (
         dispatch(snakeActions.initializeOwnSnake(id));
         break;
       }
+      case constants.GAME_STATUS_READY_TO_PLAY: {
+        break;
+      }
       case constants.GAME_STATUS_PLAYING: {
         p2pActions.p2pBroadcastSnakeData();
         break;
