@@ -1,6 +1,14 @@
-cra-server-ex.graffle
+# dependencies
 node_modules
+
+# testing
+coverage
+
+# misc
+.DS_Store
+.env
 npm-debug.log
+yarn-error.log
 
 # compiled CSS
 client/src/assets/styles/index.css
