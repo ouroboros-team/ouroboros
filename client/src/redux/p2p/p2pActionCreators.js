@@ -68,13 +68,7 @@ export const p2pBroadcast = (data) => {
 export const p2pBroadcastGameStatus = status => (
   (dispatch) => {
     p2pBroadcast(status);
-    dispatch(infoActions.handleGameStatusChange(status));
-
-    if (status === constants.GAME_STATUS_PREGAME) {
-      // if new status is pregame, broadcast rows and initialize own snake
-      p2pBroadcastStartingRows();
-      dispatch(snakeActions.initializeOwnSnake(peer.id));
-    }
+    dispatch(infoActions.handleGameStatusChange(status, peer.id));
   }
 );
 
@@ -89,13 +83,6 @@ export const p2pBroadcastStartingRows = () => {
 export const p2pBroadcastSnakeData = () => {
   p2pBroadcast(snakeHelpers.getOwnSnakeData());
 };
-
-export const broadcastResetGame = () => (
-  (dispatch) => {
-    dispatch(p2pBroadcastGameStatus(constants.GAME_STATUS_LOBBY));
-    dispatch(metaActions.resetGameData());
-  }
-);
 
 export const p2pSetCloseListener = (connection, dispatch) => {
   connection.on('close', () => {
@@ -112,7 +99,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
     console.log(`received ${data} from ${id}`);
 
     if (typeof data === 'string') {
-      dispatch(infoActions.handleGameStatusChange(data));
+      dispatch(infoActions.handleGameStatusChange(data, peer.id));
     } else {
       const status = store.getState().info.gameStatus;
 
