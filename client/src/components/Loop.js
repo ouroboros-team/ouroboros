@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import * as constants from '../constants';
 import * as snakeActions from '../redux/snake/snakeActionCreators';
-import * as boardActions from '../redux/board/boardActionCreators';
 import * as displayActions from '../redux/display/displayActionCreators';
 import * as p2pActions from '../redux/p2p/p2pActionCreators';
 import * as metaActions from '../redux/metaActionCreators';
@@ -15,7 +14,6 @@ class Loop extends React.Component {
   };
 
   componentDidMount() {
-    this.props.aggregateBoards();
     this.props.getInitialDisplayBoard();
     this.startGame();
     window.addEventListener('keydown', this.handleKeypress);
@@ -113,9 +111,6 @@ const mapDispatchToProps = dispatch => ({
   },
   handleChangeSnakeDirection: (id, direction) => {
     dispatch(snakeActions.handleChangeSnakeDirection(id, direction));
-  },
-  aggregateBoards: () => {
-    dispatch(boardActions.aggregateBoards());
   },
   getInitialDisplayBoard: () => {
     dispatch(displayActions.getInitialDisplayBoard());
