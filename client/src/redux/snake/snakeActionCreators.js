@@ -10,6 +10,12 @@ export const changeSnakeDirection = (id, direction) => ({
   type: actionTypes.CHANGE_SNAKE_DIRECTION,
 });
 
+export const changeSnakeStatus = (id, status) => ({
+  id,
+  status,
+  type: actionTypes.CHANGE_SNAKE_STATUS,
+});
+
 export const handleChangeSnakeDirection = (id, direction) => (
   (dispatch) => {
     dispatch(changeSnakeDirection(id, direction));
