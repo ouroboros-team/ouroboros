@@ -1,5 +1,4 @@
 import random from 'lodash/random';
-import merge from 'lodash/merge';
 import store from '../store';
 import * as constants from '../../constants';
 
@@ -19,21 +18,21 @@ export const getOwnSnakeData = () => {
   return state.snakes[id];
 };
 
-export const getMostRecentTu = (id) => {
-  const snake = store.getState().snakes[id];
-  const tus = Object.keys(snake.positions).map(string => (Number(string)));
-
-  return Math.max(...tus);
-};
-
 export const setStartPosition = (row) => {
   const randomColumn = random(0, constants.GRID_SIZE - 1);
 
-  return {
+  const hash = {
     '0': { row, column: randomColumn },
     '-1': { row, column: randomColumn + 1 },
     '-2': { row, column: randomColumn + 2 },
     '-3': { row, column: randomColumn + 3 },
+  };
+
+  const array = [ '0', '-1', '-2', '-3' ];
+
+  return {
+    byIndex: array,
+    byKey: hash,
   };
 };
 
@@ -91,9 +90,28 @@ export const calculateNextCoords = (direction, oldCoords) => {
 export const updateSnakeDataMutate = (newSnake, data) => {
   newSnake.direction = data.direction;
 
-  newSnake.positions = merge(newSnake.positions, data.positions);
+  const oldPositions = newSnake.positions;
+  const newPositions = data.positions;
+  const oldLastTu = Number(oldPositions.byIndex[0]);
+  const newLastTu = Number(newPositions.byIndex[0]);
 
-  // TODO: purge surplus history
-  // const keepCount = getSnakeLength(newSnake.positions[0].tu) +
-  // constants.HISTORY_LENGTH;
+  const keepCount = getSnakeLength(newLastTu) + constants.HISTORY_LENGTH;
+  let gap = newLastTu - oldLastTu;
+  let key;
+  let toRemove;
+
+  while (gap > 0) {
+    key = `${newLastTu - (gap - 1)}`;
+    // add new positions to old ones
+    oldPositions.byKey[key] = newPositions.byKey[key];
+    oldPositions.byIndex.unshift(key);
+
+    // purge old data
+    if (oldPositions.byIndex.length > keepCount) {
+      toRemove = oldPositions.byIndex.pop();
+      delete oldPositions.byKey[toRemove];
+    }
+
+    gap -= 1;
+  }
 };
