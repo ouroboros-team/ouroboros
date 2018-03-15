@@ -3,6 +3,7 @@ import * as actionTypes from '../actionTypes';
 import * as snakeHelpers from './snakeHelpers';
 import * as p2pActions from '../p2p/p2pActionCreators';
 import * as helpers from '../metaHelpers';
+import * as constants from '../../constants';
 
 export const changeSnakeDirection = (id, direction) => ({
   id,
@@ -58,6 +59,40 @@ export const writeOwnSnakePosition = id => (
 
     dispatch(updateSnakeData(id, newSnake));
     p2pActions.p2pBroadcastSnakeData();
+  }
+);
+
+export const coordinatesMatch = (coordsA, coordsB) => (
+  coordsA.row === coordsB.row && coordsA.column === coordsB.column
+);
+
+export const checkForCollisions = id => (
+  (dispatch) => {
+    const snakes = store.getState().snakes;
+    const mySnake = snakes[id];
+    const myLastTU = mySnake.positions.byIndex[0];
+    const TUsAndCoords = {};
+
+    for (let i = 0; i < constants.NUMBER_CANDIDATE_TUS; i++) {
+      TUsAndCoords[myLastTU - i] = mySnake.positions[myLastTU - i];
+    }
+
+    Object.keys(TUsAndCoords).forEach((candidateTU) => {
+      const myHeadCoordsAtTU = TUsAndCoords[candidateTU];
+      Object.keys(snakes).forEach((snakeID) => {
+        const peerLastTU = snakes[snakeID].positions.byIndex[0];
+        const lengthAtTU = snakeHelpers.getSnakeLength(peerLastTU);
+        for (let tu = peerLastTU; tu > candidateTU - lengthAtTU; tu--) {
+          const snakeCoordsAtTU = snakes[snakeID].positions[tu];
+          // Ensure that snake coords for TU exist, and no comparison with own head coords
+          if (tu !== candidateTU || snakeID !== id) {
+            if (coordinatesMatch(myHeadCoordsAtTU, snakeCoordsAtTU)) {
+              console.log('COLLISION DETECTED');
+            }
+          }
+        }
+      });
+    });
   }
 );
 

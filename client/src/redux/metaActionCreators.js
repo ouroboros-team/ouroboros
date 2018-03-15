@@ -8,6 +8,8 @@ import * as snakeActions from './snake/snakeActionCreators';
 
 export const handleTuTick = id => (
   (dispatch) => {
+    // Check for collisions
+    dispatch(snakeActions.checkForCollisions(id));
     // write/broadcast own snake position
     dispatch(snakeActions.writeOwnSnakePosition(id));
     // increment TU
