@@ -33,10 +33,17 @@ export default function p2pReducer(state = defaultState, action) {
       return newState;
     }
     case actionTypes.P2P_UPDATE_PEER_USERNAME: {
+      const username = action.username.trim();
+
+      // ignore blank and default usernames
+      if (username === '' || username.startsWith('Player ')) {
+        return state;
+      }
+
       const newState = { ...state };
       newState.peers = { ...newState.peers };
       newState.peers[action.id] = { ...newState.peers[action.id] };
-      newState.peers[action.id].username = action.username;
+      newState.peers[action.id].username = username;
       return newState;
     }
     case actionTypes.P2P_CONNECTION_READY: {
