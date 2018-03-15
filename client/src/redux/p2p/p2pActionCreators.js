@@ -63,7 +63,7 @@ export const p2pConnectToURLPeer = (dispatch) => {
   const id = store.getState().p2p.sharedPeerId;
 
   if (id && id !== '') {
-    p2pConnectToNewPeers([id], dispatch);
+    p2pConnectToNewPeers([ id ], dispatch);
   }
 };
 
@@ -137,8 +137,13 @@ export const p2pSetDataListener = (connection, dispatch) => {
       }
       case 'object': {
         if (Array.isArray(data)) {
+          console.log('received an array of peers');
           // lobby or postgame: connect to new peers
           p2pConnectToNewPeers(data, dispatch);
+        } else if (data.username) {
+          console.log('received a username');
+          // peer username
+          dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
         } else {
           // pregame and playing: receive snake data from peers
           dispatch(metaActions.receiveSnakeData(connection.peer, data));
@@ -174,7 +179,9 @@ export const p2pInitialize = () => (
           p2pSetDataListener(dataConnection, dispatch);
           dispatch(p2pUpdatePeerList(dataConnection.peer));
           peerConnections[dataConnection.peer] = dataConnection;
-          dataConnection.send(Object.keys(store.getState().p2p.peers));
+          const peers = store.getState().p2p.peers;
+          dataConnection.send(Object.keys(peers));
+          dataConnection.send({ username: peers[peer.id].username });
         });
         p2pSetCloseListener(dataConnection, dispatch);
       });
