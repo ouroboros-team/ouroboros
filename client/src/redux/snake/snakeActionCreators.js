@@ -1,9 +1,8 @@
 import store from '../store';
 import * as actionTypes from '../actionTypes';
 import * as snakeHelpers from './snakeHelpers';
-import * as displayHelpers from '../display/displayHelpers';
 import * as p2pActions from '../p2p/p2pActionCreators';
-import * as helpers from "../metaHelpers";
+import * as helpers from '../metaHelpers';
 
 export const changeSnakeDirection = (id, direction) => ({
   id,
@@ -41,10 +40,13 @@ export const initializeOwnSnake = id => (
 
 export const writeOwnSnakePosition = id => (
   (dispatch) => {
-    const newSnake = { ...store.getState().snakes[id] };
+    const state = store.getState();
+    const newSnake = { ...state.snakes[id] };
+    const tu = state.info.tu;
 
-    const coords = displayHelpers.calculateNextCoords(newSnake.direction, newSnake.positions[0]);
-    newSnake.positions = [ coords ];
+    const coords = snakeHelpers.calculateNextCoords(newSnake.direction, newSnake.positions[String(tu)]);
+    newSnake.positions = {};
+    newSnake.positions[tu + 1] = coords;
 
     dispatch(updateSnakeData(id, newSnake));
     p2pActions.p2pBroadcastSnakeData();

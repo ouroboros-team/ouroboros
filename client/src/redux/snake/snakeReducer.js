@@ -8,30 +8,31 @@ import * as helpers from '../metaHelpers';
 //     direction: 'left',
 //     status: 'alive',
 //     styleId: 0,
-//     positions: [ // queue
-//       { row: 5, column: 5, tu: 4 },
-//       { row: 5, column: 6, tu: 3 },
-//       { row: 4, column: 6, tu: 2 },
-//       { row: 4, column: 7, tu: 1 },
-//       { row: 4, column: 8, tu: 0 },
-//       { row: 4, column: 9, tu: -1 },
-//       { row: 4, column: 10, tu: -2 },
-//       { row: 4, column: 11, tu: -3 },
-//     ],
+//     positions: {
+//       '4': { row: 5, column: 5 },
+//       '3': { row: 5, column: 6 },
+//       '2': { row: 4, column: 6 },
+//       '1': { row: 4, column: 7 },
+//       '0': { row: 4, column: 8 },
+//       '-1': { row: 4, column: 9 },
+//       '-2': { row: 4, column: 10 },
+//       '-3': { row: 4, column: 11 },
+//     },
 //   },
 //   1: {
 //     direction: 'right',
 //     status: 'alive',
 //     styleId: 1,
-//     positions: [ // queue
-//       { row: 0, column: 9, tu: 3 },
-//       { row: 0, column: 8, tu: 2 },
-//       { row: 0, column: 7, tu: 1 },
-//       { row: 1, column: 7, tu: 0 },
-//       { row: 2, column: 7, tu: -1 },
-//       { row: 3, column: 7, tu: -2 },
-//       { row: 4, column: 7, tu: -3 },
-//     ],
+//     positions: {
+//       '4': { row: 0, column: 9 },
+//       '3': { row: 0, column: 8 },
+//       '2': { row: 0, column: 7 },
+//       '1': { row: 1, column: 7 },
+//       '0': { row: 2, column: 7 },
+//       '-1': { row: 3, column: 7 },
+//       '-2': { row: 4, column: 7 },
+//       '-3': { row: 4, column: 7 },
+//     },
 //   }
 // };
 
@@ -57,18 +58,9 @@ export default function snakesReducer(state = {}, action) {
         return newState;
       }
 
-      const mostRecentTu = Number(state[action.id].positions[0].tu);
-      const newDataTu = Number(action.data.positions[0].tu);
-
-      // if data TU is more recent than most recent TU for this snake,
-      // incorporate new data
-      if (newDataTu > mostRecentTu) {
-        const newState = helpers.deepClone(state);
-        snakeHelpers.updateSnakeDataMutate(newState[action.id], action.data);
-        return newState;
-      }
-
-      return state;
+      const newState = helpers.deepClone(state);
+      snakeHelpers.updateSnakeDataMutate(newState[action.id], action.data);
+      return newState;
     }
     case actionTypes.RESET_SNAKE_DATA: {
       return {};
