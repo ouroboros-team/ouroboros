@@ -70,29 +70,34 @@ export const checkForCollisions = id => (
   (dispatch) => {
     const snakes = store.getState().snakes;
     const mySnake = snakes[id];
-    const myLastTU = mySnake.positions.byIndex[0];
+    const myLastTU = Number(mySnake.positions.byIndex[0]);
     const TUsAndCoords = {};
 
     for (let i = 0; i < constants.NUMBER_CANDIDATE_TUS; i++) {
-      TUsAndCoords[myLastTU - i] = mySnake.positions[myLastTU - i];
+      TUsAndCoords[myLastTU - i] = mySnake.positions.byKey[myLastTU - i];
     }
 
-    Object.keys(TUsAndCoords).forEach((candidateTU) => {
-      const myHeadCoordsAtTU = TUsAndCoords[candidateTU];
+    // candidate tus are myLastTU to myLastTU - NUMBER_CANDIDATE_TUS + 1
+    let headTUCounter = myLastTU;
+    while (headTUCounter > myLastTU - constants.NUMBER_CANDIDATE_TUS) {
+      const myHeadCoordsAtTU = mySnake.positions.byKey[headTUCounter];
+      const snakeLength = snakeHelpers.getSnakeLength(headTUCounter);
       Object.keys(snakes).forEach((snakeID) => {
-        const peerLastTU = snakes[snakeID].positions.byIndex[0];
-        const lengthAtTU = snakeHelpers.getSnakeLength(peerLastTU);
-        for (let tu = peerLastTU; tu > candidateTU - lengthAtTU; tu--) {
-          const snakeCoordsAtTU = snakes[snakeID].positions[tu];
-          // Ensure that snake coords for TU exist, and no comparison with own head coords
-          if (tu !== candidateTU || snakeID !== id) {
+        // range is headTUCounter to headTUCounter - snakeLength + 1
+        let counter = headTUCounter;
+        while (counter > headTUCounter - snakeLength) {
+          const snakeCoordsAtTU = snakes[snakeID].positions.byKey[counter];
+          if (snakeCoordsAtTU && (Number(counter) !== Number(headTUCounter) || snakeID !== id)) {
             if (coordinatesMatch(myHeadCoordsAtTU, snakeCoordsAtTU)) {
-              console.log('COLLISION DETECTED');
+              console.log(`COLLISION DETECTED between ${snakeID} and ${id} at row:${myHeadCoordsAtTU.row} and column:${myHeadCoordsAtTU.column} for candidate tu ${headTUCounter} and tu ${counter}`);
             }
           }
+
+          counter -= 1;
         }
       });
-    });
+      headTUCounter -= 1;
+    }
   }
 );
 
