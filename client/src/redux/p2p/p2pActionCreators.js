@@ -35,9 +35,17 @@ export const p2pRemovePeerFromList = id => ({
   type: actionTypes.P2P_REMOVE_PEER_FROM_LIST,
 });
 
+export const p2pUpdatePeerUsername = (id, username) => ({
+  id,
+  username,
+  type: actionTypes.P2P_UPDATE_PEER_USERNAME,
+});
+
 export const p2pConnectToNewPeers = (list, dispatch) => {
+  const peers = store.getState().p2p.peers;
+
   list.forEach((peerId) => {
-    if (store.getState().p2p.peers[peerId] || peerId === peer.id) {
+    if (peers[peerId] || peerId === peer.id) {
       return;
     }
 
@@ -92,6 +100,13 @@ export const p2pBroadcastStartingRows = () => {
 export const p2pBroadcastSnakeData = () => {
   p2pBroadcast(snakeHelpers.getOwnSnakeData());
 };
+
+export const p2pSetOwnUsername = username => (
+  (dispatch) => {
+    dispatch(p2pUpdatePeerUsername(peer.id, username));
+    p2pBroadcast({ username });
+  }
+);
 
 export const p2pSetCloseListener = (connection, dispatch) => {
   connection.on('close', () => {
