@@ -64,7 +64,6 @@ export const getNextDisplayBoard = () => {
     // run once for all snakes, more for snakes with missing TUs
     while (mostRecentTu < tu) {
       // calculate next coordinates (predicted)
-      console.log('snake.positions', snake.positions);
       next = snakeHelpers.calculateNextCoords(snake.direction, snake.positions.byKey[`${mostRecentTu}`]);
 
       mostRecentTu += 1;
