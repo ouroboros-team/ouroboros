@@ -1,5 +1,4 @@
 import * as actionTypes from '../actionTypes';
-import * as helpers from '../metaHelpers';
 import { deepClone } from '../metaHelpers';
 
 const defaultState = {
