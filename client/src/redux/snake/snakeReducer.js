@@ -1,7 +1,6 @@
 import store from '../store';
 import * as actionTypes from '../actionTypes';
 import * as snakeHelpers from './snakeHelpers';
-import * as helpers from '../metaHelpers';
 
 // {
 //   0: {
@@ -53,25 +52,26 @@ export default function snakesReducer(state = {}, action) {
         return state;
       }
 
-      const newState = helpers.deepClone(state);
+      const newState = { ...state };
+      newState[action.id] = { ...newState[action.id] };
       newState[action.id].direction = action.direction;
       return newState;
     }
     case actionTypes.CHANGE_SNAKE_STATUS: {
-      if (state[action.id].status === action.status) {
+      if (!state[action.id] || state[action.id].status === action.status) {
         return state;
       }
 
-      const newState = helpers.deepClone(state);
+      const newState = { ...state };
+      newState[action.id] = { ...newState[action.id] };
       newState[action.id].status = action.status;
       return newState;
     }
     case actionTypes.UPDATE_SNAKE_DATA: {
-      const newState = helpers.deepClone(state);
-      const newSnake = newState[action.id];
+      const newState = { ...state };
 
       // if no snake data is held for this snake, simply add received data
-      if (!newSnake) {
+      if (!newState[action.id]) {
         newState[action.id] = action.data;
         // copy style id from p2p.peers (denormalized for speed)
         newState[action.id].styleId = store.getState().p2p.peers[action.id].styleId;
@@ -79,8 +79,10 @@ export default function snakesReducer(state = {}, action) {
       }
 
       // update existing snake, if newer data received
-      if (Number(action.data.positions.byIndex[0]) > Number(newSnake.positions.byIndex[0])) {
-        snakeHelpers.updateSnakeDataMutate(newSnake, action.data);
+      newState[action.id] = { ...newState[action.id] };
+
+      if (Number(action.data.positions.byIndex[0]) > Number(newState[action.id].positions.byIndex[0])) {
+        snakeHelpers.updateSnakeDataMutate(newState[action.id], action.data);
         return newState;
       }
 
