@@ -20,7 +20,7 @@ const PlayerList = (props) => {
   });
 
   return (
-    <div id='player-list' className='label-text'>
+    <div id='player-list' className='label'>
       <ul>
         <li className='label'>Connected Players</li>
         {players}
