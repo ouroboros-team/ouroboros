@@ -55,7 +55,7 @@ export const p2pConnectToURLPeer = (dispatch) => {
   const id = store.getState().p2p.sharedPeerId;
 
   if (id && id !== '') {
-    p2pConnectToNewPeers([ id ], dispatch);
+    p2pConnectToNewPeers([id], dispatch);
   }
 };
 
@@ -93,45 +93,39 @@ export const p2pSetCloseListener = (connection, dispatch) => {
 };
 
 export const p2pSetDataListener = (connection, dispatch) => {
-  const id = connection.peer;
-
   connection.on('data', (data) => {
-    console.log(`received ${data} from ${id}`);
+    const status = store.getState().info.gameStatus;
 
-    if (typeof data === 'string') {
-      console.log('received new game status', data);
-      dispatch(infoActions.handleGameStatusChange(data, peer.id));
-    } else {
-      const status = store.getState().info.gameStatus;
+    switch (typeof data) {
+      case 'string': {
+        // game status change
+        dispatch(infoActions.handleGameStatusChange(data, peer.id));
+        break;
+      }
+      case 'number': {
+        // pregame: receive starting row and initialize own snake,
+        // then send snake data to peers
+        dispatch(snakeActions.initializeOwnSnake(peer.id, data));
+        p2pBroadcastSnakeData();
+        break;
+      }
+      case 'object': {
+        if (Array.isArray(data)) {
+          // lobby or postgame: connect to new peers
+          p2pConnectToNewPeers(data, dispatch);
+        } else {
+          // pregame and playing: receive snake data from peers
+          dispatch(metaActions.receiveSnakeData(connection.peer, data));
 
-      switch (status) {
-        case constants.GAME_STATUS_PREGAME: {
-          if (typeof data === 'number') {
-            // receive starting row and initialize own snake
-            // then send snake data to peers
-            dispatch(snakeActions.initializeOwnSnake(peer.id, data));
-            p2pBroadcastSnakeData();
-          } else {
-            // receive snake data from peers
-            dispatch(metaActions.receiveSnakeData(connection.peer, data));
+          if (status === constants.GAME_STATUS_PREGAME || status === constants.GAME_STATUS_READY_TO_PLAY) {
             // check readiness (do I have snake data for all peers?)
             dispatch(metaActions.checkReadiness());
           }
-          break;
         }
-        case constants.GAME_STATUS_READY_TO_PLAY: {
-          break;
-        }
-        case constants.GAME_STATUS_PLAYING: {
-          // if playing, receive snake data
-          dispatch(metaActions.receiveSnakeData(id, data));
-          break;
-        }
-        case constants.GAME_STATUS_LOBBY:
-        default: {
-          // if lobby or postgame, connect to new peers
-          p2pConnectToNewPeers(data, dispatch);
-        }
+        break;
+      }
+      default: {
+        break;
       }
     }
   });
