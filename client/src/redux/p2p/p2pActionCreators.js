@@ -101,6 +101,7 @@ export const p2pSetCloseListener = (connection, dispatch) => {
   connection.on('close', () => {
     console.log(`Removing peer: ${connection.peer}`);
     dispatch(p2pRemovePeerFromList(connection.peer));
+    dispatch(snakeActions.changeSnakeStatus(connection.peer, 'dead'));
     delete peerConnections[connection.peer];
   });
 };
