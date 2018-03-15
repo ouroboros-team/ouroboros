@@ -48,6 +48,7 @@ const Game = (props) => {
         <Lobby
           ownPeerId={props.ownPeerId}
           changeGameStatus={props.p2pBroadcastGameStatus}
+          setOwnUsername={props.p2pSetOwnUsername}
         />
       );
       break;
@@ -70,12 +71,16 @@ Game.propTypes = {
   ownPeerId: propTypes.string,
   status: propTypes.string,
   peers: propTypes.object, // eslint-disable-line react/forbid-prop-types
+  p2pBroadcastGameStatus: propTypes.func,
+  p2pSetOwnUsername: propTypes.func,
 };
 
 Game.defaultProps = {
   ownPeerId: '',
   status: constants.GAME_STATUS_PREGAME,
   peers: {},
+  p2pBroadcastGameStatus: () => {},
+  p2pSetOwnUsername: () => {},
 };
 
 const mapStateToProps = state => ({
@@ -87,6 +92,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   p2pBroadcastGameStatus: (status) => {
     dispatch(p2pActions.p2pBroadcastGameStatus(status));
+  },
+  p2pSetOwnUsername: (username) => {
+    dispatch(p2pActions.p2pSetOwnUsername(username));
   },
 });
 

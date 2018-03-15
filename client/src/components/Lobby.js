@@ -6,18 +6,20 @@ import * as constants from '../constants';
 export default class Lobby extends React.Component {
   state = {
     value: '',
+    showForm: true,
   };
 
   static propTypes = {
     changeGameStatus: propTypes.func,
     ownPeerId: propTypes.string,
+    setOwnUsername: propTypes.func,
     username: propTypes.string,
   };
 
   static defaultProps = {
-    changeGameStatus: () => {
-    },
+    changeGameStatus: () => {},
     ownPeerId: '',
+    setOwnUsername: () => {},
     username: '',
   };
 
@@ -31,12 +33,24 @@ export default class Lobby extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    this.setState({ showForm: false });
     console.log('username', this.state.value);
+    this.props.setOwnUsername(this.state.value);
   };
 
   render() {
     let content = '';
-    if (this.props.username !== '') {
+    if (this.state.showForm) {
+      content = (
+        <form onSubmit={this.handleSubmit}>
+          <label className='label' htmlFor='username'>
+            Your name: <input type='text' name='username'
+                              onChange={this.handleChange} />
+          </label>
+          <input type='submit' value='Submit' />
+        </form>
+      );
+    } else {
       content = (
         <div>
           <div id='messages'>
@@ -52,16 +66,6 @@ export default class Lobby extends React.Component {
             onClick={this.handlePlayClick}
           />
         </div>
-      );
-    } else {
-      content = (
-        <form onSubmit={this.handleSubmit}>
-          <label className='label' htmlFor='username'>
-            Your name: <input type='text' name='username'
-                              onChange={this.handleChange} />
-          </label>
-          <input type='submit' value='Submit' />
-        </form>
       );
     }
 
