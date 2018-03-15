@@ -68,7 +68,16 @@ export const p2pBroadcast = (data) => {
 export const p2pBroadcastGameStatus = status => (
   (dispatch) => {
     p2pBroadcast(status);
-    dispatch(infoActions.handleGameStatusChange(status, peer.id));
+
+    // these actions are shared with all players
+    dispatch(infoActions.handleGameStatusChange(status));
+
+    // these actions are only for the player that made the change
+    if (status === constants.GAME_STATUS_PREGAME) {
+      p2pBroadcastStartingRows();
+      dispatch(snakeActions.initializeOwnSnake(peer.id));
+      dispatch(metaActions.checkReadiness());
+    }
   }
 );
 
@@ -88,6 +97,7 @@ export const p2pSetCloseListener = (connection, dispatch) => {
   connection.on('close', () => {
     console.log(`Removing peer: ${connection.peer}`);
     dispatch(p2pRemovePeerFromList(connection.peer));
+    dispatch(metaActions.checkReadiness());
     dispatch(snakeActions.changeSnakeStatus(connection.peer, 'dead'));
     delete peerConnections[connection.peer];
   });
@@ -100,7 +110,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
     switch (typeof data) {
       case 'string': {
         // game status change
-        dispatch(infoActions.handleGameStatusChange(data, peer.id));
+        dispatch(infoActions.handleGameStatusChange(data));
         break;
       }
       case 'number': {

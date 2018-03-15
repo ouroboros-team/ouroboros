@@ -1,5 +1,6 @@
 import * as actionTypes from '../actionTypes';
 import * as helpers from '../metaHelpers';
+import { deepClone } from '../metaHelpers';
 
 const defaultState = {
   id: '',
@@ -12,15 +13,17 @@ const defaultState = {
 export default function p2pReducer(state = defaultState, action) {
   switch (action.type) {
     case actionTypes.P2P_GET_PEERID_FROM_URL: {
-      const newState = helpers.deepClone(state);
+      const newState = { ...state };
       newState.sharedPeerId = action.id;
       return newState;
     }
     case actionTypes.P2P_UPDATE_PEER_LIST: {
-      const newState = helpers.deepClone(state);
-      newState.peers[action.id] = {};
-      newState.peers[action.id].styleId = newState.nextStyleId;
-      newState.peers[action.id].username = `Player ${newState.nextStyleId}`;
+      const newState = { ...state };
+      newState.peers = deepClone(newState.peers);
+      newState.peers[action.id] = {
+        styleId: newState.nextStyleId,
+        username: `Player ${newState.nextStyleId}`,
+      };
       newState.nextStyleId += 1;
       return newState;
     }
