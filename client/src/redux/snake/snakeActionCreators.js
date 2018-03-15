@@ -41,12 +41,14 @@ export const initializeOwnSnake = id => (
 export const writeOwnSnakePosition = id => (
   (dispatch) => {
     const state = store.getState();
-    const newSnake = { ...state.snakes[id] };
-    const tu = state.info.tu;
+    const newSnake = helpers.deepClone(state.snakes[id]);
+    const lastTu = Number(newSnake.positions.byIndex[0]);
 
-    const coords = snakeHelpers.calculateNextCoords(newSnake.direction, newSnake.positions[String(tu)]);
-    newSnake.positions = {};
-    newSnake.positions[tu + 1] = coords;
+    const coords = snakeHelpers.calculateNextCoords(newSnake.direction, newSnake.positions.byKey[`${lastTu}`]);
+
+    newSnake.positions.byKey = {};
+    newSnake.positions.byKey[`${lastTu + 1}`] = coords;
+    newSnake.positions.byIndex = [ `${lastTu + 1}` ];
 
     dispatch(updateSnakeData(id, newSnake));
     p2pActions.p2pBroadcastSnakeData();

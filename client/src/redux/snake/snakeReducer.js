@@ -9,14 +9,19 @@ import * as helpers from '../metaHelpers';
 //     status: 'alive',
 //     styleId: 0,
 //     positions: {
-//       '4': { row: 5, column: 5 },
-//       '3': { row: 5, column: 6 },
-//       '2': { row: 4, column: 6 },
-//       '1': { row: 4, column: 7 },
-//       '0': { row: 4, column: 8 },
-//       '-1': { row: 4, column: 9 },
-//       '-2': { row: 4, column: 10 },
-//       '-3': { row: 4, column: 11 },
+//       byIndex: {
+//         ['4', '3', '2', '1', '0', '-1', '-2', '-3']
+//       }
+//       byKey: {
+//         '4': { row: 5, column: 5 },
+//         '3': { row: 5, column: 6 },
+//         '2': { row: 4, column: 6 },
+//         '1': { row: 4, column: 7 },
+//         '0': { row: 4, column: 8 },
+//         '-1': { row: 4, column: 9 },
+//         '-2': { row: 4, column: 10 },
+//         '-3': { row: 4, column: 11 },
+//       },
 //     },
 //   },
 //   1: {
@@ -24,14 +29,19 @@ import * as helpers from '../metaHelpers';
 //     status: 'alive',
 //     styleId: 1,
 //     positions: {
-//       '4': { row: 0, column: 9 },
-//       '3': { row: 0, column: 8 },
-//       '2': { row: 0, column: 7 },
-//       '1': { row: 1, column: 7 },
-//       '0': { row: 2, column: 7 },
-//       '-1': { row: 3, column: 7 },
-//       '-2': { row: 4, column: 7 },
-//       '-3': { row: 4, column: 7 },
+//       byIndex: {
+//         ['4', '3', '2', '1', '0', '-1', '-2', '-3']
+//       }
+//       byKey: {
+//         '4': { row: 0, column: 9 },
+//         '3': { row: 0, column: 8 },
+//         '2': { row: 0, column: 7 },
+//         '1': { row: 1, column: 7 },
+//         '0': { row: 2, column: 7 },
+//         '-1': { row: 3, column: 7 },
+//         '-2': { row: 4, column: 7 },
+//         '-3': { row: 4, column: 7 },
+//       },
 //     },
 //   }
 // };
@@ -48,19 +58,24 @@ export default function snakesReducer(state = {}, action) {
       return newState;
     }
     case actionTypes.UPDATE_SNAKE_DATA: {
+      const newState = helpers.deepClone(state);
+      const newSnake = newState[action.id];
+
       // if no snake data is held for this snake, simply add received data
-      if (!state[action.id]) {
-        const newState = helpers.deepClone(state);
+      if (!newSnake) {
         newState[action.id] = action.data;
         // copy style id from p2p.peers (denormalized for speed)
-        const styleId = store.getState().p2p.peers[action.id].styleId;
-        newState[action.id].styleId = styleId;
+        newState[action.id].styleId = store.getState().p2p.peers[action.id].styleId;
         return newState;
       }
 
-      const newState = helpers.deepClone(state);
-      snakeHelpers.updateSnakeDataMutate(newState[action.id], action.data);
-      return newState;
+      // update existing snake, if newer data received
+      if (Number(action.data.positions.byIndex[0]) > Number(newSnake.positions.byIndex[0])) {
+        snakeHelpers.updateSnakeDataMutate(newSnake, action.data);
+        return newState;
+      }
+
+      return state;
     }
     case actionTypes.RESET_SNAKE_DATA: {
       return {};
