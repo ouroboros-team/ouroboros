@@ -57,6 +57,15 @@ export default function snakesReducer(state = {}, action) {
       newState[action.id].direction = action.direction;
       return newState;
     }
+    case actionTypes.CHANGE_SNAKE_STATUS: {
+      if (state[action.id].status === action.status) {
+        return state;
+      }
+
+      const newState = helpers.deepClone(state);
+      newState[action.id].status = action.status;
+      return newState;
+    }
     case actionTypes.UPDATE_SNAKE_DATA: {
       const newState = helpers.deepClone(state);
       const newSnake = newState[action.id];
