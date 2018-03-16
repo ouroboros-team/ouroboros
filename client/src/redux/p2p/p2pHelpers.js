@@ -1,4 +1,5 @@
 import Peer from 'peerjs';
+import store from '../store';
 
 export const initializeOwnPeerObject = () => {
   const host = window.location.hostname;
@@ -26,3 +27,12 @@ export const initializeOwnPeerObject = () => {
   });
 };
 
+export const ownUsernameIsSet = () => {
+  const state = store.getState();
+  const id = state.p2p.id;
+  if (state.p2p.peers[id]){
+    return state.p2p.peers[id].username;
+  }
+
+  return false;
+};

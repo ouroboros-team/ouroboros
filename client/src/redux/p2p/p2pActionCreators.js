@@ -179,9 +179,13 @@ export const p2pInitialize = () => (
           p2pSetDataListener(dataConnection, dispatch);
           dispatch(p2pUpdatePeerList(dataConnection.peer));
           peerConnections[dataConnection.peer] = dataConnection;
+
+          // send list of peer ids and own username to new peer
           const peers = store.getState().p2p.peers;
           dataConnection.send(Object.keys(peers));
-          dataConnection.send({ username: peers[peer.id].username });
+          if (peers[peer.id].username) {
+            dataConnection.send({ username: peers[peer.id].username });
+          }
         });
         p2pSetCloseListener(dataConnection, dispatch);
       });
