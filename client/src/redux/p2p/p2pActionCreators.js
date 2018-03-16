@@ -45,7 +45,7 @@ export const p2pConnectToNewPeers = (list, dispatch) => {
   const peers = store.getState().p2p.peers;
 
   list.forEach((peerId) => {
-    if (peers[peerId] || peerId === peer.id) {
+    if (peers[peerId] || peerId === p2pHelpers.getOwnId()) {
       return;
     }
 
@@ -83,7 +83,7 @@ export const p2pBroadcastGameStatus = status => (
     // these actions are only for the player that made the change
     if (status === constants.GAME_STATUS_PREGAME) {
       p2pBroadcastStartingRows();
-      dispatch(snakeActions.initializeOwnSnake(peer.id));
+      dispatch(snakeActions.initializeOwnSnake(p2pHelpers.getOwnId()));
       dispatch(metaActions.checkReadiness());
     }
   }
@@ -103,7 +103,7 @@ export const p2pBroadcastSnakeData = () => {
 
 export const p2pSetOwnUsername = username => (
   (dispatch) => {
-    dispatch(p2pUpdatePeerUsername(peer.id, username));
+    dispatch(p2pUpdatePeerUsername(p2pHelpers.getOwnId(), username));
     p2pBroadcast({ username });
   }
 );
@@ -131,7 +131,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
       case 'number': {
         // pregame: receive starting row and initialize own snake,
         // then send snake data to peers
-        dispatch(snakeActions.initializeOwnSnake(peer.id, data));
+        dispatch(snakeActions.initializeOwnSnake(p2pHelpers.getOwnId(), data));
         p2pBroadcastSnakeData();
         break;
       }
@@ -140,7 +140,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
           console.log('received an array of peers');
           // lobby or postgame: connect to new peers
           p2pConnectToNewPeers(data, dispatch);
-        } else if (data.username) {
+        } else if (data.username || data.username === '') {
           console.log('received a username');
           // peer username
           dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
@@ -179,9 +179,13 @@ export const p2pInitialize = () => (
           p2pSetDataListener(dataConnection, dispatch);
           dispatch(p2pUpdatePeerList(dataConnection.peer));
           peerConnections[dataConnection.peer] = dataConnection;
+
+          // send list of peer ids and own username to new peer
           const peers = store.getState().p2p.peers;
           dataConnection.send(Object.keys(peers));
-          dataConnection.send({ username: peers[peer.id].username });
+          if (peers[p2pHelpers.getOwnId()].username) {
+            dataConnection.send({ username: peers[p2pHelpers.getOwnId()].username });
+          }
         });
         p2pSetCloseListener(dataConnection, dispatch);
       });

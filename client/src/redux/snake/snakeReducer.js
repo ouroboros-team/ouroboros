@@ -74,7 +74,10 @@ export default function snakesReducer(state = {}, action) {
       if (!newState[action.id]) {
         newState[action.id] = action.data;
         // copy style id from p2p.peers (denormalized for speed)
-        newState[action.id].styleId = store.getState().p2p.peers[action.id].styleId;
+        const peer = store.getState().p2p.peers[action.id];
+        if (peer) {
+          newState[action.id].styleId = peer.styleId;
+        }
         return newState;
       }
 

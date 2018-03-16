@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Square = (props) => {
-  const idClass = props.styleId ? `id-${props.styleId}` : '';
   return (
     <div
-      className={`square ${props.status} ${idClass}`}
+      className={`square ${props.status} id-${props.styleId}`}
       id={`r${props.row}c${props.col}`}
     />
   );
