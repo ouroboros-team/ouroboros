@@ -102,7 +102,8 @@ export const checkForCollisions = id => (
         const snake = snakes[snakeID];
         // range is headTUCounter to headTUCounter - snakeLength + 1
         let counter = headTUCounter;
-        while (counter > headTUCounter - snakeLength) {
+        while (counter > headTUCounter - snakeLength &&
+               snake.status === constants.SNAKE_STATUS_ALIVE) {
           const snakeCoordsAtTU = snake.positions.byKey[counter];
           if (snakeCoordsAtTU &&
               isNotOwnHead(counter, headTUCounter, id, snakeID)) {
