@@ -1,6 +1,7 @@
 import store from '../store';
 import * as actionTypes from '../actionTypes';
 import * as snakeHelpers from './snakeHelpers';
+import * as p2pHelpers from '../p2p/p2pHelpers';
 
 // {
 //   0: {
@@ -48,7 +49,10 @@ import * as snakeHelpers from './snakeHelpers';
 export default function snakesReducer(state = {}, action) {
   switch (action.type) {
     case actionTypes.CHANGE_SNAKE_DIRECTION: {
-      if (!snakeHelpers.validateDirectionChange(state[action.id].direction, action.direction)) {
+      // check against last committed direction (not last direction key press)
+      const previousDirection = state[action.id].previousDirection || state[action.id].direction;
+
+      if (!snakeHelpers.validateDirectionChange(previousDirection, action.direction)) {
         return state;
       }
 
@@ -85,6 +89,13 @@ export default function snakesReducer(state = {}, action) {
       newState[action.id] = { ...newState[action.id] };
 
       if (Number(action.data.positions.byIndex[0]) > Number(newState[action.id].positions.byIndex[0])) {
+        // if self, write direction to previousDirection also
+        // (allows direction changes to be validated against last committed move
+        // instead of last arrow key pressed)
+        if (action.id === p2pHelpers.getOwnId()) {
+          newState[action.id].previousDirection = action.data.direction;
+        }
+
         snakeHelpers.updateSnakeDataMutate(newState[action.id], action.data);
         return newState;
       }
