@@ -107,6 +107,7 @@ export const checkForCollisions = id => (
           if (snakeCoordsAtTU &&
               isNotOwnHead(counter, headTUCounter, id, snakeID)) {
             if (coordinatesMatch(myHeadCoordsAtTU, snakeCoordsAtTU)) {
+              dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
               console.log(getCollisionType(myHeadCoordsAtTU, id, snakeID, snakeLength));
             }
           }
