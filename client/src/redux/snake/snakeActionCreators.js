@@ -19,8 +19,10 @@ export const changeSnakeStatus = (id, status) => ({
 
 export const handleChangeSnakeDirection = (id, direction) => (
   (dispatch) => {
-    dispatch(changeSnakeDirection(id, direction));
-    p2pActions.p2pBroadcastSnakeData();
+    if (snakeHelpers.snakeIsAlive(id)) {
+      dispatch(changeSnakeDirection(id, direction));
+      p2pActions.p2pBroadcastSnakeData();
+    }
   }
 );
 
