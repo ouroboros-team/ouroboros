@@ -8,6 +8,8 @@ import * as snakeActions from './snake/snakeActionCreators';
 
 export const handleTuTick = id => (
   (dispatch) => {
+    // Check for collisions
+    dispatch(snakeActions.checkForCollisions(id));
     // write/broadcast own snake position
     dispatch(snakeActions.writeOwnSnakePosition(id));
     // increment TU
@@ -19,7 +21,11 @@ export const handleTuTick = id => (
 
 export const receiveSnakeData = (id, data) => (
   (dispatch) => {
-    dispatch(snakeActions.updateSnakeData(id, data));
+    if (data.status === constants.SNAKE_STATUS_DEAD) {
+      dispatch(snakeActions.changeSnakeStatus(id, data.status));
+    } else {
+      dispatch(snakeActions.updateSnakeData(id, data));
+    }
   }
 );
 
