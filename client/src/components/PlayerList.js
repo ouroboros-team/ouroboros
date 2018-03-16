@@ -4,17 +4,23 @@ import propTypes from 'prop-types';
 const PlayerList = (props) => {
   const players = [];
   let className = '';
+  let name = '';
   const peerIds = Object.keys(props.peers);
 
   peerIds.forEach((peerId) => {
     className = `id-${props.peers[peerId].styleId}`;
+    if (props.peers[peerId].username) {
+      name = props.peers[peerId].username;
+    } else {
+      name = props.peers[peerId].defaultUsername;
+    }
 
     players.push(
       <li
         key={peerId}
         className={className}
       >
-        {props.peers[peerId].username}
+        {name}
       </li>,
     );
   });

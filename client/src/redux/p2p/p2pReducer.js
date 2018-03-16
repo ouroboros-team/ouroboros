@@ -21,7 +21,7 @@ export default function p2pReducer(state = defaultState, action) {
       newState.peers = deepClone(newState.peers);
       newState.peers[action.id] = {
         styleId: newState.nextStyleId,
-        username: `Player ${newState.nextStyleId}`,
+        defaultUsername: `Player ${newState.nextStyleId}`,
       };
       newState.nextStyleId += 1;
       return newState;
@@ -35,8 +35,8 @@ export default function p2pReducer(state = defaultState, action) {
     case actionTypes.P2P_UPDATE_PEER_USERNAME: {
       const username = action.username.trim();
 
-      // ignore blank and default usernames
-      if (username === '' || username.startsWith('Player ')) {
+      // ignore blank usernames
+      if (username === '') {
         return state;
       }
 

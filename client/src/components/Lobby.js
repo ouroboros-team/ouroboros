@@ -2,25 +2,24 @@ import React from 'react';
 import propTypes from 'prop-types';
 
 import * as constants from '../constants';
+import { ownUsernameIsSet } from '../redux/p2p/p2pHelpers';
 
 export default class Lobby extends React.Component {
   state = {
     value: '',
-    showForm: true,
+    showForm: !ownUsernameIsSet(),
   };
 
   static propTypes = {
     changeGameStatus: propTypes.func,
     ownPeerId: propTypes.string,
     setOwnUsername: propTypes.func,
-    username: propTypes.string,
   };
 
   static defaultProps = {
     changeGameStatus: () => {},
     ownPeerId: '',
     setOwnUsername: () => {},
-    username: '',
   };
 
   handleChange = (e) => {
@@ -34,7 +33,6 @@ export default class Lobby extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.setState({ showForm: false });
-    console.log('username', this.state.value);
     this.props.setOwnUsername(this.state.value);
   };
 
