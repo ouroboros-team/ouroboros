@@ -8,7 +8,7 @@ export const getSnakeLength = tu => (
 
 export const emptySnakeObject = (positions = {}) => ({
   direction: 'left',
-  status: 'alive',
+  status: constants.SNAKE_STATUS_ALIVE,
   positions,
 });
 
