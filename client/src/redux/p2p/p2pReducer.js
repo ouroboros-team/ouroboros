@@ -1,5 +1,4 @@
 import * as actionTypes from '../actionTypes';
-import * as helpers from '../metaHelpers';
 import { deepClone } from '../metaHelpers';
 
 const defaultState = {
@@ -28,12 +27,27 @@ export default function p2pReducer(state = defaultState, action) {
       return newState;
     }
     case actionTypes.P2P_REMOVE_PEER_FROM_LIST: {
-      const newState = helpers.deepClone(state);
+      const newState = { ...state };
+      newState.peers = { ...newState.peers };
       delete newState.peers[action.id];
       return newState;
     }
+    case actionTypes.P2P_UPDATE_PEER_USERNAME: {
+      const username = action.username.trim();
+
+      // ignore blank and default usernames
+      if (username === '' || username.startsWith('Player ')) {
+        return state;
+      }
+
+      const newState = { ...state };
+      newState.peers = { ...newState.peers };
+      newState.peers[action.id] = { ...newState.peers[action.id] };
+      newState.peers[action.id].username = username;
+      return newState;
+    }
     case actionTypes.P2P_CONNECTION_READY: {
-      const newState = helpers.deepClone(state);
+      const newState = { ...state };
       newState.id = action.id;
       newState.ready = true;
       return newState;
