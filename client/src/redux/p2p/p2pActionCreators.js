@@ -140,7 +140,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
           console.log('received an array of peers');
           // lobby or postgame: connect to new peers
           p2pConnectToNewPeers(data, dispatch);
-        } else if (data.username) {
+        } else if (data.username || data.username === '') {
           console.log('received a username');
           // peer username
           dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
