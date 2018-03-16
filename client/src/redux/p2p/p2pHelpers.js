@@ -27,6 +27,10 @@ export const initializeOwnPeerObject = () => {
   });
 };
 
+export const getOwnId = () => (
+  store.getState().p2p.id
+);
+
 export const ownUsernameIsSet = () => {
   const state = store.getState();
   const id = state.p2p.id;
