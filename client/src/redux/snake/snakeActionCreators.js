@@ -4,6 +4,7 @@ import * as snakeHelpers from './snakeHelpers';
 import * as p2pActions from '../p2p/p2pActionCreators';
 import * as helpers from '../metaHelpers';
 import * as constants from '../../constants';
+import * as metaActions from '../metaActionCreators';
 
 export const changeSnakeDirection = (id, direction) => ({
   id,
@@ -19,10 +20,8 @@ export const changeSnakeStatus = (id, status) => ({
 
 export const handleChangeSnakeDirection = (id, direction) => (
   (dispatch) => {
-    if (snakeHelpers.snakeIsAlive(id)) {
-      dispatch(changeSnakeDirection(id, direction));
-      p2pActions.p2pBroadcastSnakeData();
-    }
+    dispatch(changeSnakeDirection(id, direction));
+    p2pActions.p2pBroadcastSnakeData();
   }
 );
 
@@ -104,13 +103,13 @@ export const checkForCollisions = id => (
         const snake = snakes[snakeID];
         // range is headTUCounter to headTUCounter - snakeLength + 1
         let counter = headTUCounter;
-        while (counter > headTUCounter - snakeLength &&
-               snake.status === constants.SNAKE_STATUS_ALIVE) {
+        while (counter > headTUCounter - snakeLength) {
           const snakeCoordsAtTU = snake.positions.byKey[counter];
           if (snakeCoordsAtTU &&
               isNotOwnHead(counter, headTUCounter, id, snakeID)) {
             if (coordinatesMatch(myHeadCoordsAtTU, snakeCoordsAtTU)) {
               dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
+              dispatch(metaActions.checkForEndGame());
               console.log(getCollisionType(myHeadCoordsAtTU, id, snakeID, snakeLength));
             }
           }

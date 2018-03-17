@@ -47,6 +47,20 @@ export const checkReadiness = () => (
   }
 );
 
+// export const endSinglePlayerGame = () => (
+//   (dispatch) => {
+//   }
+// );
+
+export const checkForEndGame = () => (
+  (dispatch) => {
+    const peerList = Object.keys(store.getState().p2p.peers);
+    if (peerList.length === 1) {
+      dispatch(infoActions.updateGameStatus(constants.GAME_STATUS_POSTGAME));
+    }
+  }
+);
+
 export const resetGameData = () => (
   (dispatch) => {
     dispatch(snakeActions.resetSnakeData());
