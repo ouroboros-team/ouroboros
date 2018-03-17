@@ -47,16 +47,15 @@ export const checkReadiness = () => (
   }
 );
 
-// export const endSinglePlayerGame = () => (
-//   (dispatch) => {
-//   }
-// );
-
-export const checkForEndGame = collisionType => (
+export const checkForEndGame = (id, collisionType) => (
   (dispatch) => {
-    const peerList = Object.keys(store.getState().p2p.peers);
-    if (peerList.length === 1) {
-      dispatch(infoActions.updateGameStatus(constants.GAME_STATUS_POSTGAME));
+    if (snakeHelpers.lessThanThreeSnakesAlive()) {
+      if (collisionType !== constants.COLLISION_TYPE_HEAD_ON_HEAD) {
+        dispatch(snakeActions.changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
+        p2pActions.p2pBroadcastSnakeData();
+      }
+
+      dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
     }
   }
 );

@@ -109,8 +109,8 @@ export const checkForCollisions = id => (
               isNotOwnHead(counter, headTUCounter, id, snakeID)) {
             if (coordinatesMatch(myHeadCoordsAtTU, snakeCoordsAtTU)) {
               const collisionType = getCollisionType(myHeadCoordsAtTU, id, snakeID, snakeLength);
+              dispatch(metaActions.checkForEndGame(id, collisionType));
               dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
-              dispatch(metaActions.checkForEndGame(collisionType));
             }
           }
 
