@@ -36,6 +36,14 @@ export const setStartPosition = (row) => {
   };
 };
 
+export const snakeIsAlive = id => (
+  store.getState().snakes[id].status === constants.SNAKE_STATUS_ALIVE
+);
+
+export const lessThanThreeSnakesAlive = () => (
+  Object.keys(store.getState().snakes).filter(snakeIsAlive).length < 3
+);
+
 export const validateDirectionChange = (oldDir, newDir) => {
   switch (oldDir) {
     case 'down':

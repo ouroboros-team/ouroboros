@@ -5,13 +5,17 @@ import * as displayActions from './display/displayActionCreators';
 import * as infoActions from './info/infoActionCreators';
 import * as p2pActions from './p2p/p2pActionCreators';
 import * as snakeActions from './snake/snakeActionCreators';
+import * as snakeHelpers from './snake/snakeHelpers';
 
 export const handleTuTick = id => (
   (dispatch) => {
-    // Check for collisions
-    dispatch(snakeActions.checkForCollisions(id));
-    // write/broadcast own snake position
-    dispatch(snakeActions.writeOwnSnakePosition(id));
+    // Only check collisions/broadcast data if snake is alive
+    if (snakeHelpers.snakeIsAlive(id)) {
+      // Check for collisions
+      dispatch(snakeActions.checkForCollisions(id));
+      // write/broadcast own snake position
+      dispatch(snakeActions.writeOwnSnakePosition(id));
+    }
     // increment TU
     dispatch(infoActions.incrementTu());
     // get next display board
@@ -39,6 +43,19 @@ export const checkReadiness = () => (
     const snakeList = Object.keys(state.snakes);
     if (peerList.length === snakeList.length) {
       dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_READY_TO_PLAY));
+    }
+  }
+);
+
+export const checkForEndGame = (id, collisionType) => (
+  (dispatch) => {
+    if (snakeHelpers.lessThanThreeSnakesAlive()) {
+      if (collisionType !== constants.COLLISION_TYPE_HEAD_ON_HEAD) {
+        dispatch(snakeActions.changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
+        p2pActions.p2pBroadcastSnakeData();
+      }
+
+      dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
     }
   }
 );
