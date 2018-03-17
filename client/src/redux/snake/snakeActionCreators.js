@@ -78,12 +78,12 @@ export const getCollisionType = (headCoords, myID, peerID, snakeLength) => {
   const peerTailTU = peerSnake.positions.byIndex[snakeLength - 1];
   const peerTailCoords = peerSnake.positions.byKey[peerTailTU - 1];
   if (myID !== peerID && coordinatesMatch(headCoords, peerHeadCoords)) {
-    return 'HEAD-ON-HEAD COLLISION';
+    return constants.COLLISION_TYPE_HEAD_ON_HEAD;
   } else if (coordinatesMatch(headCoords, peerTailCoords)) {
-    return 'HEAD-ON-TAIL COLLISION';
+    return constants.COLLISION_TYPE_HEAD_ON_TAIL;
   }
 
-  return 'HEAD-ON-BODY COLLISION';
+  return constants.COLLISION_TYPE_HEAD_ON_BODY;
 };
 
 export const checkForCollisions = id => (
@@ -108,9 +108,9 @@ export const checkForCollisions = id => (
           if (snakeCoordsAtTU &&
               isNotOwnHead(counter, headTUCounter, id, snakeID)) {
             if (coordinatesMatch(myHeadCoordsAtTU, snakeCoordsAtTU)) {
+              const collisionType = getCollisionType(myHeadCoordsAtTU, id, snakeID, snakeLength);
               dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
-              dispatch(metaActions.checkForEndGame());
-              console.log(getCollisionType(myHeadCoordsAtTU, id, snakeID, snakeLength));
+              dispatch(metaActions.checkForEndGame(collisionType));
             }
           }
 

@@ -11,6 +11,9 @@ export const NUMBER_CANDIDATE_TUS = 3;
 export const INITIAL_SNAKE_LENGTH = 4;
 export const SNAKE_STATUS_ALIVE = 'alive';
 export const SNAKE_STATUS_DEAD = 'dead';
+export const COLLISION_TYPE_HEAD_ON_HEAD = 'HEAD_ON_HEAD';
+export const COLLISION_TYPE_HEAD_ON_TAIL = 'HEAD_ON_TAIL';
+export const COLLISION_TYPE_HEAD_ON_BODY = 'HEAD_ON_BODY';
 
 export const GAME_STATUS_LOBBY = 'lobby'; // peer connections
 export const GAME_STATUS_PREGAME = 'pregame'; // no new peers, share initial positions

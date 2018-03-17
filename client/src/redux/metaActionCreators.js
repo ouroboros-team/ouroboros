@@ -52,7 +52,7 @@ export const checkReadiness = () => (
 //   }
 // );
 
-export const checkForEndGame = () => (
+export const checkForEndGame = collisionType => (
   (dispatch) => {
     const peerList = Object.keys(store.getState().p2p.peers);
     if (peerList.length === 1) {
