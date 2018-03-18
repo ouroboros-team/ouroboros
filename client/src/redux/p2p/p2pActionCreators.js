@@ -25,9 +25,9 @@ export const p2pGetPeerIdFromURL = id => ({
   type: actionTypes.P2P_GET_PEERID_FROM_URL,
 });
 
-export const p2pUpdatePeerList = id => ({
+export const p2pAddPeerToList = id => ({
   id,
-  type: actionTypes.P2P_UPDATE_PEER_LIST,
+  type: actionTypes.P2P_ADD_PEER_TO_LIST,
 });
 
 export const p2pRemovePeerFromList = id => ({
@@ -52,7 +52,7 @@ export const p2pConnectToNewPeers = (list, dispatch) => {
     const dataConnection = peer.connect(peerId);
     dataConnection.on('open', () => {
       p2pSetDataListener(dataConnection, dispatch);
-      dispatch(p2pUpdatePeerList(dataConnection.peer));
+      dispatch(p2pAddPeerToList(dataConnection.peer));
       peerConnections[peerId] = dataConnection;
     });
     p2pSetCloseListener(dataConnection, dispatch);
@@ -171,13 +171,13 @@ export const p2pInitialize = () => (
       .on('open', (id) => {
         console.log(`My peer ID is: ${id}`);
         dispatch(p2pConnectionReady(id));
-        dispatch(p2pUpdatePeerList(id));
+        dispatch(p2pAddPeerToList(id));
         p2pConnectToURLPeer(dispatch);
       })
       .on('connection', (dataConnection) => {
         dataConnection.on('open', () => {
           p2pSetDataListener(dataConnection, dispatch);
-          dispatch(p2pUpdatePeerList(dataConnection.peer));
+          dispatch(p2pAddPeerToList(dataConnection.peer));
           peerConnections[dataConnection.peer] = dataConnection;
 
           // send list of peer ids and own username to new peer
