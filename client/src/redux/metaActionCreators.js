@@ -45,6 +45,7 @@ export const checkReadiness = () => (
 
 export const resetGameData = () => (
   (dispatch) => {
+    dispatch(infoActions.resetStartingRows());
     dispatch(snakeActions.resetSnakeData());
     dispatch(displayActions.resetDisplayData());
   }
