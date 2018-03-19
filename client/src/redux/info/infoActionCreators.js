@@ -1,11 +1,13 @@
 import random from 'lodash/random';
 
 import store from '../store';
+import * as constants from '../../constants';
 
 import * as actionTypes from '../actionTypes';
 import * as p2pActions from '../p2p/p2pActionCreators';
-import * as constants from '../../constants';
 import * as metaActions from '../metaActionCreators';
+
+import * as snakeHelpers from '../snake/snakeHelpers';
 
 export const incrementTu = () => ({
   type: actionTypes.INCREMENT_TU,

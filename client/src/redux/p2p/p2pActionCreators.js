@@ -101,7 +101,10 @@ export const p2pBroadcastStartingRows = () => (
 );
 
 export const p2pBroadcastSnakeData = () => {
-  p2pBroadcast(snakeHelpers.getOwnSnakeData());
+  const ownSnake = snakeHelpers.getOwnSnakeData();
+  if (ownSnake) {
+    p2pBroadcast(ownSnake);
+  }
 };
 
 export const p2pSetOwnUsername = username => (
