@@ -6,7 +6,6 @@ import * as metaActions from '../metaActionCreators';
 import * as infoActions from '../info/infoActionCreators';
 import * as snakeActions from '../snake/snakeActionCreators';
 
-import * as helpers from '../metaHelpers';
 import * as p2pHelpers from './p2pHelpers';
 import * as snakeHelpers from '../snake/snakeHelpers';
 
@@ -82,20 +81,24 @@ export const p2pBroadcastGameStatus = status => (
 
     // these actions are only for the player that made the change
     if (status === constants.GAME_STATUS_PREGAME) {
-      p2pBroadcastStartingRows();
+      dispatch(p2pBroadcastStartingRows());
       dispatch(snakeActions.initializeOwnSnake(p2pHelpers.getOwnId()));
       dispatch(metaActions.checkReadiness());
     }
   }
 );
 
-export const p2pBroadcastStartingRows = () => {
-  // player who set new game status to pregame
-  // chooses random starting row positions for all peers
-  Object.values(peerConnections).forEach((connection) => {
-    connection.send(helpers.randomUniqueRow());
-  });
-};
+export const p2pBroadcastStartingRows = () => (
+  (dispatch) => {
+    // player who set new game status to pregame
+    // chooses random starting row positions for all peers
+    let row;
+    Object.values(peerConnections).forEach((connection) => {
+      row = dispatch(infoActions.randomUniqueRow());
+      connection.send(row);
+    });
+  }
+);
 
 export const p2pBroadcastSnakeData = () => {
   p2pBroadcast(snakeHelpers.getOwnSnakeData());
@@ -137,11 +140,9 @@ export const p2pSetDataListener = (connection, dispatch) => {
       }
       case 'object': {
         if (Array.isArray(data)) {
-          console.log('received an array of peers');
           // lobby or postgame: connect to new peers
           p2pConnectToNewPeers(data, dispatch);
         } else if (data.username || data.username === '') {
-          console.log('received a username');
           // peer username
           dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
         } else {
@@ -166,7 +167,7 @@ export const p2pInitialize = () => (
   (dispatch) => {
     peer = p2pHelpers.initializeOwnPeerObject()
       .on('error', (error) => {
-        console.log(`PeerJS error: ${error}`);
+        console.log(`P2P error: ${error}`);
       })
       .on('open', (id) => {
         console.log(`My peer ID is: ${id}`);
