@@ -7,6 +7,10 @@ export const INITIAL_TU = 0;
 // beyond what is currently displayed (according to snake length)
 export const HISTORY_LENGTH = 10;
 export const NUMBER_CANDIDATE_TUS = 3;
+export const COLLISION_TYPE_HEAD_ON_HEAD = 'HEAD_ON_HEAD';
+export const COLLISION_TYPE_HEAD_ON_BODY = 'HEAD_ON_BODY';
+export const COLLISION_TYPE_HEAD_ON_TAIL = 'HEAD_ON_TAIL';
+
 
 export const INITIAL_SNAKE_LENGTH = 4;
 export const SNAKE_STATUS_ALIVE = 'alive';
