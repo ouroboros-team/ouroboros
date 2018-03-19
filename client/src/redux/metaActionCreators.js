@@ -5,17 +5,21 @@ import * as displayActions from './display/displayActionCreators';
 import * as infoActions from './info/infoActionCreators';
 import * as p2pActions from './p2p/p2pActionCreators';
 import * as snakeActions from './snake/snakeActionCreators';
+import * as snakeHelpers from './snake/snakeHelpers';
 
 export const handleTuTick = id => (
   (dispatch) => {
-    // Check for collisions
-    dispatch(snakeActions.checkForCollisions(id));
-    // write/broadcast own snake position
-    dispatch(snakeActions.writeOwnSnakePosition(id));
+    // Only check collisions/broadcast data if snake is alive
+    if (snakeHelpers.snakeIsAlive(id)) {
+      // write/broadcast own snake position
+      dispatch(snakeActions.writeOwnSnakePosition(id));
+      // Check for collisions
+      dispatch(snakeActions.checkForCollisions(id));
+    }
     // increment TU
     dispatch(infoActions.incrementTu());
     // get next display board
-    dispatch(displayActions.getNextDisplayBoard());
+    dispatch(displayActions.buildNextDisplayBoard());
   }
 );
 
