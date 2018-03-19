@@ -1,3 +1,7 @@
+import random from 'lodash/random';
+
+import store from '../store';
+
 import * as actionTypes from '../actionTypes';
 import * as p2pActions from '../p2p/p2pActionCreators';
 import * as constants from '../../constants';
@@ -7,10 +11,34 @@ export const incrementTu = () => ({
   type: actionTypes.INCREMENT_TU,
 });
 
+export const updateStartingRows = row => ({
+  row,
+  type: actionTypes.UPDATE_STARTING_ROWS,
+});
+
+export const resetStartingRows = () => ({
+  type: actionTypes.RESET_STARTING_ROWS,
+});
+
 export const updateGameStatus = status => ({
   status,
   type: actionTypes.UPDATE_GAME_STATUS,
 });
+
+export const randomUniqueRow = () => (
+  (dispatch) => {
+    const rowsUsed = store.getState().info.startingRows;
+
+    let row = random(0, constants.GRID_SIZE - 1);
+
+    while (rowsUsed.includes(row)) {
+      row = random(0, constants.GRID_SIZE - 1);
+    }
+
+    dispatch(updateStartingRows(row));
+    return row;
+  }
+);
 
 export const handleGameStatusChange = newStatus => (
   (dispatch) => {
