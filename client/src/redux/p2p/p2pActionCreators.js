@@ -95,7 +95,6 @@ export const p2pBroadcastStartingRows = () => (
     let row;
     Object.values(peerConnections).forEach((connection) => {
       row = dispatch(infoActions.randomUniqueRow());
-      console.log(`sending row ${row} to ${connection.peer}`);
       connection.send(row);
     });
   }
@@ -135,18 +134,15 @@ export const p2pSetDataListener = (connection, dispatch) => {
       case 'number': {
         // pregame: receive starting row and initialize own snake,
         // then send snake data to peers
-        console.log(`received starting row ${data}`);
         dispatch(snakeActions.initializeOwnSnake(p2pHelpers.getOwnId(), data));
         p2pBroadcastSnakeData();
         break;
       }
       case 'object': {
         if (Array.isArray(data)) {
-          console.log('received an array of peers');
           // lobby or postgame: connect to new peers
           p2pConnectToNewPeers(data, dispatch);
         } else if (data.username || data.username === '') {
-          console.log('received a username');
           // peer username
           dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
         } else {
@@ -171,7 +167,7 @@ export const p2pInitialize = () => (
   (dispatch) => {
     peer = p2pHelpers.initializeOwnPeerObject()
       .on('error', (error) => {
-        console.log(`PeerJS error: ${error}`);
+        console.log(`P2P error: ${error}`);
       })
       .on('open', (id) => {
         console.log(`My peer ID is: ${id}`);
