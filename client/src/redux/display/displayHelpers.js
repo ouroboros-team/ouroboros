@@ -1,38 +1,20 @@
+import merge from 'lodash/merge';
+
 import store from '../store';
 import * as snakeHelpers from '../snake/snakeHelpers';
-import * as helpers from '../metaHelpers';
 import * as constants from '../../constants';
 
-export const addCoordinatesMutate = (board, coords, snake, snakeId) => {
-  if (board[coords.row] === undefined) {
-    board[coords.row] = {};
-  }
-
-  board[coords.row][coords.column] = {
-    snake,
-    id: snakeId,
-  };
-};
-
 export const aggregateBoards = (lastTu) => {
-  const snakesObj = helpers.deepClone(store.getState().snakes);
-  const snakeIds = Object.keys(snakesObj);
+  const state = store.getState();
+  const boards = state.boards;
   const length = snakeHelpers.getSnakeLength(lastTu);
-  const aggregatedBoard = {};
-  let snake = {};
+  let aggregatedBoard = {};
 
-  snakeIds.forEach((id) => {
-    if (snakeHelpers.snakeIsAlive(id)) {
-      snake = snakesObj[id];
-
-      for (let i = (lastTu - length) + 1; i <= lastTu; i++) {
-        // newer data overwrites older data, no collision checking yet
-        if (snake.positions.byKey[i]) {
-          addCoordinatesMutate(aggregatedBoard, snake.positions.byKey[i], snake, id);
-        }
-      }
-    }
-  });
+  let i = lastTu - (length - 1);
+  while (i <= lastTu) {
+    aggregatedBoard = merge(aggregatedBoard, boards[i]);
+    i += 1;
+  }
 
   return aggregatedBoard;
 };
