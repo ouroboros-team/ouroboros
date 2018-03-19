@@ -23,8 +23,10 @@ export const changeSnakeStatus = (id, status) => ({
 
 export const handleChangeSnakeDirection = (id, direction) => (
   (dispatch) => {
-    dispatch(changeSnakeDirection(id, direction));
-    p2pActions.p2pBroadcastSnakeData();
+    if (snakeHelpers.snakeIsAlive(id)) {
+      dispatch(changeSnakeDirection(id, direction));
+      p2pActions.p2pBroadcastSnakeData();
+    }
   }
 );
 
@@ -82,12 +84,12 @@ export const getCollisionType = (headCoords, myID, peerID, snakeLength) => {
   const peerTailTU = peerSnake.positions.byIndex[snakeLength - 1];
   const peerTailCoords = peerSnake.positions.byKey[peerTailTU - 1];
   if (myID !== peerID && coordinatesMatch(headCoords, peerHeadCoords)) {
-    return 'HEAD-ON-HEAD COLLISION';
+    return constants.COLLISION_TYPE_HEAD_ON_HEAD;
   } else if (coordinatesMatch(headCoords, peerTailCoords)) {
-    return 'HEAD-ON-TAIL COLLISION';
+    return constants.COLLISION_TYPE_HEAD_ON_TAIL;
   }
 
-  return 'HEAD-ON-BODY COLLISION';
+  return constants.COLLISION_TYPE_HEAD_ON_BODY;
 };
 
 export const checkForCollisions = id => (
@@ -97,8 +99,8 @@ export const checkForCollisions = id => (
     const myLastTU = Number(mySnake.positions.byIndex[0]);
 
     // candidate tus are myLastTU to myLastTU - NUMBER_CANDIDATE_TUS + 1
-    let headTUCounter = myLastTU;
-    while (headTUCounter > myLastTU - constants.NUMBER_CANDIDATE_TUS) {
+    let headTUCounter = myLastTU - (constants.NUMBER_CANDIDATE_TUS - 1);
+    while (headTUCounter <= myLastTU) {
       const myHeadCoordsAtTU = mySnake.positions.byKey[headTUCounter];
       const snakeLength = snakeHelpers.getSnakeLength(headTUCounter);
       const snakeIDs = Object.keys(snakes);
@@ -107,7 +109,8 @@ export const checkForCollisions = id => (
         const snake = snakes[snakeID];
         // range is headTUCounter to headTUCounter - snakeLength + 1
         let counter = headTUCounter;
-        while (counter > headTUCounter - snakeLength) {
+        while (counter > headTUCounter - snakeLength &&
+               snake.status === constants.SNAKE_STATUS_ALIVE) {
           const snakeCoordsAtTU = snake.positions.byKey[counter];
           if (snakeCoordsAtTU &&
             isNotOwnHead(counter, headTUCounter, id, snakeID)) {
@@ -121,7 +124,7 @@ export const checkForCollisions = id => (
         }
       }
 
-      headTUCounter -= 1;
+      headTUCounter += 1;
     }
   }
 );
