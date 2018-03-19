@@ -1,6 +1,7 @@
 import store from '../store';
 import * as actionTypes from '../actionTypes';
 import * as helpers from '../metaHelpers';
+import * as boardHelpers from '../board/boardHelpers';
 import * as displayHelpers from './displayHelpers';
 import * as snakeHelpers from '../snake/snakeHelpers';
 import * as p2pActions from '../p2p/p2pActionCreators';
@@ -56,7 +57,7 @@ export const buildNextDisplayBoard = () => (
           // add next position to newBoard if it is within range
           // (based on target TU and snake length)
           if (mostRecentTu <= tu && mostRecentTu > tu - length) {
-            displayHelpers.addCoordinatesMutate(newBoard, next, snake, id);
+            boardHelpers.addCoordinatesMutate(newBoard, next, snake, id);
           }
         }
       }
