@@ -60,7 +60,7 @@ export const writeOwnSnakePosition = id => (
 
     newSnake.positions.byKey = {};
     newSnake.positions.byKey[`${lastTu + 1}`] = coords;
-    newSnake.positions.byIndex = [`${lastTu + 1}`];
+    newSnake.positions.byIndex = [ `${lastTu + 1}` ];
 
     dispatch(updateSnakeData(id, newSnake));
     p2pActions.p2pBroadcastSnakeData();
