@@ -11,10 +11,10 @@ export const handleTuTick = id => (
   (dispatch) => {
     // Only check collisions/broadcast data if snake is alive
     if (snakeHelpers.snakeIsAlive(id)) {
-      // Check for collisions
-      dispatch(snakeActions.checkForCollisions(id));
       // write/broadcast own snake position
       dispatch(snakeActions.writeOwnSnakePosition(id));
+      // Check for collisions
+      dispatch(snakeActions.checkForCollisions(id));
     }
     // increment TU
     dispatch(infoActions.incrementTu());

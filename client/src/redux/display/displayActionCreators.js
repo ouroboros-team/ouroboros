@@ -28,8 +28,9 @@ export const buildNextDisplayBoard = () => (
     const snakeIds = Object.keys(snakesObj);
 
     const length = snakeHelpers.getSnakeLength(tu);
-
     const aliveSnakes = [];
+    const peerList = Object.keys(state.p2p.peers);
+
     let snake;
     let mostRecentTu;
     let next;
@@ -61,7 +62,8 @@ export const buildNextDisplayBoard = () => (
       }
     });
 
-    if (aliveSnakes.length < 2) {
+    if ((aliveSnakes.length < 2 && peerList.length > 1) ||
+        (aliveSnakes.length < 1 && peerList.length < 2)) {
       dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
     }
 
