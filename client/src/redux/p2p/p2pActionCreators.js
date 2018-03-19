@@ -6,7 +6,6 @@ import * as metaActions from '../metaActionCreators';
 import * as infoActions from '../info/infoActionCreators';
 import * as snakeActions from '../snake/snakeActionCreators';
 
-import * as helpers from '../metaHelpers';
 import * as p2pHelpers from './p2pHelpers';
 import * as snakeHelpers from '../snake/snakeHelpers';
 
@@ -82,20 +81,25 @@ export const p2pBroadcastGameStatus = status => (
 
     // these actions are only for the player that made the change
     if (status === constants.GAME_STATUS_PREGAME) {
-      p2pBroadcastStartingRows();
+      dispatch(p2pBroadcastStartingRows());
       dispatch(snakeActions.initializeOwnSnake(p2pHelpers.getOwnId()));
       dispatch(metaActions.checkReadiness());
     }
   }
 );
 
-export const p2pBroadcastStartingRows = () => {
-  // player who set new game status to pregame
-  // chooses random starting row positions for all peers
-  Object.values(peerConnections).forEach((connection) => {
-    connection.send(helpers.randomUniqueRow());
-  });
-};
+export const p2pBroadcastStartingRows = () => (
+  (dispatch) => {
+    // player who set new game status to pregame
+    // chooses random starting row positions for all peers
+    let row;
+    Object.values(peerConnections).forEach((connection) => {
+      row = dispatch(infoActions.randomUniqueRow());
+      console.log(`sending row ${row} to ${connection.peer}`);
+      connection.send(row);
+    });
+  }
+);
 
 export const p2pBroadcastSnakeData = () => {
   p2pBroadcast(snakeHelpers.getOwnSnakeData());
@@ -131,6 +135,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
       case 'number': {
         // pregame: receive starting row and initialize own snake,
         // then send snake data to peers
+        console.log(`received starting row ${data}`);
         dispatch(snakeActions.initializeOwnSnake(p2pHelpers.getOwnId(), data));
         p2pBroadcastSnakeData();
         break;
