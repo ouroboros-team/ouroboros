@@ -1,6 +1,7 @@
 import store from './store';
 import * as constants from '../constants';
 
+import * as boardActions from './board/boardActionCreators';
 import * as displayActions from './display/displayActionCreators';
 import * as infoActions from './info/infoActionCreators';
 import * as p2pActions from './p2p/p2pActionCreators';
@@ -27,8 +28,10 @@ export const receiveSnakeData = (id, data) => (
   (dispatch) => {
     if (data.status === constants.SNAKE_STATUS_DEAD) {
       dispatch(snakeActions.changeSnakeStatus(id, data.status));
+      dispatch(boardActions.updateBoards(id, data));
     } else {
       dispatch(snakeActions.updateSnakeData(id, data));
+      dispatch(boardActions.updateBoards(id, data));
     }
   }
 );
@@ -52,6 +55,7 @@ export const resetGameData = () => (
     dispatch(infoActions.resetStartingRows());
     dispatch(snakeActions.resetSnakeData());
     dispatch(displayActions.resetDisplayData());
+    dispatch(boardActions.resetBoards());
     dispatch(infoActions.setTu(0));
   }
 );
