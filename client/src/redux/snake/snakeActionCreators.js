@@ -1,8 +1,12 @@
 import store from '../store';
+
 import * as actionTypes from '../actionTypes';
-import * as snakeHelpers from './snakeHelpers';
+import * as infoActions from '../info/infoActionCreators';
 import * as p2pActions from '../p2p/p2pActionCreators';
+
+import * as snakeHelpers from './snakeHelpers';
 import * as helpers from '../metaHelpers';
+
 import * as constants from '../../constants';
 
 export const changeSnakeDirection = (id, direction) => ({
@@ -36,10 +40,11 @@ export const resetSnakeData = () => ({
   type: actionTypes.RESET_SNAKE_DATA,
 });
 
-export const initializeOwnSnake = id => (
+export const initializeOwnSnake = (id, row) => (
   (dispatch) => {
-    const row = helpers.randomUniqueRow();
-    const positions = snakeHelpers.setStartPosition(row);
+    const startingRow = row || dispatch(infoActions.randomUniqueRow());
+
+    const positions = snakeHelpers.setStartPosition(startingRow);
     const snake = snakeHelpers.emptySnakeObject(positions);
 
     dispatch(updateSnakeData(id, snake));
@@ -108,7 +113,7 @@ export const checkForCollisions = id => (
                snake.status === constants.SNAKE_STATUS_ALIVE) {
           const snakeCoordsAtTU = snake.positions.byKey[counter];
           if (snakeCoordsAtTU &&
-              isNotOwnHead(counter, headTUCounter, id, snakeID)) {
+            isNotOwnHead(counter, headTUCounter, id, snakeID)) {
             if (coordinatesMatch(myHeadCoordsAtTU, snakeCoordsAtTU)) {
               dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
               console.log(getCollisionType(myHeadCoordsAtTU, id, snakeID, snakeLength));
