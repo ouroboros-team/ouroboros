@@ -1,5 +1,4 @@
 import * as actionTypes from '../actionTypes';
-import { deepClone } from '../metaHelpers';
 
 const defaultState = {
   id: '',
@@ -16,9 +15,14 @@ export default function p2pReducer(state = defaultState, action) {
       newState.sharedPeerId = action.id;
       return newState;
     }
-    case actionTypes.P2P_UPDATE_PEER_LIST: {
+    case actionTypes.P2P_ADD_PEER_TO_LIST: {
+      if (state.peers[action.id]) {
+        return state;
+      }
+
       const newState = { ...state };
-      newState.peers = deepClone(newState.peers);
+      newState.peers = { ...newState.peers };
+
       newState.peers[action.id] = {
         styleId: newState.nextStyleId,
         defaultUsername: `Player ${newState.nextStyleId}`,
