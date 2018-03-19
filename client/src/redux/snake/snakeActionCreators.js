@@ -94,8 +94,8 @@ export const checkForCollisions = id => (
     const myLastTU = Number(mySnake.positions.byIndex[0]);
 
     // candidate tus are myLastTU to myLastTU - NUMBER_CANDIDATE_TUS + 1
-    let headTUCounter = myLastTU;
-    while (headTUCounter > myLastTU - constants.NUMBER_CANDIDATE_TUS) {
+    let headTUCounter = myLastTU - (constants.NUMBER_CANDIDATE_TUS - 1);
+    while (headTUCounter <= myLastTU) {
       const myHeadCoordsAtTU = mySnake.positions.byKey[headTUCounter];
       const snakeLength = snakeHelpers.getSnakeLength(headTUCounter);
       const snakeIDs = Object.keys(snakes);
@@ -119,7 +119,7 @@ export const checkForCollisions = id => (
         }
       }
 
-      headTUCounter -= 1;
+      headTUCounter += 1;
     }
   }
 );
