@@ -115,6 +115,7 @@ export const checkForCollisions = id => (
       if (board[ownHead.row] && board[ownHead.row][ownHead.column]) {
         // collision
         dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
+        p2pActions.p2pBroadcastSnakeData();
 
         // check collision type
         collisionType = getCollisionType(ownHead, id, board[ownHead.row][ownHead.column].id, length);
@@ -123,6 +124,7 @@ export const checkForCollisions = id => (
         if (collisionType === constants.COLLISION_TYPE_HEAD_ON_HEAD) {
           // other snake is also dead
           dispatch(changeSnakeStatus(board[ownHead.row][ownHead.column].id, constants.SNAKE_STATUS_DEAD));
+          p2pActions.p2pBroadcast(board[ownHead.row][ownHead.column].snake);
         }
       }
 
