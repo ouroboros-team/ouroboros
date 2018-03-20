@@ -70,7 +70,6 @@ export const writeOwnSnakePosition = id => (
     newSnake.positions.byIndex = [ `${lastTu + 1}` ];
 
     dispatch(updateSnakeData(id, newSnake));
-    dispatch(headSetActions.updateHeadSets(id, newSnake));
     p2pActions.p2pBroadcastSnakeData();
   }
 );
