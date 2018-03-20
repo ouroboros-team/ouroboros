@@ -4,6 +4,7 @@ import store from '../store';
 
 import * as actionTypes from '../actionTypes';
 import * as infoActions from '../info/infoActionCreators';
+import * as metaActions from '../metaActionCreators';
 import * as p2pActions from '../p2p/p2pActionCreators';
 
 import * as boardHelpers from '../board/boardHelpers';
@@ -124,6 +125,9 @@ export const checkForCollisions = id => (
           dispatch(changeSnakeStatus(board[ownHead.row][ownHead.column].id, constants.SNAKE_STATUS_DEAD));
           p2pActions.p2pBroadcast(board[ownHead.row][ownHead.column].snake);
         }
+
+        dispatch(checkForGameOver());
+        return;
       }
 
       tuCounter += 1;
@@ -133,24 +137,21 @@ export const checkForCollisions = id => (
 
 export const checkForGameOver = () => (
   (dispatch) => {
-    const snakes = store.getState().snakes;
-    const snakeIds = Object.keys(snakes);
-    const count = snakeIds.length;
+    const state = store.getState();
+    const snakeIds = Object.keys(state.snakes);
+    const snakeCount = snakeIds.length;
 
     const snakesAlive = [];
 
     snakeIds.forEach((id) => {
-      if (snakes[id].status === constants.SNAKE_STATUS_ALIVE) {
-        return snakesAlive.push(snakes[id]);
+      if (snakeHelpers.snakeIsAlive(id, state.snakes)) {
+        snakesAlive.push(id);
       }
     });
 
-    if ((count === 1 && snakesAlive.length === 0) || (count > 1 && snakesAlive.length <= 1)) {
-      dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
+    if ((snakeCount === 1 && snakesAlive.length === 0)
+      || (snakeCount > 1 && snakesAlive.length <= 1)) {
+      dispatch(metaActions.declareGameOver(snakesAlive[0]));
     }
-
-    // TODO: push list to Redux, broadcast it to peers
-    console.log(snakesAlive);
-    return snakesAlive;
   }
 );
