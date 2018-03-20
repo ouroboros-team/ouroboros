@@ -1,12 +1,14 @@
 import store from './store';
 import * as constants from '../constants';
 
-import * as displayActions from './display/displayActionCreators';
+import * as headSetActions from './headSet/headSetActionCreators';
+import * as boardActions from './board/boardActionCreators';
 import * as infoActions from './info/infoActionCreators';
 import * as p2pActions from './p2p/p2pActionCreators';
 import * as snakeActions from './snake/snakeActionCreators';
 
 import * as snakeHelpers from './snake/snakeHelpers';
+import * as p2pHelpers from './p2p/p2pHelpers';
 
 export const handleTuTick = id => (
   (dispatch) => {
@@ -14,7 +16,7 @@ export const handleTuTick = id => (
     if (snakeHelpers.snakeIsAlive(id)) {
       // write/broadcast own snake position
       dispatch(snakeActions.writeOwnSnakePosition(id));
-      // Check for collisions
+      // Check for collisions, if found, check for game over
       dispatch(snakeActions.checkForCollisions(id));
     } else {
       // if own snake is dead or have no snake,
@@ -23,18 +25,15 @@ export const handleTuTick = id => (
     }
     // increment TU
     dispatch(infoActions.incrementTu());
-    // get next display board
-    dispatch(displayActions.buildNextDisplayBoard());
+    // get next board
+    dispatch(boardActions.getNextBoard());
   }
 );
 
 export const receiveSnakeData = (id, data) => (
   (dispatch) => {
-    if (data.status === constants.SNAKE_STATUS_DEAD) {
-      dispatch(snakeActions.changeSnakeStatus(id, data.status));
-    } else {
-      dispatch(snakeActions.updateSnakeData(id, data));
-    }
+    dispatch(snakeActions.updateSnakeData(id, data));
+    dispatch(headSetActions.updateHeadSets(id));
   }
 );
 
@@ -56,7 +55,20 @@ export const resetGameData = () => (
   (dispatch) => {
     dispatch(infoActions.resetStartingRows());
     dispatch(snakeActions.resetSnakeData());
-    dispatch(displayActions.resetDisplayData());
+    dispatch(boardActions.resetBoard());
+    dispatch(headSetActions.resetHeadSets());
     dispatch(infoActions.setTu(0));
+    dispatch(infoActions.resetWinner());
+  }
+);
+
+export const declareGameOver = peerId => (
+  (dispatch) => {
+    if (peerId) {
+      p2pActions.p2pBroadcastWinnerId(peerId);
+      const username = p2pHelpers.getUsername(peerId);
+      dispatch(infoActions.updateWinner(username));
+    }
+    dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
   }
 );
