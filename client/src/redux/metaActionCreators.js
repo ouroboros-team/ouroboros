@@ -26,13 +26,8 @@ export const handleTuTick = id => (
 
 export const receiveSnakeData = (id, data) => (
   (dispatch) => {
-    if (data.status === constants.SNAKE_STATUS_DEAD) {
-      dispatch(snakeActions.changeSnakeStatus(id, data.status));
-      dispatch(boardActions.updateBoards(id, data));
-    } else {
-      dispatch(snakeActions.updateSnakeData(id, data));
-      dispatch(boardActions.updateBoards(id, data));
-    }
+    dispatch(snakeActions.updateSnakeData(id, data));
+    dispatch(boardActions.updateBoards(id));
   }
 );
 

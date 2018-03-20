@@ -1,6 +1,7 @@
 import store from '../store';
 
 import * as actionTypes from '../actionTypes';
+import * as boardActions from '../board/boardActionCreators';
 import * as infoActions from '../info/infoActionCreators';
 import * as p2pActions from '../p2p/p2pActionCreators';
 
@@ -65,6 +66,7 @@ export const writeOwnSnakePosition = id => (
     newSnake.positions.byIndex = [ `${lastTu + 1}` ];
 
     dispatch(updateSnakeData(id, newSnake));
+    dispatch(boardActions.updateBoards(id, newSnake));
     p2pActions.p2pBroadcastSnakeData();
   }
 );

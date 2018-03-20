@@ -15,6 +15,7 @@ export const addCoordinatesMutate = (board, coords, snake, snakeId) => {
 
 export const updateBoards = (boards, id, snakeData = undefined) => {
   let snake = snakeData;
+
   if (!snake) {
     snake = store.getState().snakes[id];
   }
