@@ -3,11 +3,10 @@ import merge from 'lodash/merge';
 import store from '../store';
 
 import * as actionTypes from '../actionTypes';
-import * as headSetActions from '../headSet/headSetActionCreators';
 import * as infoActions from '../info/infoActionCreators';
 import * as p2pActions from '../p2p/p2pActionCreators';
 
-import * as displayHelpers from '../display/displayHelpers';
+import * as boardHelpers from '../board/boardHelpers';
 import * as snakeHelpers from './snakeHelpers';
 import * as helpers from '../metaHelpers';
 
@@ -108,7 +107,7 @@ export const checkForCollisions = id => (
     while (tuCounter <= lastTu) {
       ownHead = ownSnake.positions.byKey[tuCounter];
       // compare own head to other snakes and rest of own body
-      board = merge(displayHelpers.aggregateBoards(tuCounter), displayHelpers.aggregateOwnSnake(tuCounter - 1));
+      board = merge(boardHelpers.aggregateBoards(tuCounter), boardHelpers.aggregateOwnSnake(tuCounter - 1));
       length = snakeHelpers.getSnakeLength(tuCounter);
 
       if (board[ownHead.row] && board[ownHead.row][ownHead.column]) {

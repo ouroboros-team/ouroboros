@@ -1,19 +1,19 @@
 import merge from 'lodash/merge';
 
 import store from '../store';
-import * as boardHelpers from '../board/boardHelpers';
+import * as headSetHelpers from '../headSet/headSetHelpers';
 import * as snakeHelpers from '../snake/snakeHelpers';
 import * as helpers from '../metaHelpers';
 import * as constants from '../../constants';
 
-export const aggregateBoards = (lastTu) => {
+export const aggregateBoards = (mostRecentTu) => {
   const state = store.getState();
   const headSets = state.headSets;
-  const length = snakeHelpers.getSnakeLength(lastTu);
+  const length = snakeHelpers.getSnakeLength(mostRecentTu);
   let aggregatedBoard = {};
 
-  let i = lastTu - (length - 1);
-  while (i <= lastTu) {
+  let i = mostRecentTu - (length - 1);
+  while (i <= mostRecentTu) {
     aggregatedBoard = merge(aggregatedBoard, headSets[i]);
     i += 1;
   }
@@ -21,28 +21,28 @@ export const aggregateBoards = (lastTu) => {
   return aggregatedBoard;
 };
 
-export const aggregateOwnSnake = (tu) => {
+export const aggregateOwnSnake = (mostRecentTu) => {
   const state = store.getState();
   const ownId = state.p2p.id;
   const snake = state.snakes[ownId];
-  const length = snakeHelpers.getSnakeLength(tu);
+  const length = snakeHelpers.getSnakeLength(mostRecentTu);
   const aggregate = {};
 
-  let i = tu - (length - 1);
+  let i = mostRecentTu - (length - 1);
 
-  while (i <= tu && snake.positions.byKey[i]) {
-    boardHelpers.addCoordinatesMutate(aggregate, snake.positions.byKey[i], snake, ownId);
+  while (i <= mostRecentTu && snake.positions.byKey[i]) {
+    headSetHelpers.addCoordinatesMutate(aggregate, snake.positions.byKey[i], snake, ownId);
     i += 1;
   }
 
   return aggregate;
 };
 
-export const getInitialDisplayBoard = () => (
+export const getInitialBoard = () => (
   merge(aggregateBoards(constants.INITIAL_TU), aggregateOwnSnake(constants.INITIAL_TU))
 );
 
-export const buildNextDisplayBoard = () => {
+export const buildNextBoard = () => {
   const state = store.getState();
   const tu = state.info.tu;
 
@@ -76,7 +76,7 @@ export const buildNextDisplayBoard = () => {
         // add next position to newBoard if it is within range
         // (based on target TU and snake length)
         if (mostRecentTu <= tu && mostRecentTu > tu - length) {
-          boardHelpers.addCoordinatesMutate(newBoard, next, snake, id);
+          headSetHelpers.addCoordinatesMutate(newBoard, next, snake, id);
         }
       }
     }

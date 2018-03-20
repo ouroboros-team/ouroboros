@@ -3,14 +3,14 @@ import { createLogger } from 'redux-logger';
 import ReduxThunk from 'redux-thunk';
 
 import headSetReducer from './headSet/headSetReducer';
-import displayReducer from './display/displayReducer';
+import boardReducer from './board/boardReducer';
 import infoReducer from './info/infoReducer';
 import p2pReducer from './p2p/p2pReducer';
 import snakesReducer from './snake/snakeReducer';
 
 const reducer = combineReducers({
   headSets: headSetReducer,
-  displayBoard: displayReducer,
+  board: boardReducer,
   info: infoReducer,
   p2p: p2pReducer,
   snakes: snakesReducer,

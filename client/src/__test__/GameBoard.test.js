@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 
 import GameBoard from '../components/GameBoard';
 
-const initialState = { displayBoard: {} };
+const initialState = { board: {} };
 const mockStore = configureStore([ thunk ]);
 const store = mockStore(initialState);
 

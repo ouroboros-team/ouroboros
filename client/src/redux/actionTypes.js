@@ -2,10 +2,10 @@
 export const UPDATE_HEAD_SETS = 'UPDATE_HEAD_SETS';
 export const RESET_HEAD_SETS = 'RESET_HEAD_SETS';
 
-// display board
-export const GET_INITIAL_DISPLAY_BOARD = 'GET_INITIAL_DISPLAY_BOARD';
-export const GET_NEXT_DISPLAY_BOARD = 'GET_NEXT_DISPLAY_BOARD';
-export const RESET_DISPLAY_DATA = 'RESET_DISPLAY_DATA';
+// board board
+export const GET_INITIAL_BOARD = 'GET_INITIAL_BOARD';
+export const GET_NEXT_BOARD = 'GET_NEXT_BOARD';
+export const RESET_BOARD = 'RESET_BOARD';
 
 // info
 export const INCREMENT_TU = 'INCREMENT_TU';
