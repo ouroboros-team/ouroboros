@@ -39,7 +39,7 @@ export const aggregateOwnSnake = (tu) => {
 };
 
 export const getInitialDisplayBoard = () => (
-  aggregateBoards(constants.INITIAL_TU)
+  merge(aggregateBoards(constants.INITIAL_TU), aggregateOwnSnake(constants.INITIAL_TU))
 );
 
 export const buildNextDisplayBoard = () => {
