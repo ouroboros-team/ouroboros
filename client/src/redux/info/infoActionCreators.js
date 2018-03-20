@@ -35,6 +35,10 @@ export const updateWinner = winner => ({
   type: actionTypes.UPDATE_WINNER,
 });
 
+export const resetWinner = () => ({
+  type: actionTypes.RESET_WINNER,
+});
+
 export const randomUniqueRow = () => (
   (dispatch) => {
     const rowsUsed = store.getState().info.startingRows;

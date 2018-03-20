@@ -45,6 +45,11 @@ export default function infoReducer(state = defaultState, action) {
       newState.winner = action.winner;
       return newState;
     }
+    case actionTypes.RESET_WINNER: {
+      const newState = { ...state };
+      newState.winner = '';
+      return newState;
+    }
     default: {
       return state;
     }
