@@ -1,10 +1,10 @@
 import merge from 'lodash/merge';
 
 import store from '../store';
-import * as snakeHelpers from '../snake/snakeHelpers';
-import * as constants from '../../constants';
 import * as boardHelpers from '../board/boardHelpers';
+import * as snakeHelpers from '../snake/snakeHelpers';
 import * as helpers from '../metaHelpers';
+import * as constants from '../../constants';
 
 export const aggregateBoards = (lastTu) => {
   const state = store.getState();
@@ -21,6 +21,22 @@ export const aggregateBoards = (lastTu) => {
   return aggregatedBoard;
 };
 
+export const aggregateOwnSnake = (tu) => {
+  const state = store.getState();
+  const ownId = state.p2p.id;
+  const snake = state.snakes[ownId];
+  const length = snakeHelpers.getSnakeLength(tu);
+  const aggregate = {};
+
+  let i = tu - (length - 1);
+  while (i <= tu) {
+    boardHelpers.addCoordinatesMutate(aggregate, snake.positions.byKey[i], snake, ownId);
+    i += 1;
+  }
+
+  return aggregate;
+};
+
 export const getInitialDisplayBoard = () => (
   aggregateBoards(constants.INITIAL_TU)
 );
@@ -29,11 +45,10 @@ export const buildNextDisplayBoard = () => {
   const state = store.getState();
   const tu = state.info.tu;
 
-  const newBoard = aggregateBoards(tu);
+  const newBoard = merge(aggregateBoards(tu), aggregateOwnSnake(tu));
 
   const snakesObj = helpers.deepClone(state.snakes);
   const snakeIds = Object.keys(snakesObj);
-
   const length = snakeHelpers.getSnakeLength(tu);
 
   let snake;
