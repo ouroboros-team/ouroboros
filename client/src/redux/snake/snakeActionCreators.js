@@ -105,18 +105,23 @@ export const checkForCollisions = id => (
       const snakeLength = snakeHelpers.getSnakeLength(headTUCounter);
       const snakeIDs = Object.keys(snakes);
       for (let i = 0; i < snakeIDs.length; i += 1) {
-        const snakeID = snakeIDs[i];
-        const snake = snakes[snakeID];
+        const peerID = snakeIDs[i];
+        const peerSnake = snakes[peerID];
         // range is headTUCounter to headTUCounter - snakeLength + 1
         let counter = headTUCounter;
         while (counter > headTUCounter - snakeLength &&
-               snake.status === constants.SNAKE_STATUS_ALIVE) {
-          const snakeCoordsAtTU = snake.positions.byKey[counter];
+               peerSnake.status === constants.SNAKE_STATUS_ALIVE) {
+          const snakeCoordsAtTU = peerSnake.positions.byKey[counter];
           if (snakeCoordsAtTU &&
-            isNotOwnHead(counter, headTUCounter, id, snakeID)) {
+            isNotOwnHead(counter, headTUCounter, id, peerID)) {
             if (coordinatesMatch(myHeadCoordsAtTU, snakeCoordsAtTU)) {
+              const collisonType = getCollisionType(myHeadCoordsAtTU, id, peerID, snakeLength);
               dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
-              console.log(getCollisionType(myHeadCoordsAtTU, id, snakeID, snakeLength));
+              if (collisonType === constants.COLLISION_TYPE_HEAD_ON_HEAD) {
+                dispatch(changeSnakeStatus(peerID, constants.SNAKE_STATUS_DEAD));
+              }
+
+              console.log(collisonType);
             }
           }
 
@@ -128,4 +133,3 @@ export const checkForCollisions = id => (
     }
   }
 );
-
