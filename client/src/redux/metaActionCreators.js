@@ -16,6 +16,8 @@ export const handleTuTick = id => (
       dispatch(snakeActions.writeOwnSnakePosition(id));
       // Check for collisions
       dispatch(snakeActions.checkForCollisions(id));
+      // Check for game over
+      dispatch(snakeActions.checkForGameOver());
     }
     // increment TU
     dispatch(infoActions.incrementTu());
