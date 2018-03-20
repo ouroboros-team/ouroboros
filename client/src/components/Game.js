@@ -39,6 +39,7 @@ const Game = (props) => {
         <Postgame
           changeGameStatus={props.p2pBroadcastGameStatus}
           winner={props.winner}
+          totalPlayers={props.snakeIDs.length}
         />
       );
       break;
@@ -82,6 +83,7 @@ Game.defaultProps = {
   status: constants.GAME_STATUS_PREGAME,
   winner: '',
   peers: {},
+  snakeIDs: [],
   p2pBroadcastGameStatus: () => {},
   p2pSetOwnUsername: () => {},
 };
@@ -91,6 +93,7 @@ const mapStateToProps = state => ({
   status: state.info.gameStatus,
   winner: state.info.winner,
   peers: state.p2p.peers,
+  snakeIDs: Object.keys(state.snakes),
 });
 
 const mapDispatchToProps = dispatch => ({

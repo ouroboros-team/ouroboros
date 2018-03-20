@@ -7,6 +7,7 @@ export default class Postgame extends React.Component {
   static propTypes = {
     changeGameStatus: propTypes.func,
     winner: propTypes.string,
+    numPeers: propTypes.number,
   };
 
   static defaultProps = {
@@ -15,21 +16,30 @@ export default class Postgame extends React.Component {
     winner: '',
   };
 
+  getPostgameMessage = () => {
+    if (this.props.totalPlayers === 1) {
+      return '';
+    }
+
+    switch (this.props.winner) {
+      case '': {
+        return 'Determining result...';
+      }
+      case constants.GAME_RESULT_TIE: {
+        return 'Tie game!';
+      }
+      default: {
+        return `${this.props.winner} won the game!`;
+      }
+    }
+  };
+
   handlePlayAgainClick = () => {
     this.props.changeGameStatus(constants.GAME_STATUS_LOBBY);
   };
 
   render() {
-    let message;
-    let winner = this.props.winner;
-
-    if (winner === '') {
-      message = 'Determining result...';
-    } else if (winner === constants.GAME_RESULT_TIE) {
-      message = 'Tie game!';
-    } else {
-      message = `${winner} won the game!`;
-    }
+    const message = this.getPostgameMessage();
 
     return (
       <div>
