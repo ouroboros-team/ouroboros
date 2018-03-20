@@ -30,7 +30,6 @@ export const buildNextDisplayBoard = () => (
 
     const length = snakeHelpers.getSnakeLength(tu);
     const aliveSnakes = [];
-    const peerList = Object.keys(state.p2p.peers);
 
     let snake;
     let mostRecentTu;
@@ -63,12 +62,13 @@ export const buildNextDisplayBoard = () => (
       }
     });
 
-    if ((aliveSnakes.length < 2 && peerList.length > 1) ||
-        (aliveSnakes.length < 1 && peerList.length < 2)) {
+    if ((aliveSnakes.length < 2 && snakeIds.length > 1) ||
+        (aliveSnakes.length < 1 && snakeIds.length < 2)) {
       const id = aliveSnakes[0];
       const winner = id ? store.getState().p2p.peers[id].username : constants.GAME_RESULT_TIE;
       p2pActions.p2pBroadcast({ winner });
       dispatch(infoActions.updateWinner(winner));
+
       dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
     }
 
