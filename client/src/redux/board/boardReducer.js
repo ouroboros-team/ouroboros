@@ -1,6 +1,5 @@
 import * as actionTypes from '../actionTypes';
 import * as boardHelpers from './boardHelpers';
-import * as p2pHelpers from '../p2p/p2pHelpers';
 import * as helpers from '../metaHelpers';
 
 export default function boardReducer(state = {}, action) {
