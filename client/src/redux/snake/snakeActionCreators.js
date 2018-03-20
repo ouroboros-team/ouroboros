@@ -60,7 +60,7 @@ export const writeOwnSnakePosition = id => (
   (dispatch) => {
     const state = store.getState();
     const newSnake = helpers.deepClone(state.snakes[id]);
-    const lastTu = Number(newSnake.positions.byIndex[0]);
+    const lastTu = newSnake.positions.byIndex[0];
 
     const coords = snakeHelpers.calculateNextCoords(newSnake.direction, newSnake.positions.byKey[`${lastTu}`]);
 
@@ -95,7 +95,7 @@ export const getCollisionType = (headCoords, myID, peerID, snakeLength) => {
 export const checkForCollisions = id => (
   (dispatch) => {
     const ownSnake = store.getState().snakes[id];
-    const lastTu = Number(ownSnake.positions.byIndex[0]);
+    const lastTu = ownSnake.positions.byIndex[0];
 
     let ownHead;
     let board;
