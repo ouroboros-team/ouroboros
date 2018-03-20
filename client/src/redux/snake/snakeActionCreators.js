@@ -3,7 +3,6 @@ import merge from 'lodash/merge';
 import store from '../store';
 
 import * as actionTypes from '../actionTypes';
-import * as headSetActions from '../headSet/headSetActionCreators';
 import * as infoActions from '../info/infoActionCreators';
 import * as metaActions from '../metaActionCreators';
 import * as p2pActions from '../p2p/p2pActionCreators';
