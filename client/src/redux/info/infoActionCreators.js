@@ -4,6 +4,7 @@ import store from '../store';
 import * as constants from '../../constants';
 
 import * as actionTypes from '../actionTypes';
+import * as headSetActions from '../headSet/headSetActionCreators';
 import * as p2pActions from '../p2p/p2pActionCreators';
 import * as metaActions from '../metaActionCreators';
 
@@ -63,6 +64,7 @@ export const handleGameStatusChange = newStatus => (
         break;
       }
       case constants.GAME_STATUS_READY_TO_PLAY: {
+        dispatch(headSetActions.updateHeadSets());
         break;
       }
       case constants.GAME_STATUS_PLAYING: {

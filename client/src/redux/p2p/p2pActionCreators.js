@@ -72,6 +72,10 @@ export const p2pBroadcast = (data) => {
   });
 };
 
+export const p2pBroadcastWinnerId = (peerId) => {
+  p2pBroadcast({ winnerId: peerId });
+};
+
 export const p2pBroadcastGameStatus = status => (
   (dispatch) => {
     p2pBroadcast(status);
@@ -148,8 +152,12 @@ export const p2pSetDataListener = (connection, dispatch) => {
         } else if (data.username || data.username === '') {
           // peer username
           dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
-        } else if (data.winner || data.winner === '') {
-          dispatch(infoActions.updateWinner(data.winner));
+        } else if (data.winnerId || data.winnerId === '') {
+          if (data.winnerId !== '') {
+            // if peerId received, resolve to username
+            const username = p2pHelpers.getUsername(data.winnerId);
+            dispatch(infoActions.updateWinner(username));
+          }
         } else {
           // pregame and playing: receive snake data from peers
           dispatch(metaActions.receiveSnakeData(connection.peer, data));
