@@ -1,6 +1,6 @@
-// board
-export const UPDATE_BOARDS = 'UPDATE_BOARDS';
-export const RESET_BOARDS = 'RESET_BOARDS';
+// headSets
+export const UPDATE_HEAD_SETS = 'UPDATE_HEAD_SETS';
+export const RESET_HEAD_SETS = 'RESET_HEAD_SETS';
 
 // display board
 export const GET_INITIAL_DISPLAY_BOARD = 'GET_INITIAL_DISPLAY_BOARD';

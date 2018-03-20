@@ -8,13 +8,13 @@ import * as constants from '../../constants';
 
 export const aggregateBoards = (lastTu) => {
   const state = store.getState();
-  const boards = state.boards;
+  const headSets = state.headSets;
   const length = snakeHelpers.getSnakeLength(lastTu);
   let aggregatedBoard = {};
 
   let i = lastTu - (length - 1);
   while (i <= lastTu) {
-    aggregatedBoard = merge(aggregatedBoard, boards[i]);
+    aggregatedBoard = merge(aggregatedBoard, headSets[i]);
     i += 1;
   }
 

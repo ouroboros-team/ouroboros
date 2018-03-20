@@ -1,7 +1,7 @@
 import store from './store';
 import * as constants from '../constants';
 
-import * as boardActions from './board/boardActionCreators';
+import * as headSetActions from './headSet/headSetActionCreators';
 import * as displayActions from './display/displayActionCreators';
 import * as infoActions from './info/infoActionCreators';
 import * as p2pActions from './p2p/p2pActionCreators';
@@ -21,7 +21,7 @@ export const handleTuTick = id => (
     }
     // increment TU
     dispatch(infoActions.incrementTu());
-    // get next display board
+    // get next display headSet
     dispatch(displayActions.getNextDisplayBoard());
   }
 );
@@ -29,7 +29,7 @@ export const handleTuTick = id => (
 export const receiveSnakeData = (id, data) => (
   (dispatch) => {
     dispatch(snakeActions.updateSnakeData(id, data));
-    dispatch(boardActions.updateBoards(id));
+    dispatch(headSetActions.updateHeadSets(id));
   }
 );
 
@@ -52,7 +52,7 @@ export const resetGameData = () => (
     dispatch(infoActions.resetStartingRows());
     dispatch(snakeActions.resetSnakeData());
     dispatch(displayActions.resetDisplayData());
-    dispatch(boardActions.resetBoards());
+    dispatch(headSetActions.resetHeadSets());
     dispatch(infoActions.setTu(0));
   }
 );
