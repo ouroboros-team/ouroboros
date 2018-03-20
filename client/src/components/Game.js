@@ -38,6 +38,7 @@ const Game = (props) => {
       display = (
         <Postgame
           changeGameStatus={props.p2pBroadcastGameStatus}
+          totalPlayers={Object.keys(props.peers).length}
           winner={props.winner}
         />
       );
@@ -47,8 +48,8 @@ const Game = (props) => {
     default: {
       display = (
         <Lobby
-          ownPeerId={props.ownPeerId}
           changeGameStatus={props.p2pBroadcastGameStatus}
+          ownPeerId={props.ownPeerId}
           setOwnUsername={props.p2pSetOwnUsername}
         />
       );

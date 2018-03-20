@@ -1,6 +1,5 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import store from '../redux/store';
 
 import * as constants from '../constants';
 
@@ -8,26 +7,23 @@ export default class Postgame extends React.Component {
   static propTypes = {
     changeGameStatus: propTypes.func,
     winner: propTypes.string,
+    totalPlayers: propTypes.number,
   };
 
   static defaultProps = {
-    changeGameStatus: () => {
-    },
+    changeGameStatus: () => {},
     winner: '',
+    totalPlayers: 0,
   };
 
-  state = {
-    totalPlayers: Object.keys(store.getState().snakes).length,
-  }
-
   getPostgameMessage = () => {
-    if (this.state.totalPlayers === 1) {
+    if (this.props.totalPlayers === 1) {
       return '';
     }
 
     switch (this.props.winner) {
       case '': {
-        return 'Determining result...';
+        return '';
       }
       case constants.GAME_RESULT_TIE: {
         return 'Tie game!';
