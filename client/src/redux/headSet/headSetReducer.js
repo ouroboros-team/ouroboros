@@ -2,7 +2,12 @@ import * as actionTypes from '../actionTypes';
 import * as headSetHelpers from './headSetHelpers';
 import * as helpers from '../metaHelpers';
 
-export default function headSetReducer(state = {}, action) {
+const defaultState = {
+  byIndex: [],
+  byKey: {},
+};
+
+export default function headSetReducer(state = defaultState, action) {
   switch (action.type) {
     case actionTypes.UPDATE_HEAD_SETS: {
       const newState = helpers.deepClone(state);
@@ -18,7 +23,7 @@ export default function headSetReducer(state = {}, action) {
       return newState;
     }
     case actionTypes.RESET_HEAD_SETS: {
-      return {};
+      return defaultState;
     }
     default: {
       return state;

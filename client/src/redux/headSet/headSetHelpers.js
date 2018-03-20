@@ -27,11 +27,12 @@ export const updateHeadSets = (headSets, id, snakeData = undefined) => {
   }
 
   snake.positions.byIndex.forEach((key) => {
-    if (headSets[key] === undefined) {
-      headSets[key] = {};
+    if (headSets.byKey[key] === undefined) {
+      headSets.byKey[key] = {};
+      headSets.byIndex.unshift(key);
     }
 
-    addCoordinatesMutate(headSets[key], snake.positions.byKey[key], snake, id);
+    addCoordinatesMutate(headSets.byKey[key], snake.positions.byKey[key], snake, id);
   });
 };
 

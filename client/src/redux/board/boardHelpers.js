@@ -8,7 +8,7 @@ import * as constants from '../../constants';
 
 export const aggregateBoards = (mostRecentTu) => {
   const state = store.getState();
-  const headSets = state.headSets;
+  const headSets = state.headSets.byKey;
   const length = snakeHelpers.getSnakeLength(mostRecentTu);
   let aggregatedBoard = {};
 
