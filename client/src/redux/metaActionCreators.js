@@ -52,5 +52,6 @@ export const resetGameData = () => (
     dispatch(infoActions.resetStartingRows());
     dispatch(snakeActions.resetSnakeData());
     dispatch(displayActions.resetDisplayData());
+    dispatch(infoActions.setTu(0));
   }
 );

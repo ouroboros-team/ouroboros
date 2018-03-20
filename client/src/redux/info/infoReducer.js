@@ -14,6 +14,11 @@ export default function infoReducer(state = defaultState, action) {
       newState.tu += 1;
       return newState;
     }
+    case actionTypes.SET_TU: {
+      const newState = { ...state };
+      newState.tu = action.tu;
+      return newState;
+    }
     case actionTypes.UPDATE_GAME_STATUS: {
       if (state.gameStatus === action.status) {
         return state;
@@ -21,11 +26,6 @@ export default function infoReducer(state = defaultState, action) {
 
       const newState = { ...state };
       newState.gameStatus = action.status;
-
-      // also set TU to 0 if status is lobby
-      if (action.status === constants.GAME_STATUS_LOBBY) {
-        newState.tu = 0;
-      }
 
       return newState;
     }

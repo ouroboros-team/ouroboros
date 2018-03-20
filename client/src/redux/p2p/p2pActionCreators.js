@@ -101,7 +101,10 @@ export const p2pBroadcastStartingRows = () => (
 );
 
 export const p2pBroadcastSnakeData = () => {
-  p2pBroadcast(snakeHelpers.getOwnSnakeData());
+  const ownSnake = snakeHelpers.getOwnSnakeData();
+  if (ownSnake) {
+    p2pBroadcast(ownSnake);
+  }
 };
 
 export const p2pSetOwnUsername = username => (
@@ -181,9 +184,11 @@ export const p2pInitialize = () => (
           dispatch(p2pAddPeerToList(dataConnection.peer));
           peerConnections[dataConnection.peer] = dataConnection;
 
-          // send list of peer ids and own username to new peer
-          const peers = store.getState().p2p.peers;
+          // send list of peer ids, own username, game status to new peer
+          const state = store.getState();
+          const peers = state.p2p.peers;
           dataConnection.send(Object.keys(peers));
+          dataConnection.send(state.info.gameStatus);
           if (peers[p2pHelpers.getOwnId()].username) {
             dataConnection.send({ username: peers[p2pHelpers.getOwnId()].username });
           }

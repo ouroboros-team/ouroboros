@@ -1,14 +1,19 @@
 import random from 'lodash/random';
 
 import store from '../store';
+import * as constants from '../../constants';
 
 import * as actionTypes from '../actionTypes';
 import * as p2pActions from '../p2p/p2pActionCreators';
-import * as constants from '../../constants';
 import * as metaActions from '../metaActionCreators';
 
 export const incrementTu = () => ({
   type: actionTypes.INCREMENT_TU,
+});
+
+export const setTu = tu => ({
+  tu,
+  type: actionTypes.SET_TU,
 });
 
 export const updateStartingRows = row => ({
