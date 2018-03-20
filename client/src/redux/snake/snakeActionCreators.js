@@ -66,7 +66,7 @@ export const writeOwnSnakePosition = id => (
 
     newSnake.positions.byKey = {};
     newSnake.positions.byKey[`${lastTu + 1}`] = coords;
-    newSnake.positions.byIndex = [`${lastTu + 1}`];
+    newSnake.positions.byIndex = [ `${lastTu + 1}` ];
 
     dispatch(updateSnakeData(id, newSnake));
     dispatch(boardActions.updateBoards(id, newSnake));
@@ -139,15 +139,20 @@ export const checkForGameOver = () => (
     const snakeIds = Object.keys(snakes);
     const count = snakeIds.length;
 
-    const snakesAlive = snakeIds.reduce((acc, id) => {
-      if (snakes[id].status === constants.SNAKE_STATUS_ALIVE) {
-        return acc + 1;
-      }
-      return acc;
-    }, 0);
+    const snakesAlive = [];
 
-    if ((count === 1 && snakesAlive === 0) || (count > 1 && snakesAlive <= 1)) {
+    snakeIds.forEach((id) => {
+      if (snakes[id].status === constants.SNAKE_STATUS_ALIVE) {
+        return snakesAlive.push(snakes[id]);
+      }
+    });
+
+    if ((count === 1 && snakesAlive.length === 0) || (count > 1 && snakesAlive.length <= 1)) {
       dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
     }
+
+    // TODO: push list to Redux, broadcast it to peers
+    console.log(snakesAlive);
+    return snakesAlive;
   }
 );
