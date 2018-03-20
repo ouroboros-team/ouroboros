@@ -20,7 +20,7 @@ export const handleTuTick = id => (
     }
     // increment TU
     dispatch(infoActions.incrementTu());
-    // get next board headSet
+    // get next board
     dispatch(boardActions.getNextBoard());
   }
 );

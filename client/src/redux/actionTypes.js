@@ -2,7 +2,7 @@
 export const UPDATE_HEAD_SETS = 'UPDATE_HEAD_SETS';
 export const RESET_HEAD_SETS = 'RESET_HEAD_SETS';
 
-// board board
+// board
 export const GET_INITIAL_BOARD = 'GET_INITIAL_BOARD';
 export const GET_NEXT_BOARD = 'GET_NEXT_BOARD';
 export const RESET_BOARD = 'RESET_BOARD';
