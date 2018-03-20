@@ -5,6 +5,7 @@ import * as displayActions from './display/displayActionCreators';
 import * as infoActions from './info/infoActionCreators';
 import * as p2pActions from './p2p/p2pActionCreators';
 import * as snakeActions from './snake/snakeActionCreators';
+
 import * as snakeHelpers from './snake/snakeHelpers';
 
 export const handleTuTick = id => (
@@ -15,6 +16,10 @@ export const handleTuTick = id => (
       dispatch(snakeActions.writeOwnSnakePosition(id));
       // Check for collisions
       dispatch(snakeActions.checkForCollisions(id));
+    } else {
+      // if own snake is dead or have no snake,
+      // fast-forward to match peers' TU
+      dispatch(infoActions.fastForwardTu(id));
     }
     // increment TU
     dispatch(infoActions.incrementTu());
