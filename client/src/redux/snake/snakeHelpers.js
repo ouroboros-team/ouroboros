@@ -19,7 +19,7 @@ export const getOwnSnakeData = () => {
 };
 
 export const setStartPosition = (row) => {
-  const randomColumn = random(0, constants.GRID_SIZE - 1);
+  const randomColumn = random(0, constants.GRID_SIZE - constants.INITIAL_SNAKE_LENGTH);
 
   const hash = {
     '0': { row, column: randomColumn },
