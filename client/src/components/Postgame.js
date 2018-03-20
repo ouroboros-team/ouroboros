@@ -6,11 +6,32 @@ import * as constants from '../constants';
 export default class Postgame extends React.Component {
   static propTypes = {
     changeGameStatus: propTypes.func,
+    winner: propTypes.string,
+    totalPlayers: propTypes.number,
   };
 
   static defaultProps = {
-    changeGameStatus: () => {
-    },
+    changeGameStatus: () => {},
+    winner: '',
+    totalPlayers: 0,
+  };
+
+  getPostgameMessage = () => {
+    if (this.props.totalPlayers === 1) {
+      return '';
+    }
+
+    switch (this.props.winner) {
+      case '': {
+        return '';
+      }
+      case constants.GAME_RESULT_TIE: {
+        return 'Tie game!';
+      }
+      default: {
+        return `${this.props.winner} won the game!`;
+      }
+    }
   };
 
   handlePlayAgainClick = () => {
@@ -18,11 +39,13 @@ export default class Postgame extends React.Component {
   };
 
   render() {
+    const message = this.getPostgameMessage();
+
     return (
       <div>
         <h1>Game Over</h1>
         <div id='messages'>
-          <p className='label alert-text'>(Username) is the winner!</p>
+          <p className='label alert-text'>{message}</p>
         </div>
         <input
           type='button'

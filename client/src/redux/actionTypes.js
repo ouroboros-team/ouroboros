@@ -4,6 +4,8 @@ export const SET_TU = 'SET_TU'; // for resetting and fast-forwarding
 export const UPDATE_GAME_STATUS = 'UPDATE_GAME_STATUS';
 export const UPDATE_STARTING_ROWS = 'UPDATE_STARTING_ROWS';
 export const RESET_STARTING_ROWS = 'RESET_STARTING_ROWS';
+export const UPDATE_WINNER = 'UPDATE_WINNER';
+export const RESET_WINNER = 'RESET_WINNER';
 
 // snakes
 export const CHANGE_SNAKE_DIRECTION = 'CHANGE_SNAKE_DIRECTION';
