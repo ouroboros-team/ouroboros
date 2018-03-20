@@ -4,6 +4,7 @@ import * as helpers from '../metaHelpers';
 import * as displayHelpers from './displayHelpers';
 import * as snakeHelpers from '../snake/snakeHelpers';
 import * as p2pActions from '../p2p/p2pActionCreators';
+import * as infoActions from '../info/infoActionCreators';
 import * as constants from '../../constants';
 
 export const getInitialDisplayBoard = () => ({
@@ -39,7 +40,7 @@ export const buildNextDisplayBoard = () => (
     snakeIds.forEach((id) => {
       if (snakeHelpers.snakeIsAlive(id)) {
         snake = snakesObj[id];
-        aliveSnakes.push(snake);
+        aliveSnakes.push(id);
         mostRecentTu = Number(snake.positions.byIndex[0]);
 
         // run once for all snakes, more for snakes with missing TUs
@@ -64,6 +65,10 @@ export const buildNextDisplayBoard = () => (
 
     if ((aliveSnakes.length < 2 && peerList.length > 1) ||
         (aliveSnakes.length < 1 && peerList.length < 2)) {
+      const id = aliveSnakes[0];
+      const winner = id ? store.getState().p2p.peers[id].username : constants.GAME_RESULT_TIE;
+      p2pActions.p2pBroadcast({ winner });
+      dispatch(infoActions.updateWinner(winner));
       dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
     }
 

@@ -25,6 +25,11 @@ export const updateGameStatus = status => ({
   type: actionTypes.UPDATE_GAME_STATUS,
 });
 
+export const updateWinner = winner => ({
+  winner,
+  type: actionTypes.UPDATE_WINNER,
+});
+
 export const randomUniqueRow = () => (
   (dispatch) => {
     const rowsUsed = store.getState().info.startingRows;

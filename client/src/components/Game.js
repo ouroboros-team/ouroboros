@@ -38,6 +38,7 @@ const Game = (props) => {
       display = (
         <Postgame
           changeGameStatus={props.p2pBroadcastGameStatus}
+          winner={props.winner}
         />
       );
       break;
@@ -70,6 +71,7 @@ const Game = (props) => {
 Game.propTypes = {
   ownPeerId: propTypes.string,
   status: propTypes.string,
+  winner: propTypes.string,
   peers: propTypes.object, // eslint-disable-line react/forbid-prop-types
   p2pBroadcastGameStatus: propTypes.func,
   p2pSetOwnUsername: propTypes.func,
@@ -78,6 +80,7 @@ Game.propTypes = {
 Game.defaultProps = {
   ownPeerId: '',
   status: constants.GAME_STATUS_PREGAME,
+  winner: '',
   peers: {},
   p2pBroadcastGameStatus: () => {},
   p2pSetOwnUsername: () => {},
@@ -86,6 +89,7 @@ Game.defaultProps = {
 const mapStateToProps = state => ({
   ownPeerId: state.p2p.id,
   status: state.info.gameStatus,
+  winner: state.info.winner,
   peers: state.p2p.peers,
 });
 

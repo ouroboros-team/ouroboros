@@ -145,6 +145,8 @@ export const p2pSetDataListener = (connection, dispatch) => {
         } else if (data.username || data.username === '') {
           // peer username
           dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
+        } else if (data.winner || data.winner === '') {
+          dispatch(infoActions.updateWinner(data.winner));
         } else {
           // pregame and playing: receive snake data from peers
           dispatch(metaActions.receiveSnakeData(connection.peer, data));
