@@ -29,7 +29,8 @@ export const aggregateOwnSnake = (tu) => {
   const aggregate = {};
 
   let i = tu - (length - 1);
-  while (i <= tu) {
+
+  while (i <= tu && snake.positions.byKey[i]) {
     boardHelpers.addCoordinatesMutate(aggregate, snake.positions.byKey[i], snake, ownId);
     i += 1;
   }
