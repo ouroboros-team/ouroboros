@@ -6,11 +6,6 @@ import * as helpers from '../metaHelpers';
 export default function boardReducer(state = {}, action) {
   switch (action.type) {
     case actionTypes.UPDATE_BOARDS: {
-      // don't aggregate for own snake
-      if (action.id && action.id === p2pHelpers.getOwnId()) {
-        return state;
-      }
-
       const newState = helpers.deepClone(state);
 
       if (action.id) {

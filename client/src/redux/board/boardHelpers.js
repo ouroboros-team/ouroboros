@@ -1,4 +1,5 @@
 import store from '../store';
+import * as p2pHelpers from '../p2p/p2pHelpers';
 
 // tus, rows, columns as keys
 
@@ -14,6 +15,11 @@ export const addCoordinatesMutate = (board, coords, snake, snakeId) => {
 };
 
 export const updateBoards = (boards, id, snakeData = undefined) => {
+  // don't aggregate for own snake
+  if (id === p2pHelpers.getOwnId()) {
+    return;
+  }
+
   let snake = snakeData;
 
   if (!snake) {
