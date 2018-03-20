@@ -34,9 +34,22 @@ export const getOwnId = () => (
 export const ownUsernameIsSet = () => {
   const state = store.getState();
   const id = state.p2p.id;
-  if (state.p2p.peers[id]){
+  if (state.p2p.peers[id]) {
     return state.p2p.peers[id].username;
   }
 
   return false;
+};
+
+export const getUsername = (id) => {
+  const peers = store.getState().p2p.peers;
+  if (peers[id]) {
+    if (peers[id].username) {
+      return peers[id].username;
+    }
+
+    return peers[id].defaultUsername;
+  }
+
+  return undefined;
 };

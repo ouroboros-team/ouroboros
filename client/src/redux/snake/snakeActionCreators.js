@@ -1,9 +1,13 @@
+import merge from 'lodash/merge';
+
 import store from '../store';
 
 import * as actionTypes from '../actionTypes';
 import * as infoActions from '../info/infoActionCreators';
+import * as metaActions from '../metaActionCreators';
 import * as p2pActions from '../p2p/p2pActionCreators';
 
+import * as boardHelpers from '../board/boardHelpers';
 import * as snakeHelpers from './snakeHelpers';
 import * as helpers from '../metaHelpers';
 
@@ -73,10 +77,6 @@ export const coordinatesMatch = (coordsA, coordsB) => (
   coordsA.row === coordsB.row && coordsA.column === coordsB.column
 );
 
-export const isNotOwnHead = (tu1, tu2, id1, id2) => (
-  Number(tu1) !== Number(tu2) || id1 !== id2
-);
-
 export const getCollisionType = (headCoords, myID, peerID, snakeLength) => {
   const peerSnake = store.getState().snakes[peerID];
   const peerHeadTU = peerSnake.positions.byIndex[0];
@@ -94,42 +94,64 @@ export const getCollisionType = (headCoords, myID, peerID, snakeLength) => {
 
 export const checkForCollisions = id => (
   (dispatch) => {
-    const snakes = store.getState().snakes;
-    const mySnake = snakes[id];
-    const myLastTU = Number(mySnake.positions.byIndex[0]);
+    const ownSnake = store.getState().snakes[id];
+    const lastTu = Number(ownSnake.positions.byIndex[0]);
 
-    // candidate tus are myLastTU to myLastTU - NUMBER_CANDIDATE_TUS + 1
-    let headTUCounter = myLastTU - (constants.NUMBER_CANDIDATE_TUS - 1);
-    while (headTUCounter <= myLastTU) {
-      const myHeadCoordsAtTU = mySnake.positions.byKey[headTUCounter];
-      const snakeLength = snakeHelpers.getSnakeLength(headTUCounter);
-      const snakeIDs = Object.keys(snakes);
-      for (let i = 0; i < snakeIDs.length; i += 1) {
-        const peerID = snakeIDs[i];
-        const peerSnake = snakes[peerID];
-        // range is headTUCounter to headTUCounter - snakeLength + 1
-        let counter = headTUCounter;
-        while (counter > headTUCounter - snakeLength &&
-               peerSnake.status === constants.SNAKE_STATUS_ALIVE) {
-          const snakeCoordsAtTU = peerSnake.positions.byKey[counter];
-          if (snakeCoordsAtTU &&
-            isNotOwnHead(counter, headTUCounter, id, peerID)) {
-            if (coordinatesMatch(myHeadCoordsAtTU, snakeCoordsAtTU)) {
-              const collisonType = getCollisionType(myHeadCoordsAtTU, id, peerID, snakeLength);
-              dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
-              if (collisonType === constants.COLLISION_TYPE_HEAD_ON_HEAD) {
-                dispatch(changeSnakeStatus(peerID, constants.SNAKE_STATUS_DEAD));
-              }
+    let ownHead;
+    let board;
+    let length;
+    let collisionType;
 
-              console.log(collisonType);
-            }
-          }
+    // check the most recent TUs, starting with the earliest in range
+    let tuCounter = lastTu - (constants.NUMBER_CANDIDATE_TUS - 1);
 
-          counter -= 1;
+    while (tuCounter <= lastTu) {
+      ownHead = ownSnake.positions.byKey[tuCounter];
+      // compare own head to other snakes and rest of own body
+      board = merge(boardHelpers.aggregateBoards(tuCounter), boardHelpers.aggregateOwnSnake(tuCounter - 1));
+      length = snakeHelpers.getSnakeLength(tuCounter);
+
+      if (board[ownHead.row] && board[ownHead.row][ownHead.column]) {
+        // collision
+        dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
+        p2pActions.p2pBroadcastSnakeData();
+
+        // check collision type
+        collisionType = getCollisionType(ownHead, id, board[ownHead.row][ownHead.column].id, length);
+        console.log(collisionType);
+
+        if (collisionType === constants.COLLISION_TYPE_HEAD_ON_HEAD) {
+          // other snake is also dead
+          dispatch(changeSnakeStatus(board[ownHead.row][ownHead.column].id, constants.SNAKE_STATUS_DEAD));
+          p2pActions.p2pBroadcast(board[ownHead.row][ownHead.column].snake);
         }
+
+        dispatch(checkForGameOver());
+        return;
       }
 
-      headTUCounter += 1;
+      tuCounter += 1;
+    }
+  }
+);
+
+export const checkForGameOver = () => (
+  (dispatch) => {
+    const state = store.getState();
+    const snakeIds = Object.keys(state.snakes);
+    const snakeCount = snakeIds.length;
+
+    const snakesAlive = [];
+
+    snakeIds.forEach((id) => {
+      if (snakeHelpers.snakeIsAlive(id, state.snakes)) {
+        snakesAlive.push(id);
+      }
+    });
+
+    if ((snakeCount === 1 && snakesAlive.length === 0)
+      || (snakeCount > 1 && snakesAlive.length <= 1)) {
+      dispatch(metaActions.declareGameOver(snakesAlive[0]));
     }
   }
 );

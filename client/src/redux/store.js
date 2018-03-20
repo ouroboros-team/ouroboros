@@ -2,16 +2,18 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { createLogger } from 'redux-logger';
 import ReduxThunk from 'redux-thunk';
 
-import p2pReducer from './p2p/p2pReducer';
+import headSetReducer from './headSet/headSetReducer';
+import boardReducer from './board/boardReducer';
 import infoReducer from './info/infoReducer';
+import p2pReducer from './p2p/p2pReducer';
 import snakesReducer from './snake/snakeReducer';
-import displayReducer from './display/displayReducer';
 
 const reducer = combineReducers({
-  p2p: p2pReducer,
+  headSets: headSetReducer,
+  board: boardReducer,
   info: infoReducer,
+  p2p: p2pReducer,
   snakes: snakesReducer,
-  displayBoard: displayReducer,
 });
 
 const logger = createLogger({
