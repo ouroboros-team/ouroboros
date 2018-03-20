@@ -1,5 +1,6 @@
 // info
 export const INCREMENT_TU = 'INCREMENT_TU';
+export const SET_TU = 'SET_TU'; // for resetting and fast-forwarding
 export const UPDATE_GAME_STATUS = 'UPDATE_GAME_STATUS';
 export const UPDATE_STARTING_ROWS = 'UPDATE_STARTING_ROWS';
 export const RESET_STARTING_ROWS = 'RESET_STARTING_ROWS';
