@@ -95,9 +95,9 @@ export const fastForwardTu = id => (
 
     // relying on snakeIds[0] or snakeIds[1] to be sufficiently up to date
     if (snakeIds[0] !== id) {
-      newTu = Number(snakes[snakeIds[0]].positions.byIndex[0]);
+      newTu = snakes[snakeIds[0]].positions.byIndex[0];
     } else {
-      newTu = Number(snakes[snakeIds[1]].positions.byIndex[0]);
+      newTu = snakes[snakeIds[1]].positions.byIndex[0];
     }
 
     if (newTu - oldTu > 5) {
