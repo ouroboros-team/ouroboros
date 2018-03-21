@@ -58,17 +58,20 @@ export const resetGameData = () => (
     dispatch(boardActions.resetBoard());
     dispatch(headSetActions.resetHeadSets());
     dispatch(infoActions.setTu(0));
-    dispatch(infoActions.resetWinner());
+    dispatch(infoActions.resetGameResult());
   }
 );
 
 export const declareGameOver = peerId => (
   (dispatch) => {
+    let username;
     if (peerId) {
-      p2pActions.p2pBroadcastWinnerId(peerId);
-      const username = p2pHelpers.getUsername(peerId);
-      dispatch(infoActions.updateWinner(username));
+      username = p2pHelpers.getUsername(peerId);
     }
+
+    const result = username || constants.GAME_RESULT_TIE;
+    p2pActions.p2pBroadcastGameResult(result);
+    dispatch(infoActions.updateGameResult(result));
     dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
   }
 );

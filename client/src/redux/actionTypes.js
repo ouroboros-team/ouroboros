@@ -13,8 +13,8 @@ export const SET_TU = 'SET_TU'; // for resetting and fast-forwarding
 export const UPDATE_GAME_STATUS = 'UPDATE_GAME_STATUS';
 export const UPDATE_STARTING_ROWS = 'UPDATE_STARTING_ROWS';
 export const RESET_STARTING_ROWS = 'RESET_STARTING_ROWS';
-export const UPDATE_WINNER = 'UPDATE_WINNER';
-export const RESET_WINNER = 'RESET_WINNER';
+export const UPDATE_GAME_RESULT = 'UPDATE_GAME_RESULT';
+export const RESET_GAME_RESULT = 'RESET_GAME_RESULT';
 
 // p2p
 export const P2P_GET_PEERID_FROM_URL = 'P2P_GET_PEERID_FROM_URL';

@@ -31,13 +31,13 @@ export const updateGameStatus = status => ({
   type: actionTypes.UPDATE_GAME_STATUS,
 });
 
-export const updateWinner = winner => ({
-  winner,
-  type: actionTypes.UPDATE_WINNER,
+export const updateGameResult = result => ({
+  result,
+  type: actionTypes.UPDATE_GAME_RESULT,
 });
 
-export const resetWinner = () => ({
-  type: actionTypes.RESET_WINNER,
+export const resetGameResult = () => ({
+  type: actionTypes.RESET_GAME_RESULT,
 });
 
 export const randomUniqueRow = () => (
