@@ -1,5 +1,9 @@
 import store from '../store';
+
 import * as p2pHelpers from '../p2p/p2pHelpers';
+import * as snakeHelpers from '../snake/snakeHelpers';
+
+import * as constants from '../../constants';
 
 // tus, rows, columns as keys
 
@@ -45,6 +49,15 @@ export const updateSnakeHeadSets = (headSets, id, snakeData, gap) => {
 
     addCoordinatesMutate(headSets.byKey[tuCounter], snake.positions.byKey[tuCounter], snake, id);
     tuCounter += 1;
+  }
+
+  // purge extra head sets
+  const keepCount = snakeHelpers.getSnakeLength(mostRecentTu) + constants.HISTORY_LENGTH;
+  let toRemove;
+
+  while (headSets.byIndex.length > keepCount) {
+    toRemove = headSets.byIndex.pop();
+    delete headSets.byKey[toRemove];
   }
 };
 
