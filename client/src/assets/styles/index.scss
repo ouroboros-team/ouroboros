@@ -91,30 +91,15 @@ header {
         height: $square-size;
         background-color: $lightgray;
         border: solid white 1px;
+
+        &.alive {
+          background-color: $black;
+        }
+
+        &.dead {
+          background-color: $lightgray; // same as board, hidden
+        }
       }
-    }
-  }
-
-  // $black for alive self, gray for dead self
-  $self: $black;
-  $self-dead: darkgray;
-
-  #player-list ul li.id-0 {
-    background-color: $self;
-  }
-
-  #board-container #board .square.alive {
-    background-color: $black;
-  }
-;
-
-  #board-container #board .square.id-0 {
-    &.alive {
-      background-color: $self;
-    }
-
-    &.dead {
-      background-color: $self-dead;
     }
   }
 
@@ -134,9 +119,6 @@ header {
     #board-container #board .square.id-#{$i} {
       &.alive {
         background-color: $color;
-      }
-      &.dead {
-        background-color: lighten($color, 30%);
       }
     }
   }
