@@ -21,12 +21,12 @@ export const getOwnSnakeData = () => {
 export const setStartPosition = (row) => {
   const randomColumn = random(0, constants.GRID_SIZE - constants.INITIAL_SNAKE_LENGTH);
 
-  const hash = {};
-  hash[0] = { row, column: randomColumn };
-  hash[-1] = { row, column: randomColumn + 1 };
-  hash[-2] = { row, column: randomColumn + 2 };
-  hash[-3] = { row, column: randomColumn + 3 };
-
+  const hash = {
+    '0': { row, column: randomColumn },
+    '-1': { row, column: randomColumn + 1 },
+    '-2': { row, column: randomColumn + 2 },
+    '-3': { row, column: randomColumn + 3 },
+  };
   const array = [ 0, -1, -2, -3 ];
 
   return {
