@@ -5,7 +5,7 @@ const defaultState = {
   tu: constants.INITIAL_TU,
   gameStatus: constants.GAME_STATUS_LOBBY,
   startingRows: [],
-  winner: '',
+  gameResult: '',
 };
 
 export default function infoReducer(state = defaultState, action) {
@@ -40,14 +40,14 @@ export default function infoReducer(state = defaultState, action) {
       newState.startingRows = [];
       return newState;
     }
-    case actionTypes.UPDATE_WINNER: {
+    case actionTypes.UPDATE_GAME_RESULT: {
       const newState = { ...state };
-      newState.winner = action.winner;
+      newState.gameResult = action.result;
       return newState;
     }
-    case actionTypes.RESET_WINNER: {
+    case actionTypes.RESET_GAME_RESULT: {
       const newState = { ...state };
-      newState.winner = '';
+      newState.gameResult = '';
       return newState;
     }
     default: {

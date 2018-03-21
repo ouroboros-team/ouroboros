@@ -6,13 +6,13 @@ import * as constants from '../constants';
 export default class Postgame extends React.Component {
   static propTypes = {
     changeGameStatus: propTypes.func,
-    winner: propTypes.string,
+    result: propTypes.string,
     totalPlayers: propTypes.number,
   };
 
   static defaultProps = {
     changeGameStatus: () => {},
-    winner: '',
+    result: '',
     totalPlayers: 0,
   };
 
@@ -21,15 +21,15 @@ export default class Postgame extends React.Component {
       return '';
     }
 
-    switch (this.props.winner) {
+    switch (this.props.result) {
       case '': {
-        return '';
+        return 'Determining result...';
       }
       case constants.GAME_RESULT_TIE: {
         return 'Tie game!';
       }
       default: {
-        return `${this.props.winner} won the game!`;
+        return `${this.props.result} won the game!`;
       }
     }
   };
