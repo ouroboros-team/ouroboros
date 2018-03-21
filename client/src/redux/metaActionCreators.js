@@ -32,8 +32,9 @@ export const handleTuTick = id => (
 
 export const receiveSnakeData = (id, data) => (
   (dispatch) => {
+    const gap = snakeHelpers.getTuGap(id, data);
     dispatch(snakeActions.updateSnakeData(id, data));
-    dispatch(headSetActions.updateHeadSets(id));
+    dispatch(headSetActions.updateHeadSets(id, null, gap));
   }
 );
 

@@ -27,8 +27,7 @@ export const setStartPosition = (row) => {
     '-2': { row, column: randomColumn + 2 },
     '-3': { row, column: randomColumn + 3 },
   };
-
-  const array = [ '0', '-1', '-2', '-3' ];
+  const array = [ 0, -1, -2, -3 ];
 
   return {
     byIndex: array,
@@ -101,8 +100,8 @@ export const updateSnakeDataMutate = (newSnake, data) => {
 
   const oldPositions = newSnake.positions;
   const newPositions = data.positions;
-  const oldLastTu = Number(oldPositions.byIndex[0]);
-  const newLastTu = Number(newPositions.byIndex[0]);
+  const oldLastTu = oldPositions.byIndex[0];
+  const newLastTu = newPositions.byIndex[0];
 
   const keepCount = getSnakeLength(newLastTu) + constants.HISTORY_LENGTH;
   let gap = newLastTu - oldLastTu;
@@ -110,7 +109,7 @@ export const updateSnakeDataMutate = (newSnake, data) => {
   let toRemove;
 
   while (gap > 0) {
-    key = `${newLastTu - (gap - 1)}`;
+    key = newLastTu - (gap - 1);
     // add new positions to old ones
     oldPositions.byKey[key] = newPositions.byKey[key];
     oldPositions.byIndex.unshift(key);
@@ -123,4 +122,20 @@ export const updateSnakeDataMutate = (newSnake, data) => {
 
     gap -= 1;
   }
+};
+
+export const getTuGap = (id, newData) => {
+  const oldSnake = store.getState().snakes[id];
+
+  if (!oldSnake) {
+    return false;
+  }
+
+  const oldLastTu = oldSnake.positions.byIndex[0];
+  const newLastTu = newData.positions.byIndex[0];
+
+  console.log('oldSnake', oldSnake);
+  console.log('newData', newData);
+
+  return newLastTu - oldLastTu;
 };

@@ -88,7 +88,7 @@ export default function snakesReducer(state = {}, action) {
       // update existing snake, if newer data received
       newState[action.id] = { ...newState[action.id] };
 
-      if (Number(action.data.positions.byIndex[0]) > Number(newState[action.id].positions.byIndex[0])) {
+      if (action.data.positions.byIndex[0] > newState[action.id].positions.byIndex[0]) {
         // if self, write direction to previousDirection also
         // (allows direction changes to be validated against last committed move
         // instead of last arrow key pressed)
