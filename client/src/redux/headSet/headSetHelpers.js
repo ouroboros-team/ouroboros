@@ -14,7 +14,7 @@ export const addCoordinatesMutate = (headSet, coords, snake, snakeId) => {
   };
 };
 
-export const updateHeadSets = (headSets, id, snakeData = undefined) => {
+export const updateSnakeHeadSets = (headSets, id, snakeData = undefined) => {
   // don't aggregate for own snake
   if (id === p2pHelpers.getOwnId()) {
     return;
@@ -41,7 +41,7 @@ export const updateAllHeadSets = (headSets) => {
   const snakeIds = Object.keys(snakesObj);
 
   snakeIds.forEach((id) => {
-    updateHeadSets(headSets, id, snakesObj[id]);
+    updateSnakeHeadSets(headSets, id, snakesObj[id]);
   });
 
   return headSets;

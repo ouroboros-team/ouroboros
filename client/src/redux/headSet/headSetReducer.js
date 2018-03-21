@@ -14,7 +14,7 @@ export default function headSetReducer(state = defaultState, action) {
 
       if (action.id) {
         // only aggregate for snakes[action.id]
-        headSetHelpers.updateHeadSets(newState, action.id, action.snake);
+        headSetHelpers.updateSnakeHeadSets(newState, action.id, action.snake);
       } else {
         // aggregate for all snakes (before game begins)
         headSetHelpers.updateAllHeadSets(newState);
