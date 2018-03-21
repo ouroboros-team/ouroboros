@@ -1,9 +1,11 @@
 import merge from 'lodash/merge';
 
 import store from '../store';
+
 import * as headSetHelpers from '../headSet/headSetHelpers';
 import * as snakeHelpers from '../snake/snakeHelpers';
 import * as helpers from '../metaHelpers';
+
 import * as constants from '../../constants';
 
 export const aggregateBoards = (mostRecentTu) => {
@@ -25,8 +27,14 @@ export const aggregateOwnSnake = (mostRecentTu) => {
   const state = store.getState();
   const ownId = state.p2p.id;
   const snake = state.snakes[ownId];
-  const length = snakeHelpers.getSnakeLength(mostRecentTu);
   const aggregate = {};
+
+  // return empty object if own snake is dead
+  if (snake.status === constants.SNAKE_STATUS_DEAD) {
+    return aggregate;
+  }
+
+  const length = snakeHelpers.getSnakeLength(mostRecentTu);
 
   let i = mostRecentTu - (length - 1);
 
