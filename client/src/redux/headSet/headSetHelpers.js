@@ -14,7 +14,7 @@ export const addCoordinatesMutate = (headSet, coords, snake, snakeId) => {
   };
 };
 
-export const updateSnakeHeadSets = (headSets, id, snakeData = undefined) => {
+export const updateSnakeHeadSets = (headSets, id, snakeData, gap) => {
   // don't aggregate for own snake
   if (id === p2pHelpers.getOwnId()) {
     return;
@@ -26,14 +26,26 @@ export const updateSnakeHeadSets = (headSets, id, snakeData = undefined) => {
     snake = store.getState().snakes[id];
   }
 
-  snake.positions.byIndex.forEach((key) => {
-    if (headSets.byKey[key] === undefined) {
-      headSets.byKey[key] = {};
-      headSets.byIndex.unshift(key);
+  const mostRecentTu = snake.positions.byIndex[0];
+  let tuCounter;
+
+  if (gap && gap > 0) {
+    // if gap is given, process only TUs in gap
+    tuCounter = mostRecentTu - (gap - 1);
+  } else {
+    // if no gap is given, process all TUs, starting with the earliest
+    tuCounter = snake.positions.byIndex[snake.positions.byIndex.length - 1];
+  }
+
+  while (tuCounter <= mostRecentTu) {
+    if (headSets.byKey[tuCounter] === undefined) {
+      headSets.byKey[tuCounter] = {};
+      headSets.byIndex.unshift(tuCounter);
     }
 
-    addCoordinatesMutate(headSets.byKey[key], snake.positions.byKey[key], snake, id);
-  });
+    addCoordinatesMutate(headSets.byKey[tuCounter], snake.positions.byKey[tuCounter], snake, id);
+    tuCounter += 1;
+  }
 };
 
 export const updateAllHeadSets = (headSets) => {
