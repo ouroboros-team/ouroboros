@@ -85,16 +85,19 @@ export default function snakesReducer(state = {}, action) {
         return newState;
       }
 
-      // update existing snake, if newer data received
-      newState[action.id] = { ...newState[action.id] };
+      // update existing snake (only if new data is current or newer than existing data)
+      if (action.data.positions.byIndex[0] >= newState[action.id].positions.byIndex[0]) {
+        newState[action.id] = { ...newState[action.id] };
 
-      if (action.data.positions.byIndex[0] > newState[action.id].positions.byIndex[0]) {
         // if self, write direction to previousDirection also
         // (allows direction changes to be validated against last committed move
         // instead of last arrow key pressed)
         if (action.id === p2pHelpers.getOwnId()) {
           newState[action.id].previousDirection = action.data.direction;
         }
+
+        // update status
+        newState[action.id].status = action.data.status;
 
         snakeHelpers.updateSnakeDataMutate(newState[action.id], action.data);
         return newState;

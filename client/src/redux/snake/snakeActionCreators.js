@@ -66,7 +66,7 @@ export const writeOwnSnakePosition = id => (
 
     newSnake.positions.byKey = {};
     newSnake.positions.byKey[`${lastTu + 1}`] = coords;
-    newSnake.positions.byIndex = [ `${lastTu + 1}` ];
+    newSnake.positions.byIndex = [`${lastTu + 1}`];
 
     dispatch(updateSnakeData(id, newSnake));
     p2pActions.p2pBroadcastSnakeData();
@@ -111,8 +111,10 @@ export const checkForCollisions = id => (
       board = merge(boardHelpers.aggregateBoards(tuCounter), boardHelpers.aggregateOwnSnake(tuCounter - 1));
       length = snakeHelpers.getSnakeLength(tuCounter);
 
-      if (board[ownHead.row] && board[ownHead.row][ownHead.column]) {
-        // collision
+      // if coordinates occupied by living snake, there is a collision
+      if (board[ownHead.row] && board[ownHead.row][ownHead.column]
+        && snakeHelpers.snakeIsAlive(board[ownHead.row][ownHead.column].id)) {
+
         dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
         p2pActions.p2pBroadcastSnakeData();
 
