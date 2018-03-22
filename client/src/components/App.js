@@ -9,6 +9,7 @@ import '../assets/styles/index.scss';
 import Header from './Header';
 import Game from './Game';
 import Incompatible from './Incompatible';
+import Troubleshooting from './Troubleshooting';
 
 // TODO: routes for informational screens
 
@@ -36,6 +37,7 @@ class App extends React.Component {
       <div>
         <Header />
         <Switch>
+          <Route exact path='/troubleshooting' component={Troubleshooting} />
           <Route
             path='/:peerId?'
             render={({ match }) => {
