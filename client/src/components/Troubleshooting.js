@@ -9,7 +9,7 @@ const Troubleshooting = () => (
       minimize problems:</p>
     <ul>
       <li>Use <a href='https://www.google.com/chrome/'>Chrome</a> or <a href='https://www.mozilla.org/firefox'>Firefox</a>.
-        Safari, Internet Explorer, Edge, and Opera are not supported.</li>
+        No other browsers are supported.</li>
       <li>All players should use the same browser. Peer-to-peer communication
         between Firefox and Chrome is supported, but is less reliable than
         Firefox-to-Firefox or Chrome-to-Chrome.</li>
