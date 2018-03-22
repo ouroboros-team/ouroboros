@@ -1,20 +1,37 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
+import util from 'peerjs/lib/util';
+
 import * as p2pActions from '../redux/p2p/p2pActionCreators';
 import '../assets/styles/index.scss';
 
 import Header from './Header';
 import Game from './Game';
+import Incompatible from './Incompatible';
 
 // TODO: routes for informational screens
 
 class App extends React.Component {
+  state = {
+    compatible: (util.browser === 'Chrome' || util.browser === 'Firefox'),
+  };
+
   componentDidMount() {
-    this.props.p2pInitialize();
+    if (this.state.compatible) {
+      this.props.p2pInitialize();
+    }
   }
 
   render() {
+    let display;
+
+    if (this.state.compatible) {
+      display = <Game />;
+    } else {
+      display = <Incompatible />;
+    }
+
     return (
       <div>
         <Header />
@@ -27,7 +44,7 @@ class App extends React.Component {
                 this.props.p2pGetPeerIdFromURL(match.params.peerId);
               }
               return (
-                <Game />
+                display
               );
             }}
           />
