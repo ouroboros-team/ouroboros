@@ -10,14 +10,11 @@ $white: #FFF;
 $square-size: 1rem;
 $grid-size: 40;
 
-.container {
-  min-width: $grid-size * $square-size;
-}
-
 header {
   padding: 1rem;
   background-color: $lightgray;
   margin-bottom: 2rem;
+  text-align: center;
 
   > * {
     display: inline-block;
@@ -27,6 +24,25 @@ header {
 
   .logo {
     width: 4rem;
+    vertical-align: initial;
+  }
+
+  nav {
+    margin: 2rem 0;
+    text-align: center;
+
+    a {
+      margin: .5rem 1rem;
+      padding: 1rem 2rem;
+      border-radius: 4px;
+      border: solid $white 1px;
+      color: $darkgray;
+      text-decoration: none;
+
+      &:hover {
+        background-color: $white;
+      }
+    }
   }
 }
 
@@ -128,8 +144,7 @@ header {
   height: 4.5rem;
 }
 
-p, .label {
-  color: $darkgray;
+.label {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: .1rem;
