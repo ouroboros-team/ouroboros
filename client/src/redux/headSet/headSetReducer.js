@@ -3,7 +3,8 @@ import * as headSetHelpers from './headSetHelpers';
 import * as helpers from '../metaHelpers';
 
 const defaultState = {
-  byIndex: [],
+  newest: 0,
+  oldest: -3,
   byKey: {},
 };
 
