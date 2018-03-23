@@ -157,3 +157,26 @@ export const checkForGameOver = () => (
     }
   }
 );
+
+export const checkForLatentSnakes = () => (
+  (dispatch) => {
+    const state = store.getState();
+    const tu = state.info.tu;
+
+    // only check once for every 10 TUs
+    if (tu % 10 !== 0) {
+      return;
+    }
+
+    const snakes = state.snakes;
+    const snakeIds = Object.keys(state.snakes);
+
+    snakeIds.forEach((id) => {
+      if (snakes[id].status !== constants.SNAKE_STATUS_DEAD &&
+        tu - snakes[id].positions.byIndex[0] > constants.LATENT_SNAKE_TOLERANCE) {
+        console.log(`${id}'s latency is too great`);
+        dispatch(p2pActions.p2pKillPeerSnake(id));
+      }
+    });
+  }
+);

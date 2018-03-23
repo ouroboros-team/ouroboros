@@ -111,6 +111,13 @@ export const p2pBroadcastSnakeData = () => {
   }
 };
 
+export const p2pKillPeerSnake = id => (
+  (dispatch) => {
+    dispatch(snakeActions.changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
+    p2pBroadcast({ dead: id });
+  }
+);
+
 export const p2pSetOwnUsername = username => (
   (dispatch) => {
     dispatch(p2pUpdatePeerUsername(p2pHelpers.getOwnId(), username));
@@ -152,6 +159,9 @@ export const p2pSetDataListener = (connection, dispatch) => {
         } else if (data.username || data.username === '') {
           // peer username
           dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
+        } else if (data.dead || data.dead === '') {
+          // snake killed by head-on-collision or for too much latency
+          dispatch(snakeActions.changeSnakeStatus(data.dead, constants.SNAKE_STATUS_DEAD));
         } else if (data.winnerId || data.winnerId === '') {
           if (data.winnerId !== '') {
             // if peerId received, resolve to username
