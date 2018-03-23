@@ -204,6 +204,12 @@ export const p2pInitialize = () => (
           }
         });
         p2pSetCloseListener(dataConnection, dispatch);
+      })
+      .on('disconnected', () => {
+        const id = p2pHelpers.getOwnId();
+        peer.id = id;
+        peer._lastServerId = id; // allows peer.reconnect() to use correct id
+        peer.reconnect();
       });
   }
 );
