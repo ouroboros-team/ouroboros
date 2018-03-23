@@ -183,9 +183,18 @@ export const p2pInitialize = () => (
         console.log(`P2P error: ${error}`);
       })
       .on('open', (id) => {
-        console.log(`My peer ID is: ${id}`);
-        dispatch(p2pConnectionReady(id));
-        dispatch(p2pAddPeerToList(id));
+        // id not passed successfully from peer.reconnect(),
+        // so stored id is used if id is null
+        let myId;
+
+        if (id) {
+          myId = id;
+        } else {
+          myId = p2pHelpers.getOwnId();
+        }
+        console.log(`My peer ID is: ${myId}`);
+        dispatch(p2pConnectionReady(myId));
+        dispatch(p2pAddPeerToList(myId));
         p2pConnectToURLPeer(dispatch);
       })
       .on('connection', (dataConnection) => {
@@ -207,8 +216,11 @@ export const p2pInitialize = () => (
       })
       .on('disconnected', () => {
         const id = p2pHelpers.getOwnId();
+        // peer.id and peer._lastServerId are sometimes cleared on disconnection
+        // and must be repopulated for peer.reconnect() to attempt to reconnect
+        // with the same id
         peer.id = id;
-        peer._lastServerId = id; // allows peer.reconnect() to use correct id
+        peer._lastServerId = id;
         peer.reconnect();
       });
   }
