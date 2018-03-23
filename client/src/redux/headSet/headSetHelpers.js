@@ -41,10 +41,15 @@ export const updateSnakeHeadSets = (headSets, id, snakeData, gap) => {
     tuCounter = snake.positions.byIndex[snake.positions.byIndex.length - 1];
   }
 
-  while (tuCounter <= mostRecentTu) {
+  // add head sets in range, don't add old ones that have already been purged
+  while (tuCounter <= mostRecentTu && tuCounter >= headSets.oldest) {
     if (headSets.byKey[tuCounter] === undefined) {
       headSets.byKey[tuCounter] = {};
-      headSets.byIndex.unshift(tuCounter);
+
+      // update newest if needed
+      if (tuCounter > headSets.newest) {
+        headSets.newest = tuCounter;
+      }
     }
 
     addCoordinatesMutate(headSets.byKey[tuCounter], snake.positions.byKey[tuCounter], snake, id);
@@ -55,9 +60,10 @@ export const updateSnakeHeadSets = (headSets, id, snakeData, gap) => {
   const keepCount = snakeHelpers.getSnakeLength(mostRecentTu) + constants.HISTORY_LENGTH;
   let toRemove;
 
-  while (headSets.byIndex.length > keepCount) {
-    toRemove = headSets.byIndex.pop();
+  while (headSets.newest - headSets.oldest > keepCount) {
+    toRemove = headSets.oldest;
     delete headSets.byKey[toRemove];
+    headSets.oldest += 1;
   }
 };
 
