@@ -134,8 +134,5 @@ export const getTuGap = (id, newData) => {
   const oldLastTu = oldSnake.positions.byIndex[0];
   const newLastTu = newData.positions.byIndex[0];
 
-  console.log('oldSnake', oldSnake);
-  console.log('newData', newData);
-
   return newLastTu - oldLastTu;
 };

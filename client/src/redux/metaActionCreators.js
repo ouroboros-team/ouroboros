@@ -12,7 +12,7 @@ import * as p2pHelpers from './p2p/p2pHelpers';
 
 export const handleTuTick = id => (
   (dispatch) => {
-    // Only check collisions/broadcast data if snake is alive
+    // Only check collisions and broadcast data if snake is alive
     if (snakeHelpers.snakeIsAlive(id)) {
       // write/broadcast own snake position
       dispatch(snakeActions.writeOwnSnakePosition(id));
@@ -23,6 +23,8 @@ export const handleTuTick = id => (
       // fast-forward to match peers' TU
       dispatch(infoActions.fastForwardTu(id));
     }
+    // kill snakes with too much latency
+    dispatch(snakeActions.checkForLatentSnakes());
     // increment TU
     dispatch(infoActions.incrementTu());
     // get next board
