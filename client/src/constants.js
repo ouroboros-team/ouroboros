@@ -14,8 +14,6 @@ export const COLLISION_TYPE_HEAD_ON_HEAD = 'HEAD_ON_HEAD';
 export const COLLISION_TYPE_HEAD_ON_BODY = 'HEAD_ON_BODY';
 export const COLLISION_TYPE_HEAD_ON_TAIL = 'HEAD_ON_TAIL';
 
-export const GAME_RESULT_TIE = 'TIE';
-
 export const INITIAL_SNAKE_LENGTH = 4;
 
 export const SNAKE_STATUS_ALIVE = 'alive';
