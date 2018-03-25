@@ -114,21 +114,18 @@ export const checkForCollisions = id => (
       // if coordinates occupied by living snake, there is a collision
       if (board[ownHead.row] && board[ownHead.row][ownHead.column]
         && snakeHelpers.snakeIsAlive(board[ownHead.row][ownHead.column].id)) {
-
-        dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
-        p2pActions.p2pBroadcastSnakeData();
-
         // check collision type
         collisionType = getCollisionType(ownHead, id, board[ownHead.row][ownHead.column].id, length);
         console.log(collisionType);
 
         if (collisionType === constants.COLLISION_TYPE_HEAD_ON_HEAD) {
           // other snake is also dead
-          dispatch(changeSnakeStatus(board[ownHead.row][ownHead.column].id, constants.SNAKE_STATUS_DEAD));
-          p2pActions.p2pBroadcast(board[ownHead.row][ownHead.column].snake);
+          const peerId = board[ownHead.row][ownHead.column].id;
+          dispatch(changeSnakeStatus(peerId));
+          p2pActions.p2pBroadcast({ dead: peerId });
         }
 
-        dispatch(checkForGameOver());
+        dispatch(p2pActions.p2pKillPeerSnake(id));
         return;
       }
 

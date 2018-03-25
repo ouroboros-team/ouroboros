@@ -164,6 +164,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
         } else if (data.dead || data.dead === '') {
           // snake killed by head-on-collision or for too much latency
           dispatch(snakeActions.changeSnakeStatus(data.dead, constants.SNAKE_STATUS_DEAD));
+          snakeActions.checkForGameOver();
         } else if (data.winnerId || data.winnerId === '') {
           if (data.winnerId !== '') {
             // if peerId received, resolve to username
