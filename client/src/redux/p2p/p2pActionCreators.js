@@ -115,6 +115,7 @@ export const p2pKillPeerSnake = id => (
   (dispatch) => {
     dispatch(snakeActions.changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
     p2pBroadcast({ dead: id });
+    dispatch(snakeActions.checkForGameOver());
   }
 );
 
@@ -130,7 +131,8 @@ export const p2pSetCloseListener = (connection, dispatch) => {
     console.log(`Removing peer: ${connection.peer}`);
     dispatch(p2pRemovePeerFromList(connection.peer));
     dispatch(metaActions.checkReadiness());
-    dispatch(snakeActions.changeSnakeStatus(connection.peer, 'dead'));
+    dispatch(snakeActions.changeSnakeStatus(connection.peer, constants.SNAKE_STATUS_DEAD));
+    dispatch(snakeActions.checkForGameOver());
     delete peerConnections[connection.peer];
   });
 };
