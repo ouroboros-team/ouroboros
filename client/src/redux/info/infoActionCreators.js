@@ -40,6 +40,14 @@ export const resetWinner = () => ({
   type: actionTypes.RESET_WINNER,
 });
 
+export const incrementGameOverDelay = () => ({
+  type: actionTypes.INCREMENT_GAME_OVER_DELAY,
+});
+
+export const resetGameOverDelay = () => ({
+  type: actionTypes.RESET_GAME_OVER_DELAY,
+});
+
 export const randomUniqueRow = () => (
   (dispatch) => {
     const rowsUsed = store.getState().info.startingRows;

@@ -8,6 +8,7 @@ export const HISTORY_LENGTH = 10;
 
 // how far back in TUs to look for collisions
 export const NUMBER_CANDIDATE_TUS = 3;
+export const GAME_OVER_DELAY = 3;
 
 export const COLLISION_TYPE_HEAD_ON_HEAD = 'HEAD_ON_HEAD';
 export const COLLISION_TYPE_HEAD_ON_BODY = 'HEAD_ON_BODY';
