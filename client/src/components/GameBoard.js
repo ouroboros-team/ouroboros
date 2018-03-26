@@ -10,11 +10,10 @@ const GameBoard = (props) => {
   let styleId;
   const squares = [];
 
-  for (let r = 0; r < GRID_SIZE; r++) {
-    for (let c = 0; c < GRID_SIZE; c++) {
-      if (props.board[r] && props.board[r][c] && props.board[r][c].snake) {
-        status = props.board[r][c].snake.status;
-        styleId = props.board[r][c].snake.styleId;
+  for (let n = 0; n < GRID_SIZE * GRID_SIZE; n++) {
+      if (props.board[n] && props.board[n].snake) {
+        status = props.board[n].snake.status;
+        styleId = props.board[n].snake.styleId;
       } else {
         status = 'empty';
         styleId = undefined;
@@ -22,14 +21,12 @@ const GameBoard = (props) => {
 
       squares.push(
         <Square
-          col={c}
-          key={(r * GRID_SIZE) + c}
-          row={r}
+          key={n}
+          number={n}
           status={status}
           styleId={styleId}
         />,
       );
-    }
   }
 
   return (

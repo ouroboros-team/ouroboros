@@ -15,6 +15,7 @@ header {
   background-color: $lightgray;
   margin-bottom: 2rem;
   text-align: center;
+  white-space: nowrap;
 
   > * {
     display: inline-block;
