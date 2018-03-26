@@ -1,5 +1,3 @@
-import merge from 'lodash/merge';
-
 import store from '../store';
 
 import * as actionTypes from '../actionTypes';
@@ -108,7 +106,10 @@ export const checkForCollisions = id => (
       ownHead = ownSnake.positions.byKey[tuCounter];
 
       // compare own head to other snakes and rest of own body
-      board = merge(boardHelpers.aggregateBoards(tuCounter), boardHelpers.aggregateOwnSnake(tuCounter - 1));
+      board = {
+        ...boardHelpers.aggregateBoards(tuCounter),
+        ...boardHelpers.aggregateOwnSnake(tuCounter - 1),
+      };
       length = snakeHelpers.getSnakeLength(tuCounter);
       squareNumber = headSetHelpers.coordsToSquareNumber(ownHead);
 
