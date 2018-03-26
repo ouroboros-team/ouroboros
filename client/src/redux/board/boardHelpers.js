@@ -1,5 +1,3 @@
-import merge from 'lodash/merge';
-
 import store from '../store';
 
 import * as headSetHelpers from '../headSet/headSetHelpers';
@@ -16,7 +14,7 @@ export const aggregateBoards = (mostRecentTu) => {
 
   let i = mostRecentTu - (length - 1);
   while (i <= mostRecentTu) {
-    aggregatedBoard = merge(aggregatedBoard, headSets[i]);
+    aggregatedBoard = { ...aggregatedBoard, ...headSets[i] };
     i += 1;
   }
 
@@ -47,14 +45,14 @@ export const aggregateOwnSnake = (mostRecentTu) => {
 };
 
 export const getInitialBoard = () => (
-  merge(aggregateBoards(constants.INITIAL_TU), aggregateOwnSnake(constants.INITIAL_TU))
+  { ...aggregateBoards(constants.INITIAL_TU), ...aggregateOwnSnake(constants.INITIAL_TU) }
 );
 
 export const buildNextBoard = () => {
   const state = store.getState();
   const tu = state.info.tu;
 
-  const newBoard = merge(aggregateBoards(tu), aggregateOwnSnake(tu));
+  const newBoard = { ...aggregateBoards(tu), ...aggregateOwnSnake(tu) };
 
   const snakesObj = helpers.deepClone(state.snakes);
   const snakeIds = Object.keys(snakesObj);
