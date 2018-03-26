@@ -7,6 +7,14 @@ export const updateHeadSets = (id, snake, gap) => ({
   type: actionTypes.UPDATE_HEAD_SETS,
 });
 
+export const patchHeadSet = (tu, sqNum, id, snake) => ({
+  tu,
+  sqNum,
+  id,
+  snake,
+  type: actionTypes.PATCH_HEAD_SET,
+});
+
 export const resetHeadSets = () => ({
   type: actionTypes.RESET_HEAD_SETS,
 });

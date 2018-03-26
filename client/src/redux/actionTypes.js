@@ -1,6 +1,7 @@
 // headSets
 export const UPDATE_HEAD_SETS = 'UPDATE_HEAD_SETS';
 export const RESET_HEAD_SETS = 'RESET_HEAD_SETS';
+export const PATCH_HEAD_SET = 'PATCH_HEAD_SET'; // fix overwritten head
 
 // board
 export const GET_INITIAL_BOARD = 'GET_INITIAL_BOARD';
