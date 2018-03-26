@@ -18,14 +18,16 @@ export const addCoordinatesMutate = (headSet, coords, snake, id) => {
   };
 };
 
-export const patchHeadSetMutate = (headSets, tu, sqNum, snake, id) => {
+export const patchHeadSetMutate = (headSets, tu, sqNum, id) => {
   // don't patch if out of current TU range
   if (tu < headSets.oldest || tu > headSets.newest) {
     return;
   }
 
+  const snakes = store.getState().snakes;
+
   headSets.byKey[tu][sqNum] = {
-    snake,
+    snake: snakes[id],
     id,
   };
 };

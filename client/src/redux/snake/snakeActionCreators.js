@@ -65,7 +65,7 @@ export const writeOwnSnakePosition = id => (
 
     newSnake.positions.byKey = {};
     newSnake.positions.byKey[`${lastTu + 1}`] = coords;
-    newSnake.positions.byIndex = [`${lastTu + 1}`];
+    newSnake.positions.byIndex = [ `${lastTu + 1}` ];
 
     dispatch(updateSnakeData(id, newSnake));
     p2pActions.p2pBroadcastSnakeData();
@@ -124,8 +124,11 @@ export const checkForCollisions = id => (
 
         if (collisionType === constants.COLLISION_TYPE_HEAD_ON_HEAD) {
           // other snake is also dead
-          dispatch(changeSnakeStatus(board[squareNumber].id, constants.SNAKE_STATUS_DEAD));
-          p2pActions.p2pBroadcast(board[squareNumber].snake);
+          dispatch(p2pActions.p2pKillPeerSnake(board[squareNumber].id));
+        } else {
+          // tell peers to patch this head set to make sure other snake was not
+          // overwritten by your dead snake (leaving a gap in the snake's body)
+          p2pActions.p2pBroadcastPatch(tuCounter, squareNumber, board[squareNumber].id);
         }
 
         dispatch(checkForGameOver());

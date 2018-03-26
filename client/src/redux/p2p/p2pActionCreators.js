@@ -112,13 +112,12 @@ export const p2pBroadcastSnakeData = () => {
   }
 };
 
-export const p2pBroadcastPatch = (tu, sqNum, id, snake) => {
+export const p2pBroadcastPatch = (tu, sqNum, id) => {
   p2pBroadcast({
     patch: {
       tu,
       sqNum,
       id,
-      snake,
     },
   });
 };
