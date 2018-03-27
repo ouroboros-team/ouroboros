@@ -78,8 +78,10 @@ export const confirmWinner = peerId => (
   (dispatch) => {
     const peerSnake = store.getState().snakes[peerId];
     if (peerSnake.status === constants.SNAKE_STATUS_ALIVE) {
+      // if alive, this snake is the winner
       dispatch(declareWinner(peerId));
     } else {
+      // if dead, declare a tie
       dispatch(declareWinner());
     }
   }
@@ -89,8 +91,11 @@ export const declareGameOver = currentWinnerId => (
   (dispatch) => {
     dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
     if (currentWinnerId) {
+      // if we think we know the winner, wait a bit for new data from peers
+      // and then confirm that this snake is still alive
       window.setTimeout(confirmWinner, constants.GAME_OVER_DELAY * constants.LOOP_INTERVAL, currentWinnerId);
     } else {
+      // if it was a tie, declare the tie
       dispatch(declareWinner());
     }
   }
