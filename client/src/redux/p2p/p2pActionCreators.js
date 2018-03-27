@@ -175,7 +175,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
         } else if (data.dead || data.dead === '') {
           // snake killed by head-on-collision or for too much latency
           dispatch(snakeActions.changeSnakeStatus(data.dead, constants.SNAKE_STATUS_DEAD));
-          snakeActions.checkForGameOver();
+          dispatch(snakeActions.checkForGameOver());
         } else if (Object.keys(data)[0] === 'winnerId') {
           // if peerId received, resolve to username
           const username = p2pHelpers.getUsername(data.winnerId);
@@ -251,4 +251,3 @@ export const p2pInitialize = () => (
       });
   }
 );
-
