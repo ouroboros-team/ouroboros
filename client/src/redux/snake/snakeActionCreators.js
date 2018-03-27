@@ -12,6 +12,8 @@ import * as helpers from '../metaHelpers';
 
 import * as constants from '../../constants';
 
+/* eslint no-use-before-define: 0 */  // --> OFF
+
 export const changeSnakeDirection = (id, direction) => ({
   id,
   direction,
@@ -117,7 +119,7 @@ export const checkForCollisions = id => (
       if (board[squareNumber] && snakeHelpers.snakeIsAlive(board[squareNumber].id)) {
         dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
         p2pActions.p2pBroadcastSnakeData();
-    
+
         // check collision type
         collisionType = getCollisionType(squareNumber, id, board[squareNumber].id, length);
         console.log(collisionType);
@@ -131,7 +133,7 @@ export const checkForCollisions = id => (
           p2pActions.p2pBroadcastPatch(tuCounter, squareNumber, board[squareNumber].id);
         }
 
-        dispatch(p2pActions.p2pKillPeerSnake(id));
+        dispatch(checkForGameOver());
         return;
       }
 
