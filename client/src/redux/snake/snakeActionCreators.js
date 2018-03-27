@@ -13,6 +13,8 @@ import * as helpers from '../metaHelpers';
 
 import * as constants from '../../constants';
 
+/* eslint no-use-before-define: 0 */  // --> OFF
+
 export const changeSnakeDirection = (id, direction) => ({
   id,
   direction,
