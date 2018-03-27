@@ -5,7 +5,6 @@ const defaultState = {
   tu: constants.INITIAL_TU,
   gameStatus: constants.GAME_STATUS_LOBBY,
   startingRows: [],
-  gameOverDelay: 0,
   winner: '',
 };
 
@@ -49,16 +48,6 @@ export default function infoReducer(state = defaultState, action) {
     case actionTypes.RESET_WINNER: {
       const newState = { ...state };
       newState.winner = '';
-      return newState;
-    }
-    case actionTypes.INCREMENT_GAME_OVER_DELAY: {
-      const newState = { ...state };
-      newState.gameOverDelay += 1;
-      return newState;
-    }
-    case actionTypes.RESET_GAME_OVER_DELAY: {
-      const newState = { ...state };
-      newState.gameOverDelay = 0;
       return newState;
     }
     default: {

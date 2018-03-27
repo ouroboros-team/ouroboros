@@ -27,11 +27,6 @@ export const handleTuTick = id => (
     dispatch(snakeActions.checkForLatentSnakes());
     // increment TU
     dispatch(infoActions.incrementTu());
-    // increment game over delay, if delay 'started'
-    if (store.getState().info.gameOverDelay > 0) {
-      dispatch(infoActions.incrementGameOverDelay());
-      dispatch(snakeActions.checkForGameOver());
-    }
     // get next board
     dispatch(boardActions.getNextBoard());
   }
@@ -67,7 +62,6 @@ export const resetGameData = () => (
     dispatch(headSetActions.resetHeadSets());
     dispatch(infoActions.setTu(0));
     dispatch(infoActions.resetWinner());
-    dispatch(infoActions.resetGameOverDelay());
   }
 );
 
