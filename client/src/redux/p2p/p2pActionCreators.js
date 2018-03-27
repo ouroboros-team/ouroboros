@@ -181,7 +181,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
           }
         } else if (data.patch || data.patch === '') {
           const info = data.patch;
-          dispatch(headSetActions.patchHeadSet(info.tu, info.sqNum, info.id, info.snake));
+          dispatch(headSetActions.patchHeadSet(info.tu, info.sqNum, info.id));
         } else {
           // pregame and playing: receive snake data from peers
           dispatch(metaActions.receiveSnakeData(connection.peer, data));
