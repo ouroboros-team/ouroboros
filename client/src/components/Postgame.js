@@ -17,19 +17,20 @@ export default class Postgame extends React.Component {
   };
 
   getPostgameMessage = () => {
+    const winner = this.props.winner;
     if (this.props.totalPlayers === 1) {
       return '';
     }
 
-    switch (this.props.winner) {
+    switch (winner) {
       case '': {
-        return '';
+        return 'Determining winner...';
       }
       case constants.GAME_RESULT_TIE: {
         return 'Tie game!';
       }
       default: {
-        return `${this.props.winner} won the game!`;
+        return `${winner} won the game!`;
       }
     }
   };

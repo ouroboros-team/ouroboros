@@ -124,8 +124,8 @@ export const p2pBroadcastPatch = (tu, sqNum, id) => {
 
 export const p2pKillPeerSnake = id => (
   (dispatch) => {
-    dispatch(snakeActions.changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
     p2pBroadcast({ dead: id });
+    dispatch(snakeActions.handleChangeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
   }
 );
 
@@ -141,7 +141,7 @@ export const p2pSetCloseListener = (connection, dispatch) => {
     console.log(`Removing peer: ${connection.peer}`);
     dispatch(p2pRemovePeerFromList(connection.peer));
     dispatch(metaActions.checkReadiness());
-    dispatch(snakeActions.changeSnakeStatus(connection.peer, 'dead'));
+    dispatch(snakeActions.handleChangeSnakeStatus(connection.peer, constants.SNAKE_STATUS_DEAD));
     delete peerConnections[connection.peer];
   });
 };
@@ -172,13 +172,12 @@ export const p2pSetDataListener = (connection, dispatch) => {
           dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
         } else if (data.dead || data.dead === '') {
           // snake killed by head-on-collision or for too much latency
-          dispatch(snakeActions.changeSnakeStatus(data.dead, constants.SNAKE_STATUS_DEAD));
-        } else if (data.winnerId || data.winnerId === '') {
-          if (data.winnerId !== '') {
-            // if peerId received, resolve to username
-            const username = p2pHelpers.getUsername(data.winnerId);
-            dispatch(infoActions.updateWinner(username));
-          }
+          dispatch(snakeActions.handleChangeSnakeStatus(data.dead, constants.SNAKE_STATUS_DEAD));
+        } else if (Object.keys(data)[0] === 'winnerId') {
+          // if peerId received, resolve to username
+          const username = p2pHelpers.getUsername(data.winnerId);
+          const result = username || constants.GAME_RESULT_TIE;
+          dispatch(infoActions.updateWinner(result));
         } else if (data.patch || data.patch === '') {
           const info = data.patch;
           dispatch(headSetActions.patchHeadSet(info.tu, info.sqNum, info.id));
@@ -249,4 +248,3 @@ export const p2pInitialize = () => (
       });
   }
 );
-
