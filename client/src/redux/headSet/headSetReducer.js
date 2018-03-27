@@ -23,6 +23,13 @@ export default function headSetReducer(state = defaultState, action) {
 
       return newState;
     }
+    case actionTypes.PATCH_HEAD_SET: {
+      const newState = helpers.deepClone(state);
+
+      headSetHelpers.patchHeadSetMutate(newState, action.tu, action.sqNum, action.id);
+
+      return newState;
+    }
     case actionTypes.RESET_HEAD_SETS: {
       return defaultState;
     }

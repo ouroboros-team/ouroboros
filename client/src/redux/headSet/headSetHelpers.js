@@ -11,10 +11,24 @@ export const coordsToSquareNumber = coords => (
   (coords.row * constants.GRID_SIZE) + coords.column
 );
 
-export const addCoordinatesMutate = (headSet, coords, snake, snakeId) => {
+export const addCoordinatesMutate = (headSet, coords, snake, id) => {
   headSet[coordsToSquareNumber(coords)] = {
     snake,
-    id: snakeId,
+    id,
+  };
+};
+
+export const patchHeadSetMutate = (headSets, tu, sqNum, id) => {
+  // don't patch if out of current TU range
+  if (tu < headSets.oldest || tu > headSets.newest) {
+    return;
+  }
+
+  const snakes = store.getState().snakes;
+
+  headSets.byKey[tu][sqNum] = {
+    snake: snakes[id],
+    id,
   };
 };
 
