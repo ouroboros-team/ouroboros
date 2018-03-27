@@ -6,6 +6,9 @@ export const INITIAL_TU = 0;
 // beyond what is currently displayed (according to snake length)
 export const HISTORY_LENGTH = 10;
 
+// number of snake TUs to send to peers
+export const P2P_TUS = 5;
+
 // how far back in TUs to look for collisions
 export const NUMBER_CANDIDATE_TUS = 3;
 export const GAME_OVER_DELAY = 10;
