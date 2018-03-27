@@ -6,6 +6,7 @@ import * as metaActions from '../metaActionCreators';
 import * as p2pActions from '../p2p/p2pActionCreators';
 
 import * as boardHelpers from '../board/boardHelpers';
+import * as p2pHelpers from '../p2p/p2pHelpers';
 import * as headSetHelpers from '../headSet/headSetHelpers';
 import * as snakeHelpers from './snakeHelpers';
 import * as helpers from '../metaHelpers';
@@ -24,6 +25,17 @@ export const changeSnakeStatus = (id, status) => ({
   type: actionTypes.CHANGE_SNAKE_STATUS,
 });
 
+export const handleChangeSnakeStatus = (id, status) => (
+  (dispatch) => {
+    dispatch(changeSnakeStatus(id, status));
+    if (id === p2pHelpers.getOwnId()) {
+      p2pActions.p2pBroadcastSnakeData();
+    }
+
+    dispatch(checkForGameOver());
+  }
+);
+
 export const handleChangeSnakeDirection = (id, direction) => (
   (dispatch) => {
     if (snakeHelpers.snakeIsAlive(id)) {
@@ -38,6 +50,16 @@ export const updateSnakeData = (id, data) => ({
   data,
   type: actionTypes.UPDATE_SNAKE_DATA,
 });
+
+export const handleUpdateSnakeData = (id, data) => (
+  (dispatch) => {
+    if (data.status === constants.SNAKE_STATUS_DEAD) {
+      dispatch(handleChangeSnakeStatus(id, data.status));
+    }
+
+    dispatch(updateSnakeData(id, data));
+  }
+);
 
 export const resetSnakeData = () => ({
   type: actionTypes.RESET_SNAKE_DATA,
@@ -115,9 +137,7 @@ export const checkForCollisions = id => (
 
       // if coordinates occupied by living snake, there is a collision
       if (board[squareNumber] && snakeHelpers.snakeIsAlive(board[squareNumber].id)) {
-        dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
-        p2pActions.p2pBroadcastSnakeData();
-    
+        dispatch(handleChangeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
         // check collision type
         collisionType = getCollisionType(squareNumber, id, board[squareNumber].id, length);
         console.log(collisionType);
@@ -130,8 +150,6 @@ export const checkForCollisions = id => (
           // overwritten by your dead snake (leaving a gap in the snake's body)
           p2pActions.p2pBroadcastPatch(tuCounter, squareNumber, board[squareNumber].id);
         }
-
-        dispatch(p2pActions.p2pKillPeerSnake(id));
         return;
       }
 

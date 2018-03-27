@@ -124,9 +124,8 @@ export const p2pBroadcastPatch = (tu, sqNum, id) => {
 
 export const p2pKillPeerSnake = id => (
   (dispatch) => {
-    dispatch(snakeActions.changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
     p2pBroadcast({ dead: id });
-    dispatch(snakeActions.checkForGameOver());
+    dispatch(snakeActions.handleChangeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
   }
 );
 
@@ -142,8 +141,7 @@ export const p2pSetCloseListener = (connection, dispatch) => {
     console.log(`Removing peer: ${connection.peer}`);
     dispatch(p2pRemovePeerFromList(connection.peer));
     dispatch(metaActions.checkReadiness());
-    dispatch(snakeActions.changeSnakeStatus(connection.peer, constants.SNAKE_STATUS_DEAD));
-    dispatch(snakeActions.checkForGameOver());
+    dispatch(snakeActions.handleChangeSnakeStatus(connection.peer, constants.SNAKE_STATUS_DEAD));
     delete peerConnections[connection.peer];
   });
 };
@@ -174,8 +172,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
           dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
         } else if (data.dead || data.dead === '') {
           // snake killed by head-on-collision or for too much latency
-          dispatch(snakeActions.changeSnakeStatus(data.dead, constants.SNAKE_STATUS_DEAD));
-          snakeActions.checkForGameOver();
+          dispatch(snakeActions.handleChangeSnakeStatus(data.dead, constants.SNAKE_STATUS_DEAD));
         } else if (Object.keys(data)[0] === 'winnerId') {
           // if peerId received, resolve to username
           const username = p2pHelpers.getUsername(data.winnerId);
@@ -251,4 +248,3 @@ export const p2pInitialize = () => (
       });
   }
 );
-

@@ -5,7 +5,6 @@ const defaultState = {
   tu: constants.INITIAL_TU,
   gameStatus: constants.GAME_STATUS_LOBBY,
   startingRows: [],
-  gameOverDelay: 0,
   winner: '',
 };
 
