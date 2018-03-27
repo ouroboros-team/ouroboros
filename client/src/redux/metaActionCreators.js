@@ -71,13 +71,33 @@ export const resetGameData = () => (
   }
 );
 
-export const declareGameOver = peerId => (
+export const declareWinner = peerId => (
   (dispatch) => {
-    if (peerId) {
-      p2pActions.p2pBroadcastWinnerId(peerId);
-      const username = p2pHelpers.getUsername(peerId);
-      dispatch(infoActions.updateWinner(username));
+    p2pActions.p2pBroadcastWinnerId(peerId);
+    const username = p2pHelpers.getUsername(peerId);
+    const result = username || constants.GAME_RESULT_TIE;
+    dispatch(infoActions.updateWinner(result));
+  }
+);
+
+export const confirmWinner = peerId => (
+  (dispatch) => {
+    const peerSnake = store.getState().snakes[peerId];
+    if (peerSnake.status === constants.SNAKE_STATUS_ALIVE) {
+      dispatch(declareWinner(peerId));
+    } else {
+      dispatch(declareWinner());
     }
+  }
+);
+
+export const declareGameOver = currentWinnerId => (
+  (dispatch) => {
     dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
+    if (currentWinnerId) {
+      window.setTimeout(confirmWinner, constants.GAME_OVER_DELAY * constants.LOOP_INTERVAL, currentWinnerId);
+    } else {
+      dispatch(declareWinner());
+    }
   }
 );

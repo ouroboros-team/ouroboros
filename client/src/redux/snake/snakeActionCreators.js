@@ -139,8 +139,6 @@ export const checkForGameOver = () => (
     const state = store.getState();
     const snakeIds = Object.keys(state.snakes);
     const snakeCount = snakeIds.length;
-    const currentDelay = state.info.gameOverDelay;
-
     const snakesAlive = [];
 
     snakeIds.forEach((id) => {
@@ -149,15 +147,11 @@ export const checkForGameOver = () => (
       }
     });
 
-    if (snakeCount > 1 && snakesAlive.length <= 1) {
-      // Check if imposed delay has passed before declaring game over
-      if (currentDelay >= constants.GAME_OVER_DELAY) {
-        dispatch(metaActions.declareGameOver(snakesAlive[0]));
-      } else if (currentDelay === 0) {
-        dispatch(infoActions.incrementGameOverDelay());
-      }
-    } else if (snakeCount === 1 && snakesAlive.length === 0) {
-      dispatch(metaActions.declareGameOver());
+    const aliveCount = snakesAlive.length;
+
+    if ((snakeCount > 1 && aliveCount <= 1) ||
+      (snakeCount === 1 && aliveCount === 0)) {
+      dispatch(metaActions.declareGameOver(snakesAlive[0]));
     }
   }
 );

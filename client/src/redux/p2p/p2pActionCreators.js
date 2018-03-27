@@ -165,12 +165,11 @@ export const p2pSetDataListener = (connection, dispatch) => {
           // snake killed by head-on-collision or for too much latency
           dispatch(snakeActions.changeSnakeStatus(data.dead, constants.SNAKE_STATUS_DEAD));
           snakeActions.checkForGameOver();
-        } else if (data.winnerId || data.winnerId === '') {
-          if (data.winnerId !== '') {
-            // if peerId received, resolve to username
-            const username = p2pHelpers.getUsername(data.winnerId);
-            dispatch(infoActions.updateWinner(username));
-          }
+        } else if (Object.keys(data)[0] === 'winnerId') {
+          // if peerId received, resolve to username
+          const username = p2pHelpers.getUsername(data.winnerId);
+          const result = username || constants.GAME_RESULT_TIE;
+          dispatch(infoActions.updateWinner(result));
         } else {
           // pregame and playing: receive snake data from peers
           dispatch(metaActions.receiveSnakeData(connection.peer, data));

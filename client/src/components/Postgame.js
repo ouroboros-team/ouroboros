@@ -20,11 +20,19 @@ export default class Postgame extends React.Component {
     const winner = this.props.winner;
     if (this.props.totalPlayers === 1) {
       return '';
-    } else if (winner) {
-      return `${winner} won the game!`;
     }
 
-    return 'Tie game!';
+    switch (winner) {
+      case '': {
+        return 'Determining winner...';
+      }
+      case constants.GAME_RESULT_TIE: {
+        return 'Tie game!';
+      }
+      default: {
+        return `${winner} won the game!`;
+      }
+    }
   };
 
   handlePlayAgainClick = () => {
