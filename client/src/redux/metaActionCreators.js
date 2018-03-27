@@ -93,7 +93,7 @@ export const declareGameOver = currentWinnerId => (
     if (currentWinnerId) {
       // if we think we know the winner, wait a bit for new data from peers
       // and then confirm that this snake is still alive
-      window.setTimeout(confirmWinner, constants.GAME_OVER_DELAY * constants.LOOP_INTERVAL, currentWinnerId);
+      window.setTimeout(() => (dispatch(confirmWinner(currentWinnerId))), constants.GAME_OVER_DELAY * constants.LOOP_INTERVAL);
     } else {
       // if it was a tie, declare the tie
       dispatch(declareWinner());
