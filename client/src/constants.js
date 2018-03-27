@@ -8,7 +8,7 @@ export const HISTORY_LENGTH = 10;
 
 // how far back in TUs to look for collisions
 export const NUMBER_CANDIDATE_TUS = 3;
-export const GAME_OVER_DELAY = 3;
+export const GAME_OVER_DELAY = 10;
 
 export const COLLISION_TYPE_HEAD_ON_HEAD = 'HEAD_ON_HEAD';
 export const COLLISION_TYPE_HEAD_ON_BODY = 'HEAD_ON_BODY';
@@ -22,7 +22,7 @@ export const SNAKE_STATUS_ALIVE = 'alive';
 export const SNAKE_STATUS_DEAD = 'dead';
 
 // a snake that is further behind in TUs than this number will die automatically
-export const LATENT_SNAKE_TOLERANCE = 10;
+export const LATENT_SNAKE_TOLERANCE = GAME_OVER_DELAY;
 
 export const GAME_STATUS_LOBBY = 'lobby'; // peer connections
 export const GAME_STATUS_PREGAME = 'pregame'; // no new peers, share initial positions

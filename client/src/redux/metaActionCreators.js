@@ -79,20 +79,22 @@ export const declareWinner = peerId => (
   }
 );
 
-export const confirmWinner = (peerId, dispatch) => {
-  const peerSnake = store.getState().snakes[peerId];
-  if (peerSnake.status === constants.SNAKE_STATUS_ALIVE) {
-    dispatch(declareWinner(peerId));
-  } else {
-    dispatch(declareWinner());
+export const confirmWinner = peerId => (
+  (dispatch) => {
+    const peerSnake = store.getState().snakes[peerId];
+    if (peerSnake.status === constants.SNAKE_STATUS_ALIVE) {
+      dispatch(declareWinner(peerId));
+    } else {
+      dispatch(declareWinner());
+    }
   }
-};
+);
 
 export const declareGameOver = currentWinnerId => (
   (dispatch) => {
     dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
     if (currentWinnerId) {
-      window.setTimeout(confirmWinner, constants.GAME_OVER_DELAY * constants.LOOP_INTERVAL, currentWinnerId, dispatch);
+      window.setTimeout(() => (dispatch(confirmWinner(currentWinnerId))), constants.GAME_OVER_DELAY * constants.LOOP_INTERVAL);
     } else {
       dispatch(declareWinner());
     }
