@@ -1,6 +1,8 @@
 import random from 'lodash/random';
+
 import store from '../store';
 import * as constants from '../../constants';
+import * as helpers from '../metaHelpers';
 
 export const getSnakeLength = tu => (
   constants.INITIAL_SNAKE_LENGTH + Math.floor(tu / 10)
@@ -12,10 +14,27 @@ export const emptySnakeObject = (positions = {}) => ({
   positions,
 });
 
-export const getOwnSnakeData = () => {
+export const snakeDataForBroadcast = () => {
   const state = store.getState();
   const id = state.p2p.id;
-  return state.snakes[id];
+  const snakeClone = helpers.deepClone(state.snakes[id]);
+
+  // if too long, truncate byIndex list
+  if (snakeClone.positions.byIndex.length > constants.P2P_TUS) {
+    snakeClone.positions.byIndex.length = constants.P2P_TUS;
+
+    const truncByKey = {};
+
+    // populate truncated byKey list
+    snakeClone.positions.byIndex.forEach((tu) => {
+      truncByKey[tu] = snakeClone.positions.byKey[tu];
+    });
+
+    // overwrite byKey with truncated list
+    snakeClone.positions.byKey = truncByKey;
+  }
+
+  return snakeClone;
 };
 
 export const setStartPosition = (row) => {

@@ -106,7 +106,7 @@ export const p2pBroadcastStartingRows = () => (
 );
 
 export const p2pBroadcastSnakeData = () => {
-  const ownSnake = snakeHelpers.getOwnSnakeData();
+  const ownSnake = snakeHelpers.snakeDataForBroadcast();
   if (ownSnake) {
     p2pBroadcast(ownSnake);
   }
