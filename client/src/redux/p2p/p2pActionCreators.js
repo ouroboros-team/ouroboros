@@ -3,6 +3,7 @@ import * as constants from '../../constants';
 import * as actionTypes from '../actionTypes';
 
 import * as metaActions from '../metaActionCreators';
+import * as headSetActions from '../headSet/headSetActionCreators';
 import * as infoActions from '../info/infoActionCreators';
 import * as snakeActions from '../snake/snakeActionCreators';
 
@@ -111,6 +112,16 @@ export const p2pBroadcastSnakeData = () => {
   }
 };
 
+export const p2pBroadcastPatch = (tu, sqNum, id) => {
+  p2pBroadcast({
+    patch: {
+      tu,
+      sqNum,
+      id,
+    },
+  });
+};
+
 export const p2pKillPeerSnake = id => (
   (dispatch) => {
     dispatch(snakeActions.changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
@@ -170,6 +181,9 @@ export const p2pSetDataListener = (connection, dispatch) => {
           const username = p2pHelpers.getUsername(data.winnerId);
           const result = username || constants.GAME_RESULT_TIE;
           dispatch(infoActions.updateWinner(result));
+        } else if (data.patch || data.patch === '') {
+          const info = data.patch;
+          dispatch(headSetActions.patchHeadSet(info.tu, info.sqNum, info.id));
         } else {
           // pregame and playing: receive snake data from peers
           dispatch(metaActions.receiveSnakeData(connection.peer, data));

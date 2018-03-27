@@ -1,5 +1,3 @@
-import merge from 'lodash/merge';
-
 import store from '../store';
 
 import * as actionTypes from '../actionTypes';
@@ -8,6 +6,7 @@ import * as metaActions from '../metaActionCreators';
 import * as p2pActions from '../p2p/p2pActionCreators';
 
 import * as boardHelpers from '../board/boardHelpers';
+import * as headSetHelpers from '../headSet/headSetHelpers';
 import * as snakeHelpers from './snakeHelpers';
 import * as helpers from '../metaHelpers';
 
@@ -66,26 +65,23 @@ export const writeOwnSnakePosition = id => (
 
     newSnake.positions.byKey = {};
     newSnake.positions.byKey[`${lastTu + 1}`] = coords;
-    newSnake.positions.byIndex = [`${lastTu + 1}`];
+    newSnake.positions.byIndex = [ `${lastTu + 1}` ];
 
     dispatch(updateSnakeData(id, newSnake));
     p2pActions.p2pBroadcastSnakeData();
   }
 );
 
-export const coordinatesMatch = (coordsA, coordsB) => (
-  coordsA.row === coordsB.row && coordsA.column === coordsB.column
-);
-
-export const getCollisionType = (headCoords, myID, peerID, snakeLength) => {
+export const getCollisionType = (sqNum, myID, peerID, snakeLength) => {
   const peerSnake = store.getState().snakes[peerID];
   const peerHeadTU = peerSnake.positions.byIndex[0];
-  const peerHeadCoords = peerSnake.positions.byKey[peerHeadTU];
+  const peerHeadSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerHeadTU]);
   const peerTailTU = peerSnake.positions.byIndex[snakeLength - 1];
-  const peerTailCoords = peerSnake.positions.byKey[peerTailTU - 1];
-  if (myID !== peerID && coordinatesMatch(headCoords, peerHeadCoords)) {
+  const peerTailSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerTailTU - 1]);
+
+  if (myID !== peerID && sqNum === peerHeadSqNum) {
     return constants.COLLISION_TYPE_HEAD_ON_HEAD;
-  } else if (coordinatesMatch(headCoords, peerTailCoords)) {
+  } else if (sqNum === peerTailSqNum) {
     return constants.COLLISION_TYPE_HEAD_ON_TAIL;
   }
 
@@ -101,28 +97,38 @@ export const checkForCollisions = id => (
     let board;
     let length;
     let collisionType;
+    let squareNumber;
 
     // check the most recent TUs, starting with the earliest in range
     let tuCounter = lastTu - (constants.NUMBER_CANDIDATE_TUS - 1);
 
     while (tuCounter <= lastTu) {
       ownHead = ownSnake.positions.byKey[tuCounter];
+
       // compare own head to other snakes and rest of own body
-      board = merge(boardHelpers.aggregateBoards(tuCounter), boardHelpers.aggregateOwnSnake(tuCounter - 1));
+      board = {
+        ...boardHelpers.aggregateBoards(tuCounter),
+        ...boardHelpers.aggregateOwnSnake(tuCounter - 1),
+      };
       length = snakeHelpers.getSnakeLength(tuCounter);
+      squareNumber = headSetHelpers.coordsToSquareNumber(ownHead);
 
       // if coordinates occupied by living snake, there is a collision
-      if (board[ownHead.row] && board[ownHead.row][ownHead.column]
-        && snakeHelpers.snakeIsAlive(board[ownHead.row][ownHead.column].id)) {
+      if (board[squareNumber] && snakeHelpers.snakeIsAlive(board[squareNumber].id)) {
+        dispatch(changeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
+        p2pActions.p2pBroadcastSnakeData();
+    
         // check collision type
-        collisionType = getCollisionType(ownHead, id, board[ownHead.row][ownHead.column].id, length);
+        collisionType = getCollisionType(squareNumber, id, board[squareNumber].id, length);
         console.log(collisionType);
 
         if (collisionType === constants.COLLISION_TYPE_HEAD_ON_HEAD) {
           // other snake is also dead
-          const peerId = board[ownHead.row][ownHead.column].id;
-          dispatch(changeSnakeStatus(peerId));
-          p2pActions.p2pBroadcast({ dead: peerId });
+          dispatch(p2pActions.p2pKillPeerSnake(board[squareNumber].id));
+        } else {
+          // tell peers to patch this head set to make sure other snake was not
+          // overwritten by your dead snake (leaving a gap in the snake's body)
+          p2pActions.p2pBroadcastPatch(tuCounter, squareNumber, board[squareNumber].id);
         }
 
         dispatch(p2pActions.p2pKillPeerSnake(id));

@@ -7,14 +7,28 @@ import * as constants from '../../constants';
 
 // tus, rows, columns as keys
 
-export const addCoordinatesMutate = (headSet, coords, snake, snakeId) => {
-  if (headSet[coords.row] === undefined) {
-    headSet[coords.row] = {};
+export const coordsToSquareNumber = coords => (
+  (coords.row * constants.GRID_SIZE) + coords.column
+);
+
+export const addCoordinatesMutate = (headSet, coords, snake, id) => {
+  headSet[coordsToSquareNumber(coords)] = {
+    snake,
+    id,
+  };
+};
+
+export const patchHeadSetMutate = (headSets, tu, sqNum, id) => {
+  // don't patch if out of current TU range
+  if (tu < headSets.oldest || tu > headSets.newest) {
+    return;
   }
 
-  headSet[coords.row][coords.column] = {
-    snake,
-    id: snakeId,
+  const snakes = store.getState().snakes;
+
+  headSets.byKey[tu][sqNum] = {
+    snake: snakes[id],
+    id,
   };
 };
 
