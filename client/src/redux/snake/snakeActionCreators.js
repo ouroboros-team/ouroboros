@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash/cloneDeep';
+
 import store from '../store';
 
 import * as actionTypes from '../actionTypes';
@@ -9,7 +11,6 @@ import * as boardHelpers from '../board/boardHelpers';
 import * as p2pHelpers from '../p2p/p2pHelpers';
 import * as headSetHelpers from '../headSet/headSetHelpers';
 import * as snakeHelpers from './snakeHelpers';
-import * as helpers from '../metaHelpers';
 
 import * as constants from '../../constants';
 
@@ -87,7 +88,7 @@ export const initializeOwnSnake = (id, row) => (
 export const writeOwnSnakePosition = id => (
   (dispatch) => {
     const state = store.getState();
-    const newSnake = helpers.deepClone(state.snakes[id]);
+    const newSnake = cloneDeep(state.snakes[id]);
     const lastTu = newSnake.positions.byIndex[0];
 
     const coords = snakeHelpers.calculateNextCoords(newSnake.direction, newSnake.positions.byKey[`${lastTu}`]);

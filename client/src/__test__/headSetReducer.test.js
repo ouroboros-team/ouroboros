@@ -1,11 +1,9 @@
 import headSetReducer, { defaultState } from '../redux/headSet/headSetReducer';
 import * as actionTypes from '../redux/actionTypes';
-import * as helpers from '../redux/metaHelpers';
 import * as headSetHelpers from '../redux/headSet/headSetHelpers';
 
 describe('Head set reducer', () => {
   let state = {};
-  const cloneSpy = jest.spyOn(helpers, 'deepClone');
 
   beforeEach(() => {
     state = {
@@ -30,7 +28,6 @@ describe('Head set reducer', () => {
     const spy = jest.spyOn(headSetHelpers, 'updateAllHeadSets').mockImplementation(() => {});
     headSetReducer(state, actionObj);
 
-    expect(cloneSpy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalled();
   });
 
@@ -42,7 +39,6 @@ describe('Head set reducer', () => {
     const spy = jest.spyOn(headSetHelpers, 'updateSnakeHeadSets').mockImplementation(() => {});
     headSetReducer(state, actionObj);
 
-    expect(cloneSpy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalled();
   });
 
@@ -50,7 +46,6 @@ describe('Head set reducer', () => {
     const spy = jest.spyOn(headSetHelpers, 'patchHeadSetMutate').mockImplementation(() => {});
     headSetReducer(state, { type: actionTypes.PATCH_HEAD_SET });
 
-    expect(cloneSpy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalled();
   });
 
