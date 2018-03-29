@@ -1,6 +1,5 @@
-import * as actionTypes from '../redux/actionTypes';
-import * as constants from '../constants';
 import store from '../redux/store';
+import * as constants from '../constants';
 
 import * as metaActions from '../redux/metaActionCreators';
 
@@ -11,6 +10,7 @@ import * as p2pActions from '../redux/p2p/p2pActionCreators';
 import * as snakeActions from '../redux/snake/snakeActionCreators';
 
 import * as snakeHelpers from '../redux/snake/snakeHelpers';
+import * as p2pHelpers from '../redux/p2p/p2pHelpers';
 
 describe('Meta action creators', () => {
   describe('handleTuTick thunk', () => {
@@ -19,6 +19,7 @@ describe('Meta action creators', () => {
 
     afterEach(() => {
       jest.clearAllMocks();
+      jest.resetAllMocks();
     });
 
     it('returns a function', () => {
@@ -89,6 +90,7 @@ describe('Meta action creators', () => {
 
     afterEach(() => {
       jest.clearAllMocks();
+      jest.resetAllMocks();
     });
 
     it('returns a function', () => {
@@ -129,6 +131,11 @@ describe('Meta action creators', () => {
   describe('checkReadiness thunk', () => {
     const dispatchSpy = jest.fn();
     let initialState = {};
+
+    afterEach(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
 
     it('returns a function', () => {
       expect(typeof metaActions.checkReadiness()).toBe('function');
@@ -185,7 +192,8 @@ describe('Meta action creators', () => {
       };
 
       const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
-      const spy = jest.spyOn(p2pActions, 'p2pBroadcastGameStatus').mockImplementation(() => {});
+      const spy = jest.spyOn(p2pActions, 'p2pBroadcastGameStatus').mockImplementation(() => {
+      });
 
       metaActions.checkReadiness()(dispatchSpy);
 
@@ -198,12 +206,18 @@ describe('Meta action creators', () => {
   describe('resetGameData thunk', () => {
     const dispatchSpy = jest.fn();
 
+    afterEach(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
     it('returns a function', () => {
       expect(typeof metaActions.resetGameData()).toBe('function');
     });
 
     it('calls dispatch with infoActions.resetStartingRows', () => {
-      const spy = jest.spyOn(infoActions, 'resetStartingRows').mockImplementation(() => {});
+      const spy = jest.spyOn(infoActions, 'resetStartingRows').mockImplementation(() => {
+      });
 
       metaActions.resetGameData()(dispatchSpy);
 
@@ -212,7 +226,8 @@ describe('Meta action creators', () => {
     });
 
     it('calls dispatch with snakeActions.resetSnakeData', () => {
-      const spy = jest.spyOn(snakeActions, 'resetSnakeData').mockImplementation(() => {});
+      const spy = jest.spyOn(snakeActions, 'resetSnakeData').mockImplementation(() => {
+      });
 
       metaActions.resetGameData()(dispatchSpy);
 
@@ -221,7 +236,8 @@ describe('Meta action creators', () => {
     });
 
     it('calls dispatch with boardActions.resetBoard', () => {
-      const spy = jest.spyOn(boardActions, 'resetBoard').mockImplementation(() => {});
+      const spy = jest.spyOn(boardActions, 'resetBoard').mockImplementation(() => {
+      });
 
       metaActions.resetGameData()(dispatchSpy);
 
@@ -230,7 +246,8 @@ describe('Meta action creators', () => {
     });
 
     it('calls dispatch with headSetActions.resetHeadSets', () => {
-      const spy = jest.spyOn(headSetActions, 'resetHeadSets').mockImplementation(() => {});
+      const spy = jest.spyOn(headSetActions, 'resetHeadSets').mockImplementation(() => {
+      });
 
       metaActions.resetGameData()(dispatchSpy);
 
@@ -239,7 +256,8 @@ describe('Meta action creators', () => {
     });
 
     it('calls dispatch with infoActions.setTu', () => {
-      const spy = jest.spyOn(infoActions, 'setTu').mockImplementation(() => {});
+      const spy = jest.spyOn(infoActions, 'setTu').mockImplementation(() => {
+      });
 
       metaActions.resetGameData()(dispatchSpy);
 
@@ -248,7 +266,8 @@ describe('Meta action creators', () => {
     });
 
     it('calls dispatch with infoActions.resetWinner', () => {
-      const spy = jest.spyOn(infoActions, 'resetWinner').mockImplementation(() => {});
+      const spy = jest.spyOn(infoActions, 'resetWinner').mockImplementation(() => {
+      });
 
       metaActions.resetGameData()(dispatchSpy);
 
@@ -258,11 +277,138 @@ describe('Meta action creators', () => {
   });
 
   describe('declareWinner thunk', () => {
+    const dispatchSpy = jest.fn();
+
+    afterEach(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('returns a function', () => {
+      expect(typeof metaActions.declareWinner()).toBe('function');
+    });
+
+    it('calls p2pActions.p2pBroadcastWinnerId with the passed id', () => {
+      const spy = jest.spyOn(p2pActions, 'p2pBroadcastWinnerId').mockImplementation(() => {
+      });
+      jest.spyOn(p2pHelpers, 'getUsername').mockImplementation(() => {
+      });
+      const id = 'egrnjkvhi678345';
+
+      metaActions.declareWinner(id)(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledWith(id);
+    });
+
+    it('calls p2pHelpers.getUsername with the passed id', () => {
+      const username = 'username';
+      const spy = jest.spyOn(p2pHelpers, 'getUsername').mockImplementation(() => (username));
+      const id = 'egrnjkvhi678345';
+
+      metaActions.declareWinner(id)(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledWith(id);
+    });
+
+    it('calls dispatch with infoActions.updateWinner with tie if no id is passed', () => {
+      metaActions.declareWinner()(dispatchSpy);
+
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateWinner(constants.GAME_RESULT_TIE));
+    });
+
+    it('calls dispatch with infoActions.updateWinner with winner\'s username when id is passed', () => {
+      const username = 'username';
+      jest.spyOn(p2pHelpers, 'getUsername').mockImplementation(() => (username));
+      const id = 'egrnjkvhi678345';
+
+      metaActions.declareWinner(id)(dispatchSpy);
+
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateWinner(username));
+    });
   });
 
   describe('confirmWinner thunk', () => {
-  });
+    let dispatchSpy;
 
+    beforeEach(() => {
+      dispatchSpy = jest.fn();
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('returns a function', () => {
+      expect(typeof metaActions.declareWinner()).toBe('function');
+    });
+
+    it('calls snakeHelpers.snakeIsAlive with peerId', () => {
+      const id = 'navknadv8346';
+      const spy = jest.spyOn(snakeHelpers, 'snakeIsAlive');
+
+      metaActions.confirmWinner(id)(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledWith(id);
+    });
+
+    // Problems testing thunks calling thunks
+    //
+    // it('calls dispatch with declareWinner with peerId if corresponding snake is alive', () => {
+    //   jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
+    //   const declareSpy = jest.spyOn(metaActions, 'declareWinner').mockImplementation(() => {});
+    //   const id = 'navknadv8346';
+    //
+    //   metaActions.confirmWinner(id)(dispatchSpy);
+    //   expect(dispatchSpy).toHaveBeenCalledWith(declareSpy(id));
+    // });
+    //
+    // it('calls dispatch with declareWinner with no arguments if snake is dead', () => {
+    //   jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (false));
+    //   const declareSpy = jest.spyOn(metaActions, 'declareWinner').mockImplementation(() => {});
+    //   const id = 'navknadv8346';
+    //
+    //   metaActions.confirmWinner(id)(dispatchSpy);
+    //   expect(dispatchSpy).toHaveBeenCalledWith(declareSpy);
+    // });
+  });
   describe('declareGameOver thunk', () => {
+    let dispatchSpy;
+
+    beforeEach(() => {
+      dispatchSpy = jest.fn();
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('returns a function', () => {
+      expect(typeof metaActions.declareGameOver()).toBe('function');
+    });
+
+    // Problems testing thunks calling thunks
+    //
+    // it('calls dispatch with p2pActions.p2pBroadcastGameStatus with postgame status', () => {
+    //   metaActions.declareGameOver()(dispatchSpy);
+    //   expect(dispatchSpy.mock.calls[0]).toEqual(
+    //     [ p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME) ],
+    //   );
+    // });
+    //
+    // it('calls dispatch with declareWinner with no arguments if no id passed', () => {
+    //   metaActions.declareGameOver()(dispatchSpy);
+    //   expect(dispatchSpy.mock.calls[1]).toEqual([metaActions.declareWinner()]);
+    // });
+
+    it('calls window.setTimeout to delay result if id is passed', () => {
+      const spy = jest.spyOn(window, 'setTimeout').mockImplementation(() => {
+      });
+      const id = 'ghiru4736';
+
+      metaActions.declareGameOver(id)(dispatchSpy);
+      expect(spy).toHaveBeenCalled();
+    });
   });
 });

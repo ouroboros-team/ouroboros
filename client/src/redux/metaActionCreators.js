@@ -76,8 +76,7 @@ export const declareWinner = peerId => (
 
 export const confirmWinner = peerId => (
   (dispatch) => {
-    const peerSnake = store.getState().snakes[peerId];
-    if (peerSnake.status === constants.SNAKE_STATUS_ALIVE) {
+    if (snakeHelpers.snakeIsAlive(peerId)) {
       // if alive, this snake is the winner
       dispatch(declareWinner(peerId));
     } else {
