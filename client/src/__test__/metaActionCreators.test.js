@@ -80,6 +80,7 @@ describe('Meta action creators', () => {
       expect(spy).toHaveBeenCalledTimes(1);
     });
   });
+
   describe('receiveSnakeData thunk', () => {
     const dispatchSpy = jest.fn();
 
@@ -124,6 +125,7 @@ describe('Meta action creators', () => {
       expect(spy).toHaveBeenCalledWith(id, null, gap);
     });
   });
+
   describe('checkReadiness thunk', () => {
     const dispatchSpy = jest.fn();
     let initialState = {};
@@ -155,8 +157,7 @@ describe('Meta action creators', () => {
             elgjkn: {},
           },
         },
-        snakes: {
-        },
+        snakes: {},
       };
 
       const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
@@ -193,16 +194,75 @@ describe('Meta action creators', () => {
       expect(spy).toHaveBeenCalledWith(constants.GAME_STATUS_READY_TO_PLAY);
     });
   });
+
   describe('resetGameData thunk', () => {
+    const dispatchSpy = jest.fn();
 
+    it('returns a function', () => {
+      expect(typeof metaActions.resetGameData()).toBe('function');
+    });
+
+    it('calls dispatch with infoActions.resetStartingRows', () => {
+      const spy = jest.spyOn(infoActions, 'resetStartingRows').mockImplementation(() => {});
+
+      metaActions.resetGameData()(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.resetStartingRows());
+    });
+
+    it('calls dispatch with snakeActions.resetSnakeData', () => {
+      const spy = jest.spyOn(snakeActions, 'resetSnakeData').mockImplementation(() => {});
+
+      metaActions.resetGameData()(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(dispatchSpy).toHaveBeenCalledWith(snakeActions.resetSnakeData());
+    });
+
+    it('calls dispatch with boardActions.resetBoard', () => {
+      const spy = jest.spyOn(boardActions, 'resetBoard').mockImplementation(() => {});
+
+      metaActions.resetGameData()(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(dispatchSpy).toHaveBeenCalledWith(boardActions.resetBoard());
+    });
+
+    it('calls dispatch with headSetActions.resetHeadSets', () => {
+      const spy = jest.spyOn(headSetActions, 'resetHeadSets').mockImplementation(() => {});
+
+      metaActions.resetGameData()(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(dispatchSpy).toHaveBeenCalledWith(headSetActions.resetHeadSets());
+    });
+
+    it('calls dispatch with infoActions.setTu', () => {
+      const spy = jest.spyOn(infoActions, 'setTu').mockImplementation(() => {});
+
+      metaActions.resetGameData()(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.setTu(0));
+    });
+
+    it('calls dispatch with infoActions.resetWinner', () => {
+      const spy = jest.spyOn(infoActions, 'resetWinner').mockImplementation(() => {});
+
+      metaActions.resetGameData()(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.resetWinner());
+    });
   });
+
   describe('declareWinner thunk', () => {
-
   });
+
   describe('confirmWinner thunk', () => {
-
   });
-  describe('declareGameOver thunk', () => {
 
+  describe('declareGameOver thunk', () => {
   });
 });
