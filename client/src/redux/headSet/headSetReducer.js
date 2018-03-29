@@ -39,5 +39,5 @@ function headSetReducer(state = defaultState, action) {
   }
 }
 
-// exported here as workaround for testing bug
+// exported here as workaround for testing bug: `defaultState` is undefined
 export default headSetReducer;
