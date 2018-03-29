@@ -80,7 +80,56 @@ describe('Meta action creators', () => {
     });
   });
   describe('receiveSnakeData thunk', () => {
+    const dispatchSpy = jest.fn();
 
+    const id = 'egnkndv54678';
+    const data = {
+      direction: 'right',
+      previousDirection: 'up',
+      status: 'alive',
+      positions: {
+        byIndex: [ 1, 0 ],
+        byKey: {
+          1: { row: 4, column: 7 },
+          0: { row: 4, column: 8 },
+        },
+      },
+    };
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('returns a function', () => {
+      expect(typeof metaActions.receiveSnakeData()).toBe('function');
+    });
+
+    it('calls snakeHelpers.getTuGap with passed id and data', () => {
+      const spy = jest.spyOn(snakeHelpers, 'getTuGap').mockImplementation(() => {});
+
+      metaActions.receiveSnakeData(id, data)(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledWith(id, data);
+    });
+
+    it('calls dispatch with snakeActions.handleUpdateSnakeData with passed id and data', () => {
+      jest.spyOn(snakeHelpers, 'getTuGap').mockImplementation(() => (5));
+      const updateSpy = jest.spyOn(snakeActions, 'handleUpdateSnakeData').mockImplementation(() => {});
+
+      metaActions.receiveSnakeData(id, data)(dispatchSpy);
+      expect(dispatchSpy).toHaveBeenCalledWith(snakeActions.handleUpdateSnakeData(id, data));
+      expect(updateSpy).toHaveBeenCalledWith(id, data);
+    });
+
+    it('calls dispatch with headSetActions.updateHeadSets with passed id and gap', () => {
+      const gap = 5;
+      jest.spyOn(snakeHelpers, 'getTuGap').mockImplementation(() => (gap));
+      const spy = jest.spyOn(headSetActions, 'updateHeadSets').mockImplementation(() => {});
+
+      metaActions.receiveSnakeData(id, data)(dispatchSpy);
+      expect(dispatchSpy).toHaveBeenCalledWith(headSetActions.updateHeadSets(id, null, gap));
+      expect(spy).toHaveBeenCalledWith(id, null, gap);
+    });
   });
   describe('checkReadiness thunk', () => {
 
