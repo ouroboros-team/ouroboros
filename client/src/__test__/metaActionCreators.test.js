@@ -1,5 +1,6 @@
 import * as actionTypes from '../redux/actionTypes';
 import * as constants from '../constants';
+import store from '../redux/store';
 
 import * as metaActions from '../redux/metaActionCreators';
 
@@ -83,18 +84,7 @@ describe('Meta action creators', () => {
     const dispatchSpy = jest.fn();
 
     const id = 'egnkndv54678';
-    const data = {
-      direction: 'right',
-      previousDirection: 'up',
-      status: 'alive',
-      positions: {
-        byIndex: [ 1, 0 ],
-        byKey: {
-          1: { row: 4, column: 7 },
-          0: { row: 4, column: 8 },
-        },
-      },
-    };
+    const data = {};
 
     afterEach(() => {
       jest.clearAllMocks();
@@ -105,7 +95,8 @@ describe('Meta action creators', () => {
     });
 
     it('calls snakeHelpers.getTuGap with passed id and data', () => {
-      const spy = jest.spyOn(snakeHelpers, 'getTuGap').mockImplementation(() => {});
+      const spy = jest.spyOn(snakeHelpers, 'getTuGap').mockImplementation(() => {
+      });
 
       metaActions.receiveSnakeData(id, data)(dispatchSpy);
 
@@ -114,7 +105,8 @@ describe('Meta action creators', () => {
 
     it('calls dispatch with snakeActions.handleUpdateSnakeData with passed id and data', () => {
       jest.spyOn(snakeHelpers, 'getTuGap').mockImplementation(() => (5));
-      const updateSpy = jest.spyOn(snakeActions, 'handleUpdateSnakeData').mockImplementation(() => {});
+      const updateSpy = jest.spyOn(snakeActions, 'handleUpdateSnakeData').mockImplementation(() => {
+      });
 
       metaActions.receiveSnakeData(id, data)(dispatchSpy);
       expect(dispatchSpy).toHaveBeenCalledWith(snakeActions.handleUpdateSnakeData(id, data));
@@ -124,7 +116,8 @@ describe('Meta action creators', () => {
     it('calls dispatch with headSetActions.updateHeadSets with passed id and gap', () => {
       const gap = 5;
       jest.spyOn(snakeHelpers, 'getTuGap').mockImplementation(() => (gap));
-      const spy = jest.spyOn(headSetActions, 'updateHeadSets').mockImplementation(() => {});
+      const spy = jest.spyOn(headSetActions, 'updateHeadSets').mockImplementation(() => {
+      });
 
       metaActions.receiveSnakeData(id, data)(dispatchSpy);
       expect(dispatchSpy).toHaveBeenCalledWith(headSetActions.updateHeadSets(id, null, gap));
@@ -132,7 +125,73 @@ describe('Meta action creators', () => {
     });
   });
   describe('checkReadiness thunk', () => {
+    const dispatchSpy = jest.fn();
+    let initialState = {};
 
+    it('returns a function', () => {
+      expect(typeof metaActions.checkReadiness()).toBe('function');
+    });
+
+    it('does not call p2pActions.p2pBroadcastGameStatus if gameStatus is not pregame', () => {
+      initialState = {
+        info: { gameStatus: 'aegknr' },
+      };
+
+      const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
+      const spy = jest.spyOn(p2pActions, 'p2pBroadcastGameStatus');
+
+      metaActions.checkReadiness()(dispatchSpy);
+
+      expect(getStateSpy).toHaveBeenCalled();
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('does not call p2pActions.p2pBroadcastGameStatus if snake data is missing', () => {
+      initialState = {
+        info: { gameStatus: constants.GAME_STATUS_PREGAME },
+        p2p: {
+          peers: {
+            lhiaer: {},
+            elgjkn: {},
+          },
+        },
+        snakes: {
+        },
+      };
+
+      const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
+      const spy = jest.spyOn(p2pActions, 'p2pBroadcastGameStatus');
+
+      metaActions.checkReadiness()(dispatchSpy);
+
+      expect(getStateSpy).toHaveBeenCalled();
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('calls p2pActions.p2pBroadcastGameStatus with ready-to-play status if all peers\' snake data is present', () => {
+      initialState = {
+        info: { gameStatus: constants.GAME_STATUS_PREGAME },
+        p2p: {
+          peers: {
+            lhiaer: {},
+            elgjkn: {},
+          },
+        },
+        snakes: {
+          lhiaer: {},
+          elgjkn: {},
+        },
+      };
+
+      const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
+      const spy = jest.spyOn(p2pActions, 'p2pBroadcastGameStatus').mockImplementation(() => {});
+
+      metaActions.checkReadiness()(dispatchSpy);
+
+      expect(getStateSpy).toHaveBeenCalled();
+      expect(dispatchSpy).toHaveBeenCalledWith(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_READY_TO_PLAY));
+      expect(spy).toHaveBeenCalledWith(constants.GAME_STATUS_READY_TO_PLAY);
+    });
   });
   describe('resetGameData thunk', () => {
 
