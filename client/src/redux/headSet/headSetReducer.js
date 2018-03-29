@@ -2,13 +2,13 @@ import * as actionTypes from '../actionTypes';
 import * as headSetHelpers from './headSetHelpers';
 import * as helpers from '../metaHelpers';
 
-const defaultState = {
+export const defaultState = {
   newest: 0,
   oldest: -3,
   byKey: {},
 };
 
-export default function headSetReducer(state = defaultState, action) {
+function headSetReducer(state = defaultState, action) {
   switch (action.type) {
     case actionTypes.UPDATE_HEAD_SETS: {
       const newState = helpers.deepClone(state);
@@ -38,3 +38,6 @@ export default function headSetReducer(state = defaultState, action) {
     }
   }
 }
+
+// exported here as workaround for testing bug: `defaultState` is undefined
+export default headSetReducer;

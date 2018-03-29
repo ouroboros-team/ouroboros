@@ -1,7 +1,7 @@
 import * as actionTypes from '../actionTypes';
 import * as constants from '../../constants';
 
-const defaultState = {
+export const defaultState = {
   tu: constants.INITIAL_TU,
   gameStatus: constants.GAME_STATUS_LOBBY,
   startingRows: [],

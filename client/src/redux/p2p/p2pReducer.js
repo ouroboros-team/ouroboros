@@ -31,6 +31,9 @@ export default function p2pReducer(state = defaultState, action) {
       return newState;
     }
     case actionTypes.P2P_REMOVE_PEER_FROM_LIST: {
+      if (!state.peers[action.id]) {
+        return state;
+      }
       const newState = { ...state };
       newState.peers = { ...newState.peers };
       delete newState.peers[action.id];
@@ -39,8 +42,8 @@ export default function p2pReducer(state = defaultState, action) {
     case actionTypes.P2P_UPDATE_PEER_USERNAME: {
       const username = action.username.trim();
 
-      // ignore blank usernames
-      if (username === '') {
+      // ignore blank usernames and nonexistent peers
+      if (username === '' || !state.peers[action.id]) {
         return state;
       }
 
