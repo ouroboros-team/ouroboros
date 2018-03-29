@@ -152,6 +152,7 @@ describe('Info action creators', () => {
 
   describe('fastForwardTu thunk', () => {
     let initialState;
+    const id = 'alkenrfg874';
     const dispatchSpy = jest.fn();
 
     afterEach(() => {
@@ -176,7 +177,6 @@ describe('Info action creators', () => {
       };
 
       const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
-      const id = 'alkenrfg874';
 
       const newTu = infoActions.fastForwardTu(id)(dispatchSpy);
       expect(getStateSpy).toHaveBeenCalledTimes(1);
@@ -197,12 +197,32 @@ describe('Info action creators', () => {
       };
 
       const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
-      const id = 'alkenrfg874';
 
       const newTu = infoActions.fastForwardTu(id)(dispatchSpy);
       expect(getStateSpy).toHaveBeenCalledTimes(1);
       expect(dispatchSpy).not.toHaveBeenCalledWith(infoActions.setTu(newTu));
       expect(newTu).toBe(initialState.info.tu);
     });
+
+    it('checks another peer\'s TU if first peer checked is self', () => {
+      initialState = {
+        info: { tu: 5 },
+        snakes: {
+          alkenrfg874: {
+            positions: { byIndex: [ 5 ] },
+          },
+          lakjn: {
+            positions: { byIndex: [ 21 ] },
+          },
+        },
+      };
+
+      const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
+
+      const newTu = infoActions.fastForwardTu(id)(dispatchSpy);
+      expect(getStateSpy).toHaveBeenCalledTimes(1);
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.setTu(newTu));
+    });
+
   });
 });
