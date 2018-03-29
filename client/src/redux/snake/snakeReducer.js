@@ -2,51 +2,31 @@ import store from '../store';
 import * as actionTypes from '../actionTypes';
 import * as snakeHelpers from './snakeHelpers';
 import * as p2pHelpers from '../p2p/p2pHelpers';
+import * as helpers from '../metaHelpers';
 
 // {
-//   0: {
+//   id: {
 //     direction: 'left',
+//     previousDirection: 'up',
 //     status: 'alive',
 //     styleId: 0,
 //     positions: {
-//       byIndex: {
-//         ['4', '3', '2', '1', '0', '-1', '-2', '-3']
-//       }
+//       byIndex: [4, 3, 2, 1, 0, -1, -2, -3],
 //       byKey: {
-//         '4': { row: 5, column: 5 },
-//         '3': { row: 5, column: 6 },
-//         '2': { row: 4, column: 6 },
-//         '1': { row: 4, column: 7 },
-//         '0': { row: 4, column: 8 },
-//         '-1': { row: 4, column: 9 },
-//         '-2': { row: 4, column: 10 },
-//         '-3': { row: 4, column: 11 },
+//         4: { row: 5, column: 5 },
+//         3: { row: 5, column: 6 },
+//         2: { row: 4, column: 6 },
+//         1: { row: 4, column: 7 },
+//         0: { row: 4, column: 8 },
+//         -1: { row: 4, column: 9 },
+//         -2: { row: 4, column: 10 },
+//         -3: { row: 4, column: 11 },
 //       },
 //     },
 //   },
-//   1: {
-//     direction: 'right',
-//     status: 'alive',
-//     styleId: 1,
-//     positions: {
-//       byIndex: {
-//         ['4', '3', '2', '1', '0', '-1', '-2', '-3']
-//       }
-//       byKey: {
-//         '4': { row: 0, column: 9 },
-//         '3': { row: 0, column: 8 },
-//         '2': { row: 0, column: 7 },
-//         '1': { row: 1, column: 7 },
-//         '0': { row: 2, column: 7 },
-//         '-1': { row: 3, column: 7 },
-//         '-2': { row: 4, column: 7 },
-//         '-3': { row: 4, column: 7 },
-//       },
-//     },
-//   }
 // };
 
-export default function snakesReducer(state = {}, action) {
+function snakesReducer(state = {}, action) {
   switch (action.type) {
     case actionTypes.CHANGE_SNAKE_DIRECTION: {
       // check against last committed direction (not last direction key press)
@@ -87,9 +67,11 @@ export default function snakesReducer(state = {}, action) {
 
       // update existing snake (only if new data is current or newer than existing data)
       if (action.data.positions.byIndex[0] >= newState[action.id].positions.byIndex[0]) {
-        newState[action.id] = { ...newState[action.id] };
+        newState[action.id] = helpers.deepClone(newState[action.id]);
 
-        // if self, write direction to previousDirection also
+        snakeHelpers.updateSnakeDataMutate(newState[action.id], action.data);
+
+        // if self, write direction to previousDirection
         // (allows direction changes to be validated against last committed move
         // instead of last arrow key pressed)
         if (action.id === p2pHelpers.getOwnId()) {
@@ -99,7 +81,6 @@ export default function snakesReducer(state = {}, action) {
         // update status
         newState[action.id].status = action.data.status;
 
-        snakeHelpers.updateSnakeDataMutate(newState[action.id], action.data);
         return newState;
       }
 
@@ -113,3 +94,6 @@ export default function snakesReducer(state = {}, action) {
     }
   }
 }
+
+// exported here as workaround for testing bug
+export default snakesReducer;
