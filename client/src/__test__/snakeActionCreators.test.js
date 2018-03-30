@@ -1,12 +1,13 @@
 import * as actionTypes from '../redux/actionTypes';
 import * as constants from '../constants';
 
-import * as snakeActions from '../redux/snake/snakeActionCreators';
+import * as infoActions from '../redux/info/infoActionCreators';
+import * as metaActions from '../redux/metaActionCreators';
 import * as p2pActions from '../redux/p2p/p2pActionCreators';
+import * as snakeActions from '../redux/snake/snakeActionCreators';
 
 import * as p2pHelpers from '../redux/p2p/p2pHelpers';
 import * as snakeHelpers from '../redux/snake/snakeHelpers';
-import * as metaActions from '../redux/metaActionCreators';
 
 describe('Snake action creators', () => {
   it('changeSnakeDirection returns expected object', () => {
@@ -182,17 +183,150 @@ describe('Snake action creators', () => {
   });
 
   describe('initializeOwnSnake thunk', () => {
+    let dispatchSpy;
+
+    beforeEach(() => {
+      dispatchSpy = jest.fn();
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('returns a function', () => {
+      expect(typeof snakeActions.initializeOwnSnake()).toBe('function');
+    });
+
+    it('calls dispatch with infoActions.randomUniqueRow if no row is passed', () => {
+      const id = 'knjerg658';
+      jest.spyOn(infoActions, 'randomUniqueRow').mockImplementation(() => {});
+
+      snakeActions.initializeOwnSnake(id)(dispatchSpy);
+
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.randomUniqueRow());
+    });
+
+    it('does not call dispatch with infoActions.randomUniqueRow if row is passed', () => {
+      const id = 'knjerg658';
+      const row = 7;
+      jest.spyOn(infoActions, 'randomUniqueRow').mockImplementation(() => (row));
+
+      snakeActions.initializeOwnSnake(id, row)(dispatchSpy);
+
+      expect(dispatchSpy).not.toHaveBeenCalledWith(infoActions.randomUniqueRow());
+    });
+
+    it('calls snakeHelpers.setStartPosition with passed row', () => {
+      const id = 'knjerg658';
+      const row = 7;
+      const spy = jest.spyOn(snakeHelpers, 'setStartPosition').mockImplementation(() => {});
+
+      snakeActions.initializeOwnSnake(id, row)(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledWith(row);
+    });
+
+    it('calls snakeHelpers.emptySnakeObject with positions from snakeHelpers.setStartPosition', () => {
+      const id = 'knjerg658';
+      const row = 7;
+      const positions = { hello: 'world' };
+      jest.spyOn(snakeHelpers, 'setStartPosition').mockImplementation(() => (positions));
+      const spy = jest.spyOn(snakeHelpers, 'emptySnakeObject');
+
+      snakeActions.initializeOwnSnake(id, row)(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledWith(positions);
+    });
+
+    it('calls dispatch with updateSnakeData with generated snake', () => {
+      const id = 'knjerg658';
+      const row = 7;
+      const object = { snake: 'object' };
+      jest.spyOn(snakeHelpers, 'setStartPosition').mockImplementation(() => ({}));
+      jest.spyOn(snakeHelpers, 'emptySnakeObject').mockImplementation(() => (object));
+
+      snakeActions.initializeOwnSnake(id, row)(dispatchSpy);
+
+      expect(dispatchSpy).toHaveBeenCalledWith(snakeActions.updateSnakeData(id, object));
+    });
+
+    it('calls p2pActions.p2pBroadcastSnakeData', () => {
+      const id = 'knjerg658';
+      const row = 7;
+      const spy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
+
+      snakeActions.initializeOwnSnake(id, row)(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('writeOwnSnakePosition thunk', () => {
+    let dispatchSpy;
+
+    beforeEach(() => {
+      dispatchSpy = jest.fn();
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('returns a function', () => {
+      expect(typeof snakeActions.writeOwnSnakePosition()).toBe('function');
+    });
   });
 
   describe('checkForCollisions thunk', () => {
+    let dispatchSpy;
+
+    beforeEach(() => {
+      dispatchSpy = jest.fn();
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('returns a function', () => {
+      expect(typeof snakeActions.checkForCollisions()).toBe('function');
+    });
   });
 
   describe('checkForGameOver thunk', () => {
+    let dispatchSpy;
+
+    beforeEach(() => {
+      dispatchSpy = jest.fn();
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('returns a function', () => {
+      expect(typeof snakeActions.checkForGameOver()).toBe('function');
+    });
   });
 
   describe('checkForLatentSnakes thunk', () => {
+    let dispatchSpy;
+
+    beforeEach(() => {
+      dispatchSpy = jest.fn();
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('returns a function', () => {
+      expect(typeof snakeActions.checkForLatentSnakes()).toBe('function');
+    });
   });
 });
