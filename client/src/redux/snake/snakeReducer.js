@@ -1,8 +1,9 @@
+import cloneDeep from 'lodash/cloneDeep';
+
 import store from '../store';
 import * as actionTypes from '../actionTypes';
 import * as snakeHelpers from './snakeHelpers';
 import * as p2pHelpers from '../p2p/p2pHelpers';
-import * as helpers from '../metaHelpers';
 
 // {
 //   id: {
@@ -67,7 +68,7 @@ function snakesReducer(state = {}, action) {
 
       // update existing snake (only if new data is current or newer than existing data)
       if (action.data.positions.byIndex[0] >= newState[action.id].positions.byIndex[0]) {
-        newState[action.id] = helpers.deepClone(newState[action.id]);
+        newState[action.id] = cloneDeep(newState[action.id]);
 
         snakeHelpers.updateSnakeDataMutate(newState[action.id], action.data);
 
