@@ -184,10 +184,13 @@ export const checkForLatentSnakes = () => (
 
     const snakes = state.snakes;
     const snakeIds = Object.keys(state.snakes);
+    let mostRecentTu;
 
     snakeIds.forEach((id) => {
-      if (snakes[id].status !== constants.SNAKE_STATUS_DEAD &&
-        tu - snakes[id].positions.byIndex[0] > constants.LATENT_SNAKE_TOLERANCE) {
+      mostRecentTu = snakes[id].positions.byIndex[0];
+
+      if (snakeHelpers.snakeIsAlive(id, snakes[id]) &&
+        tu - mostRecentTu > constants.LATENT_SNAKE_TOLERANCE) {
         console.log(`${id}'s latency is too great`);
         dispatch(p2pActions.p2pKillPeerSnake(id));
       }

@@ -475,9 +475,34 @@ describe('Snake action creators', () => {
 
   describe('checkForLatentSnakes thunk', () => {
     let dispatchSpy;
+    let state;
+    const tu = 30;
 
     beforeEach(() => {
       dispatchSpy = jest.fn();
+      state = {
+        info: { tu },
+        snakes: {
+          knjlegr: {
+            positions: {
+              byIndex: [ tu ],
+              byKey: {},
+            },
+          },
+          vinadsnv: {
+            positions: {
+              byIndex: [ tu ],
+              byKey: {},
+            },
+          },
+          iugryea: {
+            positions: {
+              byIndex: [ tu - (constants.LATENT_SNAKE_TOLERANCE + 1) ],
+              byKey: {},
+            },
+          },
+        },
+      };
     });
 
     afterEach(() => {
@@ -487,6 +512,33 @@ describe('Snake action creators', () => {
 
     it('returns a function', () => {
       expect(typeof snakeActions.checkForLatentSnakes()).toBe('function');
+    });
+
+    it('calls snakeHelpers.snakeIsAlive for each snake', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      const spy = jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
+
+      snakeActions.checkForLatentSnakes()(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(Object.keys(state.snakes).length);
+    });
+
+    it('calls dispatch with p2pActions.p2pKillPeerSnake for each snake outside of latency tolerance', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
+      const spy = jest.spyOn(p2pActions, 'p2pKillPeerSnake').mockImplementation(() => {});
+
+      const latentCount = Object.keys(state.snakes).reduce((count, id) => {
+        if (state.info.tu - state.snakes[id].positions.byIndex[0] > constants.LATENT_SNAKE_TOLERANCE){
+          return count + 1;
+        }
+        return count;
+      }, 0);
+
+      snakeActions.checkForLatentSnakes()(dispatchSpy);
+
+      expect(dispatchSpy).toHaveBeenCalledTimes(latentCount);
+      expect(spy).toHaveBeenCalledTimes(latentCount);
     });
   });
 });
