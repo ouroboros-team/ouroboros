@@ -9,6 +9,9 @@ import * as snakeActions from '../redux/snake/snakeActionCreators';
 
 import * as p2pHelpers from '../redux/p2p/p2pHelpers';
 import * as snakeHelpers from '../redux/snake/snakeHelpers';
+import * as boardHelpers from '../redux/board/boardHelpers';
+import * as headSetHelpers from '../redux/headSet/headSetHelpers';
+import { handleChangeSnakeStatus } from '../redux/snake/snakeActionCreators';
 
 describe('Snake action creators', () => {
   it('changeSnakeDirection returns expected object', () => {
@@ -316,9 +319,21 @@ describe('Snake action creators', () => {
 
   describe('checkForCollisions thunk', () => {
     let dispatchSpy;
+    let state;
+    const id = 'knjerg658';
+    const direction = 'up';
+    const positions = { row: 5, column: 3 };
+    const tu = 7;
+    const board = { 803: 'a snake' };
 
     beforeEach(() => {
       dispatchSpy = jest.fn();
+
+      state = { snakes: {} };
+      state.snakes[id] = {};
+      state.snakes[id].positions = { byIndex: [ tu ], byKey: {} };
+      state.snakes[id].positions.byKey[tu] = positions;
+      state.snakes[id].direction = direction;
     });
 
     afterEach(() => {
@@ -328,6 +343,74 @@ describe('Snake action creators', () => {
 
     it('returns a function', () => {
       expect(typeof snakeActions.checkForCollisions()).toBe('function');
+    });
+
+    it('calls boardHelpers.aggregateBoards and boardHelpers.aggregateOwnSnake for TUs in range', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      jest.spyOn(headSetHelpers, 'coordsToSquareNumber').mockImplementation(() => {});
+      const boardSpy = jest.spyOn(boardHelpers, 'aggregateBoards').mockImplementation(() => {});
+      const snakeSpy = jest.spyOn(boardHelpers, 'aggregateOwnSnake').mockImplementation(() => {});
+
+      snakeActions.checkForCollisions(id)(dispatchSpy);
+
+      expect(boardSpy).toHaveBeenCalledTimes(constants.NUMBER_CANDIDATE_TUS);
+      expect(snakeSpy).toHaveBeenCalledTimes(constants.NUMBER_CANDIDATE_TUS);
+    });
+
+    // Problem testing thunks calling thunks
+    //
+    // it('calls dispatch with handleChangeSnakeStatus to kill own snake if a collision is found', () => {
+    //   jest.spyOn(store, 'getState').mockImplementation(() => (state));
+    //   jest.spyOn(headSetHelpers, 'coordsToSquareNumber').mockImplementation(() => (803));
+    //   jest.spyOn(boardHelpers, 'aggregateBoards').mockImplementation(() => (board));
+    //   jest.spyOn(boardHelpers, 'aggregateOwnSnake').mockImplementation(() => {});
+    //   jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
+    //   jest.spyOn(snakeHelpers, 'getCollisionType').mockImplementation(() => (true));
+    //
+    //   const spy = jest.spyOn(snakeActions, 'handleChangeSnakeStatus');
+    //   snakeActions.checkForCollisions(id)(dispatchSpy);
+    //
+    //   expect(dispatchSpy).toHaveBeenCalledWith(snakeActions.handleChangeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
+    // });
+
+    it('calls snakeHelpers.getCollisionType if a collision is found', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      jest.spyOn(headSetHelpers, 'coordsToSquareNumber').mockImplementation(() => (803));
+      jest.spyOn(boardHelpers, 'aggregateBoards').mockImplementation(() => (board));
+      jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
+      const spy = jest.spyOn(snakeHelpers, 'getCollisionType').mockImplementation(() => (true));
+
+      snakeActions.checkForCollisions(id)(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    // Problems testing thunks called by thunks
+    //
+    // it('calls dispatch with p2pActions.p2pKillPeerSnake if a head-on-head collision is found', () => {
+    //   jest.spyOn(store, 'getState').mockImplementation(() => (state));
+    //   jest.spyOn(headSetHelpers, 'coordsToSquareNumber').mockImplementation(() => (803));
+    //   jest.spyOn(boardHelpers, 'aggregateBoards').mockImplementation(() => (board));
+    //   jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
+    //   jest.spyOn(snakeHelpers, 'getCollisionType').mockImplementation(() => (constants.COLLISION_TYPE_HEAD_ON_HEAD));
+    //   const spy = jest.spyOn(p2pActions, 'p2pKillPeerSnake').mockImplementation(() => {});
+    //
+    //   snakeActions.checkForCollisions(id)(dispatchSpy);
+    //
+    //   expect(dispatchSpy.mock.calls).toBe([p2pActions.p2pKillPeerSnake]);
+    // });
+
+    it('calls p2pActions.p2pBroadcastPatch if a collision is not head-on-head', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      jest.spyOn(headSetHelpers, 'coordsToSquareNumber').mockImplementation(() => (803));
+      jest.spyOn(boardHelpers, 'aggregateBoards').mockImplementation(() => (board));
+      jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
+      jest.spyOn(snakeHelpers, 'getCollisionType').mockImplementation(() => {});
+      const spy = jest.spyOn(p2pActions, 'p2pBroadcastPatch').mockImplementation(() => {});
+
+      snakeActions.checkForCollisions(id)(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(1);
     });
   });
 
