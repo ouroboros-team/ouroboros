@@ -141,9 +141,13 @@ export const p2pSetCloseListener = (connection, dispatch) => {
     console.log(`Removing peer: ${connection.peer}`);
     dispatch(p2pRemovePeerFromList(connection.peer));
     dispatch(metaActions.checkReadiness());
-    if (store.getState().info.gameStatus !== constants.GAME_STATUS_POSTGAME) {
+    const gameStatus = store.getState().info.gameStatus;
+    if (gameStatus === constants.GAME_STATUS_PLAYING) {
       dispatch(snakeActions.handleChangeSnakeStatus(connection.peer, constants.SNAKE_STATUS_DEAD));
+    } else if (gameStatus === constants.GAME_STATUS_READY_TO_PLAY) {
+      dispatch(snakeActions.removeSnake(connection.peer));
     }
+
     delete peerConnections[connection.peer];
   });
 };
