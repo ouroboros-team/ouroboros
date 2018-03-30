@@ -380,7 +380,9 @@ describe('Snake action creators', () => {
       jest.spyOn(store, 'getState').mockImplementation(() => (state));
       jest.spyOn(headSetHelpers, 'coordsToSquareNumber').mockImplementation(() => (803));
       jest.spyOn(boardHelpers, 'aggregateBoards').mockImplementation(() => (board));
+      jest.spyOn(boardHelpers, 'aggregateOwnSnake').mockImplementation(() => {});
       jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
+      jest.spyOn(p2pActions, 'p2pBroadcastPatch').mockImplementation(() => {});
       const spy = jest.spyOn(snakeHelpers, 'getCollisionType').mockImplementation(() => (true));
 
       snakeActions.checkForCollisions(id)(dispatchSpy);
