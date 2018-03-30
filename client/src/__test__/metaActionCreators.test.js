@@ -356,20 +356,22 @@ describe('Meta action creators', () => {
     //
     // it('calls dispatch with declareWinner with peerId if corresponding snake is alive', () => {
     //   jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
-    //   const declareSpy = jest.spyOn(metaActions, 'declareWinner').mockImplementation(() => {});
+    //   const spy = jest.spyOn(metaActions, 'declareWinner').mockImplementation(() => {});
     //   const id = 'navknadv8346';
     //
     //   metaActions.confirmWinner(id)(dispatchSpy);
-    //   expect(dispatchSpy).toHaveBeenCalledWith(declareSpy(id));
+    //
+    //   expect(spy).toHaveBeenCalledWith(id);
     // });
     //
     // it('calls dispatch with declareWinner with no arguments if snake is dead', () => {
     //   jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (false));
-    //   const declareSpy = jest.spyOn(metaActions, 'declareWinner').mockImplementation(() => {});
+    //   const spy = jest.spyOn(metaActions, 'declareWinner').mockImplementation(() => {});
     //   const id = 'navknadv8346';
     //
     //   metaActions.confirmWinner(id)(dispatchSpy);
-    //   expect(dispatchSpy).toHaveBeenCalledWith(declareSpy);
+    //
+    //   expect(spy).toHaveBeenCalled();
     // });
   });
   describe('declareGameOver thunk', () => {
@@ -388,18 +390,20 @@ describe('Meta action creators', () => {
       expect(typeof metaActions.declareGameOver()).toBe('function');
     });
 
+    it('calls p2pActions.p2pBroadcastGameStatus with postgame status', () => {
+      const spy = jest.spyOn(p2pActions, 'p2pBroadcastGameStatus');
+      metaActions.declareGameOver()(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledWith(constants.GAME_STATUS_POSTGAME);
+    });
+
     // Problems testing thunks calling thunks
     //
-    // it('calls dispatch with p2pActions.p2pBroadcastGameStatus with postgame status', () => {
+    // it('calls dispatch with declareWinner if no id passed', () => {
+    //   const spy = jest.spyOn(metaActions, 'declareWinner').mockImplementation(() => {});
     //   metaActions.declareGameOver()(dispatchSpy);
-    //   expect(dispatchSpy.mock.calls[0]).toEqual(
-    //     [ p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME) ],
-    //   );
-    // });
     //
-    // it('calls dispatch with declareWinner with no arguments if no id passed', () => {
-    //   metaActions.declareGameOver()(dispatchSpy);
-    //   expect(dispatchSpy.mock.calls[1]).toEqual([metaActions.declareWinner()]);
+    //   expect(spy).toHaveBeenCalled();
     // });
 
     it('calls window.setTimeout to delay result if id is passed', () => {
