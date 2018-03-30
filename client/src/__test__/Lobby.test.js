@@ -7,7 +7,7 @@ describe('Lobby', () => {
     shallow(<Lobby />);
   });
 
-  it('should render an form for entering a user name', () => {
+  it('should render a form for entering a user name', () => {
     const wrapper = shallow(<Lobby />);
     expect(wrapper.find('form').length).toEqual(1);
     expect(wrapper.find('input[type="text"]').length).toEqual(1);
