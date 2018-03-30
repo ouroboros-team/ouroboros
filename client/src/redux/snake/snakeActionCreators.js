@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash/cloneDeep';
+
 import store from '../store';
 
 import * as actionTypes from '../actionTypes';
@@ -9,7 +11,6 @@ import * as boardHelpers from '../board/boardHelpers';
 import * as p2pHelpers from '../p2p/p2pHelpers';
 import * as headSetHelpers from '../headSet/headSetHelpers';
 import * as snakeHelpers from './snakeHelpers';
-import * as helpers from '../metaHelpers';
 
 import * as constants from '../../constants';
 
@@ -34,7 +35,11 @@ export const handleChangeSnakeStatus = (id, status) => (
       p2pActions.p2pBroadcastSnakeData();
     }
 
-    dispatch(checkForGameOver());
+    const result = snakeHelpers.checkForGameOver();
+
+    if (result !== false) {
+      dispatch(metaActions.declareGameOver(result));
+    }
   }
 );
 
@@ -87,35 +92,19 @@ export const initializeOwnSnake = (id, row) => (
 export const writeOwnSnakePosition = id => (
   (dispatch) => {
     const state = store.getState();
-    const newSnake = helpers.deepClone(state.snakes[id]);
+    const newSnake = cloneDeep(state.snakes[id]);
     const lastTu = newSnake.positions.byIndex[0];
 
     const coords = snakeHelpers.calculateNextCoords(newSnake.direction, newSnake.positions.byKey[`${lastTu}`]);
 
     newSnake.positions.byKey = {};
     newSnake.positions.byKey[`${lastTu + 1}`] = coords;
-    newSnake.positions.byIndex = [ `${lastTu + 1}` ];
+    newSnake.positions.byIndex = [`${lastTu + 1}`];
 
     dispatch(updateSnakeData(id, newSnake));
     p2pActions.p2pBroadcastSnakeData();
   }
 );
-
-export const getCollisionType = (sqNum, myID, peerID, snakeLength) => {
-  const peerSnake = store.getState().snakes[peerID];
-  const peerHeadTU = peerSnake.positions.byIndex[0];
-  const peerHeadSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerHeadTU]);
-  const peerTailTU = peerSnake.positions.byIndex[snakeLength - 1];
-  const peerTailSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerTailTU - 1]);
-
-  if (myID !== peerID && sqNum === peerHeadSqNum) {
-    return constants.COLLISION_TYPE_HEAD_ON_HEAD;
-  } else if (sqNum === peerTailSqNum) {
-    return constants.COLLISION_TYPE_HEAD_ON_TAIL;
-  }
-
-  return constants.COLLISION_TYPE_HEAD_ON_BODY;
-};
 
 export const checkForCollisions = id => (
   (dispatch) => {
@@ -146,7 +135,7 @@ export const checkForCollisions = id => (
       if (board[squareNumber] && snakeHelpers.snakeIsAlive(board[squareNumber].id)) {
         dispatch(handleChangeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
         // check collision type
-        collisionType = getCollisionType(squareNumber, id, board[squareNumber].id, length);
+        collisionType = snakeHelpers.getCollisionType(squareNumber, id, board[squareNumber].id, length);
         console.log(collisionType);
 
         if (collisionType === constants.COLLISION_TYPE_HEAD_ON_HEAD) {
@@ -165,28 +154,6 @@ export const checkForCollisions = id => (
   }
 );
 
-export const checkForGameOver = () => (
-  (dispatch) => {
-    const state = store.getState();
-    const snakeIds = Object.keys(state.snakes);
-    const snakeCount = snakeIds.length;
-    const snakesAlive = [];
-
-    snakeIds.forEach((id) => {
-      if (snakeHelpers.snakeIsAlive(id, state.snakes)) {
-        snakesAlive.push(id);
-      }
-    });
-
-    const aliveCount = snakesAlive.length;
-
-    if ((snakeCount > 1 && aliveCount <= 1) ||
-      (snakeCount === 1 && aliveCount === 0)) {
-      dispatch(metaActions.declareGameOver(snakesAlive[0]));
-    }
-  }
-);
-
 export const checkForLatentSnakes = () => (
   (dispatch) => {
     const state = store.getState();
@@ -199,10 +166,13 @@ export const checkForLatentSnakes = () => (
 
     const snakes = state.snakes;
     const snakeIds = Object.keys(state.snakes);
+    let mostRecentTu;
 
     snakeIds.forEach((id) => {
-      if (snakes[id].status !== constants.SNAKE_STATUS_DEAD &&
-        tu - snakes[id].positions.byIndex[0] > constants.LATENT_SNAKE_TOLERANCE) {
+      mostRecentTu = snakes[id].positions.byIndex[0];
+
+      if (snakeHelpers.snakeIsAlive(id, snakes[id]) &&
+        tu - mostRecentTu > constants.LATENT_SNAKE_TOLERANCE) {
         console.log(`${id}'s latency is too great`);
         dispatch(p2pActions.p2pKillPeerSnake(id));
       }

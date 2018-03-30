@@ -60,9 +60,6 @@ export const handleGameStatusChange = newStatus => (
     dispatch(updateGameStatus(newStatus));
 
     switch (newStatus) {
-      case constants.GAME_STATUS_PREGAME: {
-        break;
-      }
       case constants.GAME_STATUS_READY_TO_PLAY: {
         dispatch(headSetActions.updateHeadSets());
         break;
@@ -71,13 +68,12 @@ export const handleGameStatusChange = newStatus => (
         p2pActions.p2pBroadcastSnakeData();
         break;
       }
-      case constants.GAME_STATUS_POSTGAME: {
-        break;
-      }
       case constants.GAME_STATUS_LOBBY: {
         dispatch(metaActions.resetGameData());
         break;
       }
+      // case constants.GAME_STATUS_PREGAME:
+      // case constants.GAME_STATUS_POSTGAME:
       default: {
         break;
       }
@@ -91,10 +87,11 @@ export const fastForwardTu = id => (
     const snakes = state.snakes;
     const snakeIds = Object.keys(snakes);
     const oldTu = state.info.tu;
+    const myId = id || state.p2p.id;
     let newTu;
 
     // relying on snakeIds[0] or snakeIds[1] to be sufficiently up to date
-    if (snakeIds[0] !== id) {
+    if (snakeIds[0] !== myId) {
       newTu = snakes[snakeIds[0]].positions.byIndex[0];
     } else {
       newTu = snakes[snakeIds[1]].positions.byIndex[0];
@@ -103,6 +100,9 @@ export const fastForwardTu = id => (
     if (newTu - oldTu > 5) {
       // fast-forward TU
       dispatch(setTu(newTu));
+      return newTu;
     }
+
+    return oldTu;
   }
 );

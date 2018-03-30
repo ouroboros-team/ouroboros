@@ -1,8 +1,9 @@
+import cloneDeep from 'lodash/cloneDeep';
+
 import store from '../store';
 
 import * as headSetHelpers from '../headSet/headSetHelpers';
 import * as snakeHelpers from '../snake/snakeHelpers';
-import * as helpers from '../metaHelpers';
 
 import * as constants from '../../constants';
 
@@ -54,7 +55,7 @@ export const buildNextBoard = () => {
 
   const newBoard = { ...aggregateBoards(tu), ...aggregateOwnSnake(tu) };
 
-  const snakesObj = helpers.deepClone(state.snakes);
+  const snakesObj = cloneDeep(state.snakes);
   const snakeIds = Object.keys(snakesObj);
   const length = snakeHelpers.getSnakeLength(tu);
 

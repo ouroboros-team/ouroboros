@@ -1,6 +1,7 @@
+import cloneDeep from 'lodash/cloneDeep';
+
 import * as actionTypes from '../actionTypes';
 import * as headSetHelpers from './headSetHelpers';
-import * as helpers from '../metaHelpers';
 
 export const defaultState = {
   newest: 0,
@@ -11,7 +12,7 @@ export const defaultState = {
 function headSetReducer(state = defaultState, action) {
   switch (action.type) {
     case actionTypes.UPDATE_HEAD_SETS: {
-      const newState = helpers.deepClone(state);
+      const newState = cloneDeep(state);
 
       if (action.id) {
         // only aggregate for snakes[action.id]
@@ -24,7 +25,7 @@ function headSetReducer(state = defaultState, action) {
       return newState;
     }
     case actionTypes.PATCH_HEAD_SET: {
-      const newState = helpers.deepClone(state);
+      const newState = cloneDeep(state);
 
       headSetHelpers.patchHeadSetMutate(newState, action.tu, action.sqNum, action.id);
 
