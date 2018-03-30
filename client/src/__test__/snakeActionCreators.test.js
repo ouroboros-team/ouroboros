@@ -1,3 +1,4 @@
+import store from '../redux/store';
 import * as actionTypes from '../redux/actionTypes';
 import * as constants from '../constants';
 
@@ -264,9 +265,18 @@ describe('Snake action creators', () => {
 
   describe('writeOwnSnakePosition thunk', () => {
     let dispatchSpy;
+    let state;
+    const id = 'knjerg658';
+    const direction = 'up';
+    const positions = { row: 5, column: 3 };
 
     beforeEach(() => {
       dispatchSpy = jest.fn();
+
+      state = { snakes: {} };
+      state.snakes[id] = {};
+      state.snakes[id].positions = { byIndex: [ 7 ], byKey: { 7: positions } };
+      state.snakes[id].direction = direction;
     });
 
     afterEach(() => {
@@ -276,6 +286,31 @@ describe('Snake action creators', () => {
 
     it('returns a function', () => {
       expect(typeof snakeActions.writeOwnSnakePosition()).toBe('function');
+    });
+
+    it('calls snakeHelpers.calculateNextCoords with direction and most recent position of own snake', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      const spy = jest.spyOn(snakeHelpers, 'calculateNextCoords').mockImplementation(() => {});
+
+      snakeActions.writeOwnSnakePosition(id)(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledWith(direction, positions);
+    });
+    it('calls dispatch with updateSnakeData', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+
+      snakeActions.writeOwnSnakePosition(id)(dispatchSpy);
+
+      expect(dispatchSpy.mock.calls[0][0].type).toBe(actionTypes.UPDATE_SNAKE_DATA);
+    });
+
+    it('calls p2pActions.p2pBroadcastSnakeData', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      const spy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
+
+      snakeActions.writeOwnSnakePosition(id)(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(1);
     });
   });
 
