@@ -63,6 +63,11 @@ export const handleUpdateSnakeData = (id, data) => (
   }
 );
 
+export const removeSnake = id => ({
+  id,
+  type: actionTypes.REMOVE_SNAKE,
+});
+
 export const resetSnakeData = () => ({
   type: actionTypes.RESET_SNAKE_DATA,
 });

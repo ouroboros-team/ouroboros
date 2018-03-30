@@ -86,6 +86,11 @@ function snakesReducer(state = {}, action) {
 
       return state;
     }
+    case actionTypes.REMOVE_SNAKE: {
+      const newState = { ...state };
+      delete newState[action.id];
+      return newState;
+    }
     case actionTypes.RESET_SNAKE_DATA: {
       return {};
     }
