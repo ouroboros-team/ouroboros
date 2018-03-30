@@ -35,7 +35,11 @@ export const handleChangeSnakeStatus = (id, status) => (
       p2pActions.p2pBroadcastSnakeData();
     }
 
-    dispatch(checkForGameOver());
+    const result = snakeHelpers.checkForGameOver();
+
+    if (result !== false) {
+      dispatch(metaActions.declareGameOver(result));
+    }
   }
 );
 
@@ -95,7 +99,7 @@ export const writeOwnSnakePosition = id => (
 
     newSnake.positions.byKey = {};
     newSnake.positions.byKey[`${lastTu + 1}`] = coords;
-    newSnake.positions.byIndex = [ `${lastTu + 1}` ];
+    newSnake.positions.byIndex = [`${lastTu + 1}`];
 
     dispatch(updateSnakeData(id, newSnake));
     p2pActions.p2pBroadcastSnakeData();
@@ -146,28 +150,6 @@ export const checkForCollisions = id => (
       }
 
       tuCounter += 1;
-    }
-  }
-);
-
-export const checkForGameOver = () => (
-  (dispatch) => {
-    const state = store.getState();
-    const snakeIds = Object.keys(state.snakes);
-    const snakeCount = snakeIds.length;
-    const snakesAlive = [];
-
-    snakeIds.forEach((id) => {
-      if (snakeHelpers.snakeIsAlive(id, state.snakes)) {
-        snakesAlive.push(id);
-      }
-    });
-
-    const aliveCount = snakesAlive.length;
-
-    if ((snakeCount > 1 && aliveCount <= 1) ||
-      (snakeCount === 1 && aliveCount === 0)) {
-      dispatch(metaActions.declareGameOver(snakesAlive[0]));
     }
   }
 );

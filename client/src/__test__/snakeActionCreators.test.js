@@ -11,7 +11,6 @@ import * as p2pHelpers from '../redux/p2p/p2pHelpers';
 import * as snakeHelpers from '../redux/snake/snakeHelpers';
 import * as boardHelpers from '../redux/board/boardHelpers';
 import * as headSetHelpers from '../redux/headSet/headSetHelpers';
-import { handleChangeSnakeStatus } from '../redux/snake/snakeActionCreators';
 
 describe('Snake action creators', () => {
   it('changeSnakeDirection returns expected object', () => {
@@ -81,17 +80,21 @@ describe('Snake action creators', () => {
       ]);
     });
 
-    // Problems testing thunks calling thunks
-    // also, mocking checkForGameOver breaks tests for that function below
-    //
-    // it('calls dispatch with checkForGameOver', () => {
-    //   const id = 'sbihou38457';
-    //   const data = {};
-    //   const spy = jest.spyOn(snakeActions, 'checkForGameOver');
-    //
-    //   snakeActions.handleChangeSnakeStatus(id, data)(dispatchSpy);
-    //   expect(spy).toHaveBeenCalledTimes(1);
-    // });
+    it('calls checkForGameOver', () => {
+      const spy = jest.spyOn(snakeHelpers, 'checkForGameOver');
+
+      snakeActions.handleChangeSnakeStatus()(dispatchSpy);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('calls metaActions.declareGameOver if game is over', () => {
+      jest.spyOn(snakeHelpers, 'checkForGameOver').mockImplementation(() => (true));
+      const spy = jest.spyOn(metaActions, 'declareGameOver');
+
+      snakeActions.handleChangeSnakeStatus()(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
 
     it('calls p2pActions.p2pBroadcastSnakeData if passed id is own id', () => {
       const id = 'sbihou38457';
@@ -408,65 +411,6 @@ describe('Snake action creators', () => {
 
       snakeActions.checkForCollisions(id)(dispatchSpy);
 
-      expect(spy).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('checkForGameOver thunk', () => {
-    let dispatchSpy;
-    let state;
-
-    beforeEach(() => {
-      dispatchSpy = jest.fn();
-      state = {
-        snakes: {
-          knjlegr: {},
-          vinadsnv: {},
-          iugryea: {},
-        },
-      };
-    });
-
-    afterEach(() => {
-      jest.clearAllMocks();
-      jest.resetAllMocks();
-    });
-
-    it('returns a function', () => {
-      expect(typeof snakeActions.checkForGameOver()).toBe('function');
-    });
-
-    it('calls snakeHelpers.snakeIsAlive for each snake', () => {
-      jest.spyOn(store, 'getState').mockImplementation(() => (state));
-      const spy = jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
-
-      snakeActions.checkForGameOver()(dispatchSpy);
-
-      expect(spy).toHaveBeenCalledTimes(Object.keys(state.snakes).length);
-    });
-
-    it('declares game over for multi-player game if 1 snake is alive', () => {
-      jest.spyOn(store, 'getState').mockImplementation(() => (state));
-      jest.spyOn(snakeHelpers, 'snakeIsAlive')
-        .mockImplementationOnce(() => (true))
-        .mockImplementation(() => (false));
-      const spy = jest.spyOn(metaActions, 'declareGameOver');
-
-      snakeActions.checkForGameOver()(dispatchSpy);
-
-      expect(dispatchSpy).toHaveBeenCalledTimes(1);
-      expect(spy).toHaveBeenCalledTimes(1);
-    });
-
-    it('declares game over for single-player game if no snakes are alive', () => {
-      state.snakes = { lviewegu: {} };
-      jest.spyOn(store, 'getState').mockImplementation(() => (state));
-      jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (false));
-      const spy = jest.spyOn(metaActions, 'declareGameOver');
-
-      snakeActions.checkForGameOver()(dispatchSpy);
-
-      expect(dispatchSpy).toHaveBeenCalledTimes(1);
       expect(spy).toHaveBeenCalledTimes(1);
     });
   });

@@ -172,3 +172,25 @@ export const getCollisionType = (sqNum, myID, peerID, snakeLength) => {
 
   return constants.COLLISION_TYPE_HEAD_ON_BODY;
 };
+
+export const checkForGameOver = () => {
+  const state = store.getState();
+  const snakeIds = Object.keys(state.snakes);
+  const snakeCount = snakeIds.length;
+  const snakesAlive = [];
+
+  snakeIds.forEach((id) => {
+    if (snakeIsAlive(id, state.snakes)) {
+      snakesAlive.push(id);
+    }
+  });
+
+  const aliveCount = snakesAlive.length;
+
+  if ((snakeCount > 1 && aliveCount <= 1) ||
+    (snakeCount === 1 && aliveCount === 0)) {
+    return snakesAlive[0];
+  }
+
+  return false;
+};
