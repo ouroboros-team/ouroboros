@@ -327,53 +327,6 @@ describe('Meta action creators', () => {
     });
   });
 
-  describe('confirmWinner thunk', () => {
-    let dispatchSpy;
-
-    beforeEach(() => {
-      dispatchSpy = jest.fn();
-    });
-
-    afterEach(() => {
-      jest.clearAllMocks();
-      jest.resetAllMocks();
-    });
-
-    it('returns a function', () => {
-      expect(typeof metaActions.declareWinner()).toBe('function');
-    });
-
-    it('calls snakeHelpers.snakeIsAlive with peerId', () => {
-      const id = 'navknadv8346';
-      const spy = jest.spyOn(snakeHelpers, 'snakeIsAlive');
-
-      metaActions.confirmWinner(id)(dispatchSpy);
-
-      expect(spy).toHaveBeenCalledWith(id);
-    });
-
-    // Problems testing thunks calling thunks
-    //
-    // it('calls dispatch with declareWinner with peerId if corresponding snake is alive', () => {
-    //   jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
-    //   const spy = jest.spyOn(metaActions, 'declareWinner').mockImplementation(() => {});
-    //   const id = 'navknadv8346';
-    //
-    //   metaActions.confirmWinner(id)(dispatchSpy);
-    //
-    //   expect(spy).toHaveBeenCalledWith(id);
-    // });
-    //
-    // it('calls dispatch with declareWinner with no arguments if snake is dead', () => {
-    //   jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (false));
-    //   const spy = jest.spyOn(metaActions, 'declareWinner').mockImplementation(() => {});
-    //   const id = 'navknadv8346';
-    //
-    //   metaActions.confirmWinner(id)(dispatchSpy);
-    //
-    //   expect(spy).toHaveBeenCalled();
-    // });
-  });
   describe('declareGameOver thunk', () => {
     let dispatchSpy;
 
@@ -407,8 +360,7 @@ describe('Meta action creators', () => {
     // });
 
     it('calls window.setTimeout to delay result if id is passed', () => {
-      const spy = jest.spyOn(window, 'setTimeout').mockImplementation(() => {
-      });
+      const spy = jest.spyOn(window, 'setTimeout').mockImplementation(() => {});
       const id = 'ghiru4736';
 
       metaActions.declareGameOver(id)(dispatchSpy);
