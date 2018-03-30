@@ -416,9 +416,17 @@ describe('Snake action creators', () => {
 
   describe('checkForGameOver thunk', () => {
     let dispatchSpy;
+    let state;
 
     beforeEach(() => {
       dispatchSpy = jest.fn();
+      state = {
+        snakes: {
+          knjlegr: {},
+          vinadsnv: {},
+          iugryea: {},
+        },
+      };
     });
 
     afterEach(() => {
@@ -428,6 +436,40 @@ describe('Snake action creators', () => {
 
     it('returns a function', () => {
       expect(typeof snakeActions.checkForGameOver()).toBe('function');
+    });
+
+    it('calls snakeHelpers.snakeIsAlive for each snake', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      const spy = jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
+
+      snakeActions.checkForGameOver()(dispatchSpy);
+
+      expect(spy).toHaveBeenCalledTimes(Object.keys(state.snakes).length);
+    });
+
+    it('declares game over for multi-player game if 1 snake is alive', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      jest.spyOn(snakeHelpers, 'snakeIsAlive')
+        .mockImplementationOnce(() => (true))
+        .mockImplementation(() => (false));
+      const spy = jest.spyOn(metaActions, 'declareGameOver');
+
+      snakeActions.checkForGameOver()(dispatchSpy);
+
+      expect(dispatchSpy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('declares game over for single-player game if no snakes are alive', () => {
+      state.snakes = { lviewegu: {} };
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (false));
+      const spy = jest.spyOn(metaActions, 'declareGameOver');
+
+      snakeActions.checkForGameOver()(dispatchSpy);
+
+      expect(dispatchSpy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledTimes(1);
     });
   });
 
