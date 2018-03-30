@@ -3,6 +3,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import store from '../store';
 import * as constants from '../../constants';
+import * as headSetHelpers from '../headSet/headSetHelpers';
 
 export const getSnakeLength = tu => (
   constants.INITIAL_SNAKE_LENGTH + Math.floor(tu / 10)
@@ -154,4 +155,20 @@ export const getTuGap = (id, newData) => {
   const newLastTu = newData.positions.byIndex[0];
 
   return newLastTu - oldLastTu;
+};
+
+export const getCollisionType = (sqNum, myID, peerID, snakeLength) => {
+  const peerSnake = store.getState().snakes[peerID];
+  const peerHeadTU = peerSnake.positions.byIndex[0];
+  const peerHeadSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerHeadTU]);
+  const peerTailTU = peerSnake.positions.byIndex[snakeLength - 1];
+  const peerTailSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerTailTU - 1]);
+
+  if (myID !== peerID && sqNum === peerHeadSqNum) {
+    return constants.COLLISION_TYPE_HEAD_ON_HEAD;
+  } else if (sqNum === peerTailSqNum) {
+    return constants.COLLISION_TYPE_HEAD_ON_TAIL;
+  }
+
+  return constants.COLLISION_TYPE_HEAD_ON_BODY;
 };

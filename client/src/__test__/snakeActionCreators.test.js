@@ -187,9 +187,6 @@ describe('Snake action creators', () => {
   describe('writeOwnSnakePosition thunk', () => {
   });
 
-  describe('getCollisionType thunk', () => {
-  });
-
   describe('checkForCollisions thunk', () => {
   });
 

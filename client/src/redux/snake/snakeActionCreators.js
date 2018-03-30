@@ -102,22 +102,6 @@ export const writeOwnSnakePosition = id => (
   }
 );
 
-export const getCollisionType = (sqNum, myID, peerID, snakeLength) => {
-  const peerSnake = store.getState().snakes[peerID];
-  const peerHeadTU = peerSnake.positions.byIndex[0];
-  const peerHeadSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerHeadTU]);
-  const peerTailTU = peerSnake.positions.byIndex[snakeLength - 1];
-  const peerTailSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerTailTU - 1]);
-
-  if (myID !== peerID && sqNum === peerHeadSqNum) {
-    return constants.COLLISION_TYPE_HEAD_ON_HEAD;
-  } else if (sqNum === peerTailSqNum) {
-    return constants.COLLISION_TYPE_HEAD_ON_TAIL;
-  }
-
-  return constants.COLLISION_TYPE_HEAD_ON_BODY;
-};
-
 export const checkForCollisions = id => (
   (dispatch) => {
     const ownSnake = store.getState().snakes[id];
@@ -147,7 +131,7 @@ export const checkForCollisions = id => (
       if (board[squareNumber] && snakeHelpers.snakeIsAlive(board[squareNumber].id)) {
         dispatch(handleChangeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
         // check collision type
-        collisionType = getCollisionType(squareNumber, id, board[squareNumber].id, length);
+        collisionType = snakeHelpers.getCollisionType(squareNumber, id, board[squareNumber].id, length);
         console.log(collisionType);
 
         if (collisionType === constants.COLLISION_TYPE_HEAD_ON_HEAD) {
