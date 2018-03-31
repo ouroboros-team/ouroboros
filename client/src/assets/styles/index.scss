@@ -142,7 +142,8 @@ header {
 }
 
 #messages {
-  height: 4.5rem;
+  min-height: 2.5rem;
+  word-break: break-word;
 }
 
 .label {
