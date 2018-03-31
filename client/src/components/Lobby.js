@@ -43,7 +43,8 @@ export default class Lobby extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <label className='label' htmlFor='username'>
             Your name: <input type='text' name='username'
-                              onChange={this.handleChange} />
+                              onChange={this.handleChange}
+                              autoFocus />
           </label>
           <input type='submit' value='Submit' />
         </form>
@@ -62,6 +63,7 @@ export default class Lobby extends React.Component {
             type='button'
             value='Play with Connected Players'
             onClick={this.handlePlayClick}
+            autoFocus
           />
         </div>
       );
