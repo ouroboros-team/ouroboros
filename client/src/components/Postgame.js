@@ -52,6 +52,7 @@ export default class Postgame extends React.Component {
           type='button'
           value='Play Again'
           onClick={this.handlePlayAgainClick}
+          autoFocus
         />
       </div>
     );

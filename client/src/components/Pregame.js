@@ -35,6 +35,7 @@ export default class Pregame extends React.Component {
               'Waiting for all players to be ready...' : 'Start Game'
           }
           onClick={this.handleStartClick}
+          autoFocus
         />
       </div>
     );
