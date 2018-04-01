@@ -10,6 +10,10 @@ $white: #FFF;
 $square-size: 1rem;
 $grid-size: 40;
 
+body {
+  background: url("../images/snake-texture.png");
+}
+
 header {
   padding: 1rem;
   background-color: $lightgray;
@@ -120,14 +124,13 @@ header {
     }
   }
 
-  // Random colors for other players
-  $s-min: 40;
-  $s-max: 70;
-  $l-min: 35;
-  $l-max: 45;
+  // Generate colors for other players
+  $s: 40;
+  $l: 45;
 
   @for $i from 1 through 25 {
-    $color: hsl(random(360), $s-min+random($s-max+-$s-min), $l-min+random($l-max+-$l-min));
+    $hue: (($i * 85) + 50) % 360;
+    $color: hsl($hue, $s, $l);
 
     #player-list ul li.id-#{$i} {
       background-color: $color;
@@ -142,7 +145,8 @@ header {
 }
 
 #messages {
-  height: 4.5rem;
+  min-height: 2.5rem;
+  word-break: break-word;
 }
 
 .label {
