@@ -1,10 +1,12 @@
+import shuffle from 'lodash/shuffle';
+
 import * as actionTypes from '../actionTypes';
 import * as constants from '../../constants';
 
 export const defaultState = {
   tu: constants.INITIAL_TU,
   gameStatus: constants.GAME_STATUS_LOBBY,
-  startingRows: [],
+  availableRows: shuffle(Array(constants.GRID_SIZE).fill(null).map((_, i) => (i))),
   winner: '',
 };
 
@@ -30,14 +32,14 @@ export default function infoReducer(state = defaultState, action) {
 
       return newState;
     }
-    case actionTypes.UPDATE_STARTING_ROWS: {
+    case actionTypes.UPDATE_AVAILABLE_ROWS: {
       const newState = { ...state };
-      newState.startingRows.push(action.row);
+      newState.availableRows = action.availableRows;
       return newState;
     }
-    case actionTypes.RESET_STARTING_ROWS: {
+    case actionTypes.RESET_AVAILABLE_ROWS: {
       const newState = { ...state };
-      newState.startingRows = [];
+      newState.availableRows = shuffle(Array(constants.GRID_SIZE).fill(null).map((_, i) => (i)));
       return newState;
     }
     case actionTypes.UPDATE_WINNER: {

@@ -79,7 +79,7 @@ export const resetSnakeData = () => ({
 
 export const initializeOwnSnake = (id, row) => (
   (dispatch) => {
-    const startingRow = row || dispatch(infoActions.randomUniqueRow());
+    const startingRow = row || dispatch(infoActions.getAvailableRow());
 
     const positions = snakeHelpers.setStartPosition(startingRow);
     const snake = snakeHelpers.emptySnakeObject(positions);
