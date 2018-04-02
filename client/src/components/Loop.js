@@ -73,28 +73,6 @@ class Loop extends React.Component {
         <div id='messages'>
           {countdown}
         </div>
-        <div>
-          <input
-            type='button'
-            value='Start'
-            onClick={this.startGame}
-          />
-          <input
-            type='button'
-            value='Pause'
-            onClick={this.pauseGame}
-          />
-          <input
-            type='button'
-            value='Next TU'
-            onClick={this.tick}
-          />
-          <input
-            type='button'
-            value='End Game'
-            onClick={this.endGame}
-          />
-        </div>
         {this.props.children}
       </div>
     );
