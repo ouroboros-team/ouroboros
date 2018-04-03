@@ -1,17 +1,12 @@
 language: node_js
 node_js:
-- 6
+  - 6
 cache:
   directories:
-  - node_modules
-  - client/node_modules
+    - node_modules
+    - client/node_modules
 script:
-- cd client
-- yarn install
-- yarn build
-- yarn test
-deploy:
-  provider: heroku
-  api_key:
-    secure: Xi41xNm5GeUhdOa5TDDv/Gczbf8KP1JJnoRyyCvgeaOiBaVVzrMl7uhfigEzJjCh/+Ta86IROjkaEuC4Nogz/ETU+4uLmExVz2v+CMPDES5Zo9N17hXXxnmyJTeSIEdwYfIgyA3cKdtZgRrHgIaXIBF5uvB4J+SXltFCyhQQNeGhoANB6HwNaDHtk0k9LJIJazXmyDKiotpmsqfMGRuLya2WnaGD9gQeLmm4mjVxInnPfjtT26Xp1RWGH15Aa1FS6TzTM8nBLotQFaHoWrWbkwNja8FbiytyhawHr8LZu6qPfjwg75X8K4C+K7Mn89uF69EbK8YmKWd2n4cqNjNelglaR4gCZz4jmkANPLJSp/8E9xxUy0SPxMz38X4m4+LVlYzM9LO28fA3axYkanMITbYDu/4tgS+sx9qm9tBMKHY9cBtCYNebwtEp/QMl7kwnUTLDry0mI7oiX5e48W6cCGjkX9Vqe1Z059ZSRLUEA+xD0f9owo7qhOZ9pNsBuMCAL8liGsAjtA9CdWthHIq7vD0gPdVeYB41aqC8vAR3imzcSPzkFQSUa90OUuDlJwiPkMOjlM45m+fW6Ldsbi4f3+81PIKj+YbUe8QFNHzYUghD54kDhU/MKb9JY/Md0s+ZT1c1VdoLUipjnBrE8KHB1e1VoJ2eN9ygWrnlllIJ7Ho=
-  app: ouroboros-game
+  - cd client
+  - yarn install
+  - yarn build
+  - yarn test
