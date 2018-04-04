@@ -12,8 +12,8 @@ export const RESET_BOARD = 'RESET_BOARD';
 export const INCREMENT_TU = 'INCREMENT_TU';
 export const SET_TU = 'SET_TU'; // for resetting and fast-forwarding
 export const UPDATE_GAME_STATUS = 'UPDATE_GAME_STATUS';
-export const UPDATE_STARTING_ROWS = 'UPDATE_STARTING_ROWS';
-export const RESET_STARTING_ROWS = 'RESET_STARTING_ROWS';
+export const UPDATE_AVAILABLE_ROWS = 'UPDATE_AVAILABLE_ROWS';
+export const RESET_AVAILABLE_ROWS = 'RESET_AVAILABLE_ROWS';
 export const UPDATE_WINNER = 'UPDATE_WINNER';
 export const RESET_WINNER = 'RESET_WINNER';
 

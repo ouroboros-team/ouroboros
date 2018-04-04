@@ -215,14 +215,14 @@ describe('Meta action creators', () => {
       expect(typeof metaActions.resetGameData()).toBe('function');
     });
 
-    it('calls dispatch with infoActions.resetStartingRows', () => {
-      const spy = jest.spyOn(infoActions, 'resetStartingRows').mockImplementation(() => {
+    it('calls dispatch with infoActions.resetAvailableRows', () => {
+      const spy = jest.spyOn(infoActions, 'resetAvailableRows').mockImplementation(() => {
       });
 
       metaActions.resetGameData()(dispatchSpy);
 
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.resetStartingRows());
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.resetAvailableRows());
     });
 
     it('calls dispatch with snakeActions.resetSnakeData', () => {

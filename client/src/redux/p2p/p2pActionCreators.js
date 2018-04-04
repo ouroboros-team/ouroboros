@@ -97,10 +97,8 @@ export const p2pBroadcastStartingRows = () => (
   (dispatch) => {
     // player who set new game status to pregame
     // chooses random starting row positions for all peers
-    let row;
     Object.values(peerConnections).forEach((connection) => {
-      row = dispatch(infoActions.randomUniqueRow());
-      connection.send(row);
+      connection.send(dispatch(infoActions.getAvailableRow()));
     });
   }
 );
