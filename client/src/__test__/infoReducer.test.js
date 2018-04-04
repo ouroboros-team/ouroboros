@@ -1,5 +1,6 @@
 import infoReducer, { defaultState } from '../redux/info/infoReducer';
 import * as actionTypes from '../redux/actionTypes';
+import * as constants from '../constants';
 
 describe('Info reducer', () => {
   let state = {};
@@ -8,7 +9,7 @@ describe('Info reducer', () => {
     state = {
       tu: 70,
       gameStatus: 'playing',
-      startingRows: [ 23, 6, 39 ],
+      availableRows: [ 23, 6, 39 ],
       winner: 'Bob',
     };
   });
@@ -41,20 +42,19 @@ describe('Info reducer', () => {
     expect(newState.gameStatus).toBe(actionObj.status);
   });
 
-  it('UPDATE_STARTING_ROWS adds the passed row to the startingRows array', () => {
+  it('UPDATE_AVAILABLE_ROWS sets availableRows to the passed array', () => {
     const actionObj = {
-      row: 43,
-      type: actionTypes.UPDATE_STARTING_ROWS,
+      availableRows: [ 23, 6 ],
+      type: actionTypes.UPDATE_AVAILABLE_ROWS,
     };
-    const rowsList = [ ...state.startingRows, actionObj.row ];
 
     const newState = infoReducer(state, actionObj);
-    expect(newState.startingRows).toEqual(rowsList);
+    expect(newState.availableRows).toEqual(actionObj.availableRows);
   });
 
-  it('RESET_STARTING_ROWS sets startingRows to the default state', () => {
-    const newState = infoReducer(state, { type: actionTypes.RESET_STARTING_ROWS });
-    expect(newState.startingRows).toEqual(defaultState.startingRows);
+  it('RESET_AVAILABLE_ROWS sets availableRows to the default state', () => {
+    const newState = infoReducer(state, { type: actionTypes.RESET_AVAILABLE_ROWS });
+    expect(newState.availableRows.length).toEqual(constants.GRID_SIZE);
   });
 
   it('UPDATE_WINNER sets the passed string as winner', () => {
