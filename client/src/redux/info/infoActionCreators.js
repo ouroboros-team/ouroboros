@@ -1,5 +1,3 @@
-import random from 'lodash/random';
-
 import store from '../store';
 import * as constants from '../../constants';
 
@@ -17,13 +15,13 @@ export const setTu = tu => ({
   type: actionTypes.SET_TU,
 });
 
-export const updateStartingRows = row => ({
-  row,
-  type: actionTypes.UPDATE_STARTING_ROWS,
+export const updateAvailableRows = availableRows => ({
+  availableRows,
+  type: actionTypes.UPDATE_AVAILABLE_ROWS,
 });
 
-export const resetStartingRows = () => ({
-  type: actionTypes.RESET_STARTING_ROWS,
+export const resetAvailableRows = () => ({
+  type: actionTypes.RESET_AVAILABLE_ROWS,
 });
 
 export const updateGameStatus = status => ({
@@ -40,17 +38,11 @@ export const resetWinner = () => ({
   type: actionTypes.RESET_WINNER,
 });
 
-export const randomUniqueRow = () => (
+export const getAvailableRow = () => (
   (dispatch) => {
-    const rowsUsed = store.getState().info.startingRows;
-
-    let row = random(0, constants.GRID_SIZE - 1);
-
-    while (rowsUsed.includes(row)) {
-      row = random(0, constants.GRID_SIZE - 1);
-    }
-
-    dispatch(updateStartingRows(row));
+    const availableRows = [ ...store.getState().info.availableRows ];
+    const row = availableRows.pop();
+    dispatch(updateAvailableRows(availableRows));
     return row;
   }
 );

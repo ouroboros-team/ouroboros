@@ -21,18 +21,18 @@ describe('Info action creators', () => {
     });
   });
 
-  it('updateStartingRows returns expected object', () => {
-    const row = 38;
-    const obj = infoActions.updateStartingRows(row);
+  it('updateAvailableRows returns expected object', () => {
+    const availableRows = [ 38, 39 ];
+    const obj = infoActions.updateAvailableRows(availableRows);
     expect(obj).toEqual({
-      row,
-      type: actionTypes.UPDATE_STARTING_ROWS,
+      availableRows,
+      type: actionTypes.UPDATE_AVAILABLE_ROWS,
     });
   });
 
-  it('resetStartingRows returns expected object', () => {
-    const obj = infoActions.resetStartingRows();
-    expect(obj).toEqual({ type: actionTypes.RESET_STARTING_ROWS });
+  it('resetAvailableRows returns expected object', () => {
+    const obj = infoActions.resetAvailableRows();
+    expect(obj).toEqual({ type: actionTypes.RESET_AVAILABLE_ROWS });
   });
 
   it('updateGameStatus returns expected object', () => {
@@ -58,18 +58,18 @@ describe('Info action creators', () => {
     expect(obj).toEqual({ type: actionTypes.RESET_WINNER });
   });
 
-  describe('randomUniqueRow thunk', () => {
+  describe('getAvailableRow thunk', () => {
     const dispatchSpy = jest.fn();
     let initialState = {};
 
     beforeEach(() => {
       initialState = {
         info: {
-          startingRows: [
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-            21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-            31, 32, 33, 34, 35, 36, 37, 38,
+          availableRows: [
+            19, 30, 26, 27, 8, 16, 6, 37, 7, 21,
+            32, 22, 31, 35, 15, 9, 38, 24, 14, 25,
+            36, 20, 33, 12, 0, 5, 34, 11, 39, 1,
+            13, 4, 3, 28, 2, 23, 29, 18, 10, 17,
           ],
         },
       };
@@ -80,27 +80,28 @@ describe('Info action creators', () => {
     });
 
     it('returns a function', () => {
-      expect(typeof infoActions.randomUniqueRow()).toBe('function');
+      expect(typeof infoActions.getAvailableRow()).toBe('function');
     });
 
-    it('calls dispatch with updateStartingRows with generated row as an argument', () => {
+    it('calls dispatch with updateAvailableRows with new available rows as an argument', () => {
       const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
 
-      const row = infoActions.randomUniqueRow()(dispatchSpy);
+      const availableRow = infoActions.getAvailableRow()(dispatchSpy);
+      const newAvailableRows = initialState.info.availableRows.filter(row => (row !== availableRow));
       expect(getStateSpy).toHaveBeenCalledTimes(1);
       expect(dispatchSpy).toHaveBeenCalledTimes(1);
-      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateStartingRows(row));
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateAvailableRows(newAvailableRows));
     });
 
-    it('generates a row that is <= 0 and > GRID_SIZE', () => {
-      const row = infoActions.randomUniqueRow()(dispatchSpy);
+    it('generates a row that is >= 0 and < GRID_SIZE', () => {
+      const row = infoActions.getAvailableRow()(dispatchSpy);
       const result = row >= 0 && row < constants.GRID_SIZE;
       expect(result).toBe(true);
     });
 
-    it('generates a row that is not already in info.startingRows', () => {
-      const row = infoActions.randomUniqueRow()(dispatchSpy);
-      expect(initialState.info.startingRows.includes(row)).toBe(false);
+    it('generates a row that is in info.availableRows', () => {
+      const row = infoActions.getAvailableRow()(dispatchSpy);
+      expect(initialState.info.availableRows.includes(row)).toBe(true);
     });
   });
 
