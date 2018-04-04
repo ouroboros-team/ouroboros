@@ -205,23 +205,23 @@ describe('Snake action creators', () => {
       expect(typeof snakeActions.initializeOwnSnake()).toBe('function');
     });
 
-    it('calls dispatch with infoActions.randomUniqueRow if no row is passed', () => {
+    it('calls dispatch with infoActions.getAvailableRow if no row is passed', () => {
       const id = 'knjerg658';
-      jest.spyOn(infoActions, 'randomUniqueRow').mockImplementation(() => {});
+      jest.spyOn(infoActions, 'getAvailableRow').mockImplementation(() => {});
 
       snakeActions.initializeOwnSnake(id)(dispatchSpy);
 
-      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.randomUniqueRow());
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.getAvailableRow());
     });
 
-    it('does not call dispatch with infoActions.randomUniqueRow if row is passed', () => {
+    it('does not call dispatch with infoActions.getAvailableRow if row is passed', () => {
       const id = 'knjerg658';
       const row = 7;
-      jest.spyOn(infoActions, 'randomUniqueRow').mockImplementation(() => (row));
+      jest.spyOn(infoActions, 'getAvailableRow').mockImplementation(() => (row));
 
       snakeActions.initializeOwnSnake(id, row)(dispatchSpy);
 
-      expect(dispatchSpy).not.toHaveBeenCalledWith(infoActions.randomUniqueRow());
+      expect(dispatchSpy).not.toHaveBeenCalledWith(infoActions.getAvailableRow());
     });
 
     it('calls snakeHelpers.setStartPosition with passed row', () => {
