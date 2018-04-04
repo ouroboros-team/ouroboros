@@ -157,17 +157,9 @@ export const getTuGap = (id, newData) => {
   return newLastTu - oldLastTu;
 };
 
-export const getCollisionType = (sqNum, myID, peerID, snakeLength) => {
-  const peerSnake = store.getState().snakes[peerID];
-  const peerHeadTU = peerSnake.positions.byIndex[0];
-  const peerHeadSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerHeadTU]);
-  const peerTailTU = peerSnake.positions.byIndex[snakeLength - 1];
-  const peerTailSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerTailTU - 1]);
-
-  if (myID !== peerID && sqNum === peerHeadSqNum) {
+export const getCollisionType = (ownHead, peerHead) => {
+  if (peerHead && ownHead.row === peerHead.row && ownHead.column === peerHead.column) {
     return constants.COLLISION_TYPE_HEAD_ON_HEAD;
-  } else if (sqNum === peerTailSqNum) {
-    return constants.COLLISION_TYPE_HEAD_ON_TAIL;
   }
 
   return constants.COLLISION_TYPE_HEAD_ON_BODY;
