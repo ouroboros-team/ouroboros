@@ -144,6 +144,8 @@ export const p2pSetCloseListener = (connection, dispatch) => {
       dispatch(snakeActions.handleChangeSnakeStatus(connection.peer, constants.SNAKE_STATUS_DEAD));
     } else if (gameStatus === constants.GAME_STATUS_READY_TO_PLAY) {
       dispatch(snakeActions.removeSnake(connection.peer));
+      dispatch(headSetActions.resetHeadSets());
+      dispatch(headSetActions.updateHeadSets());
     }
 
     delete peerConnections[connection.peer];
