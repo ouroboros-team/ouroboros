@@ -37,16 +37,6 @@ class Loop extends React.Component {
     this.props.handleChangeSnakeDirection(this.props.peerId, arrowKeyCodes[code]);
   };
 
-  endGame = () => {
-    this.pauseGame();
-    this.props.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME);
-  };
-
-  pauseGame = () => {
-    clearInterval(this.state.timer);
-    this.setState({ timer: null });
-  };
-
   startGame = () => {
     if (!this.state.timer) { // so multiple calls don't result in multiple timers
       const timer = setInterval(this.tick, constants.LOOP_INTERVAL);
@@ -66,7 +56,7 @@ class Loop extends React.Component {
     let countdown = '';
     if (this.state.countdown > 0) {
       const num = Math.ceil((this.state.countdown * constants.LOOP_INTERVAL) / 1000);
-      countdown = <p className='label alert-text'>Game starts in {num}</p>;
+      countdown = <span className='label alert-text'>Game starts in {num}</span>;
     }
     return (
       <div id='loop'>
