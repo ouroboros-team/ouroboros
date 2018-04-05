@@ -108,14 +108,12 @@ export const writeOwnSnakePosition = id => (
 
 export const checkForCollisions = id => (
   (dispatch) => {
-    const snakes = store.getState().snakes;
-    const ownSnake = snakes[id];
+    const ownSnake = store.getState().snakes[id];
     const lastTu = ownSnake.positions.byIndex[0];
 
     let ownHead;
     let peerHead;
     let board;
-    let length;
     let collisionType;
     let squareNumber;
 
@@ -130,14 +128,13 @@ export const checkForCollisions = id => (
         ...boardHelpers.aggregateBoards(tuCounter),
         ...boardHelpers.aggregateOwnSnake(tuCounter - 1),
       };
-      length = snakeHelpers.getSnakeLength(tuCounter);
       squareNumber = headSetHelpers.coordsToSquareNumber(ownHead);
 
       // if coordinates occupied by living snake, there is a collision
       if (board[squareNumber] && snakeHelpers.snakeIsAlive(board[squareNumber].id)) {
         dispatch(handleChangeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
         // check collision type
-        peerHead = snakes[board[squareNumber].id].positions.byKey[tuCounter];
+        peerHead = board[squareNumber].snake.positions.byKey[tuCounter];
         collisionType = snakeHelpers.getCollisionType(ownHead, peerHead);
         console.log(collisionType);
 
