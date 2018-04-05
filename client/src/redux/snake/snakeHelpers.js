@@ -3,7 +3,6 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import store from '../store';
 import * as constants from '../../constants';
-import * as headSetHelpers from '../headSet/headSetHelpers';
 
 export const getSnakeLength = tu => (
   constants.INITIAL_SNAKE_LENGTH + Math.floor(tu / 10)
