@@ -126,7 +126,7 @@ export const checkForCollisions = id => (
       // compare own head to other snakes and rest of own body
       board = {
         ...boardHelpers.aggregateBoards(tuCounter),
-        ...boardHelpers.aggregateOwnSnake(tuCounter - 1),
+        ...boardHelpers.aggregateOwnSnake(tuCounter, true),
       };
       squareNumber = headSetHelpers.coordsToSquareNumber(ownHead);
 
@@ -134,8 +134,9 @@ export const checkForCollisions = id => (
       if (board[squareNumber] && snakeHelpers.snakeIsAlive(board[squareNumber].id)) {
         dispatch(handleChangeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
         // check collision type
+
         peerHead = board[squareNumber].snake.positions.byKey[tuCounter];
-        collisionType = snakeHelpers.getCollisionType(ownHead, peerHead);
+        collisionType = snakeHelpers.getCollisionType(ownHead, peerHead, id, board[squareNumber].id);
         console.log(collisionType);
 
         if (collisionType === constants.COLLISION_TYPE_HEAD_ON_HEAD) {

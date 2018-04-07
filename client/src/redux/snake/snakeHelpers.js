@@ -156,8 +156,11 @@ export const getTuGap = (id, newData) => {
   return newLastTu - oldLastTu;
 };
 
-export const getCollisionType = (ownHead, peerHead) => {
-  if (peerHead && ownHead.row === peerHead.row && ownHead.column === peerHead.column) {
+export const getCollisionType = (ownHead, peerHead, ownId, peerId) => {
+  if (peerHead &&
+      ownId !== peerId &&
+      ownHead.row === peerHead.row &&
+      ownHead.column === peerHead.column) {
     return constants.COLLISION_TYPE_HEAD_ON_HEAD;
   }
 
