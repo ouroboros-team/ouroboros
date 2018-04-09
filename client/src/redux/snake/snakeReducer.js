@@ -79,9 +79,6 @@ function snakesReducer(state = {}, action) {
           newState[action.id].previousDirection = action.data.direction;
         }
 
-        // update status
-        newState[action.id].status = action.data.status;
-
         return newState;
       }
 
