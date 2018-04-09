@@ -9,8 +9,6 @@ import * as snakeActions from './snake/snakeActionCreators';
 
 import * as snakeHelpers from './snake/snakeHelpers';
 import * as p2pHelpers from './p2p/p2pHelpers';
-import { handleSetTuOfDeath } from './snake/snakeActionCreators';
-import { updateSnakeData } from './snake/snakeActionCreators';
 
 export const handleTuTick = id => (
   (dispatch) => {
@@ -18,10 +16,12 @@ export const handleTuTick = id => (
     if (snakeHelpers.snakeIsAlive(id)) {
       // write/broadcast own snake position
       dispatch(snakeActions.writeOwnSnakePosition(id));
-      // Check for collisions, if found, check for game over
+      // check for collisions
       dispatch(snakeActions.checkForCollisions(id));
     } else {
       // if own snake is dead or have no snake,
+      // broadcast own death
+      p2pActions.p2pBroadcastOwnDeath();
       // fast-forward to match peers' TU
       dispatch(infoActions.fastForwardTu(id));
     }
@@ -37,11 +37,7 @@ export const handleTuTick = id => (
 export const receiveSnakeData = (id, data) => (
   (dispatch) => {
     const gap = snakeHelpers.getTuGap(id, data);
-    if (data.tuOfDeath) {
-      dispatch(handleSetTuOfDeath(id, data.tuOfDeath));
-    }
-
-    dispatch(updateSnakeData(id, data));
+    dispatch(snakeActions.updateSnakeData(id, data));
     dispatch(headSetActions.updateHeadSets(id, null, gap));
   }
 );
@@ -107,13 +103,14 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
   (dispatch) => {
     if (id === p2pHelpers.getOwnId()) {
       // broadcast own death to peers
-    }
+      p2pActions.p2pBroadcastOwnDeath(tuOfDeath);
+    } else if (snakeHelpers.snakeIsAlive(id)) {
+      dispatch(snakeActions.handleSetTuOfDeath(id, tuOfDeath));
+      dispatch(infoActions.decrementLivingSnakeCount());
 
-    dispatch(snakeActions.handleSetTuOfDeath(id, tuOfDeath));
-    dispatch(infoActions.decrementLivingSnakeCount());
-
-    if (snakeHelpers.checkForGameOver()) {
-      dispatch(declareGameOver());
+      if (snakeHelpers.checkForGameOver()) {
+        dispatch(declareGameOver());
+      }
     }
   }
 );

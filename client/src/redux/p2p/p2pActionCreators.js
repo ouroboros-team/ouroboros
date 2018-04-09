@@ -110,6 +110,22 @@ export const p2pBroadcastSnakeData = () => {
   }
 };
 
+export const p2pBroadcastOwnDeath = (tuOfDeath) => {
+  let tu = tuOfDeath;
+
+  if (!tu) {
+    const state = store.getState();
+    tu = state.snakes[state.p2p.id].tuOfDeath;
+  }
+
+  p2pBroadcast({
+    death: {
+      id: p2pHelpers.getOwnId(),
+      tu,
+    },
+  });
+};
+
 export const p2pBroadcastPatch = (tu, sqNum, id) => {
   p2pBroadcast({
     patch: {
@@ -122,7 +138,7 @@ export const p2pBroadcastPatch = (tu, sqNum, id) => {
 
 export const p2pKillPeerSnake = id => (
   (dispatch) => {
-    p2pBroadcast({ dead: id });
+    p2pBroadcast({ kill: id });
     dispatch(metaActions.handleSnakeDeath(id, constants.LATENCY));
   }
 );
@@ -176,9 +192,9 @@ export const p2pSetDataListener = (connection, dispatch) => {
         } else if (data.username || data.username === '') {
           // peer username
           dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
-        } else if (data.dead || data.dead === '') {
+        } else if (data.kill || data.kill === '') {
           // snake killed for too much latency
-          dispatch(metaActions.handleSnakeDeath(data.dead, constants.LATENCY));
+          dispatch(metaActions.handleSnakeDeath(data.kill, constants.LATENCY));
         } else if (Object.keys(data)[0] === 'winnerId') {
           // if peerId received, resolve to username
           const username = p2pHelpers.getUsername(data.winnerId);
@@ -187,6 +203,10 @@ export const p2pSetDataListener = (connection, dispatch) => {
         } else if (data.patch || data.patch === '') {
           const info = data.patch;
           dispatch(headSetActions.patchHeadSet(info.tu, info.sqNum, info.id));
+        } else if (data.death || data.death === '') {
+          // snake death
+          const info = data.death;
+          dispatch(metaActions.handleSnakeDeath(info.id, info.tu));
         } else {
           // pregame and playing: receive snake data from peers
           dispatch(metaActions.receiveSnakeData(connection.peer, data));
