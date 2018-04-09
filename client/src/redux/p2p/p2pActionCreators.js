@@ -123,7 +123,7 @@ export const p2pBroadcastPatch = (tu, sqNum, id) => {
 export const p2pKillPeerSnake = id => (
   (dispatch) => {
     p2pBroadcast({ dead: id });
-    dispatch(snakeActions.handleSetTuOfDeath(id, constants.LATENCY));
+    dispatch(metaActions.handleSnakeDeath(id, constants.LATENCY));
   }
 );
 
@@ -177,8 +177,8 @@ export const p2pSetDataListener = (connection, dispatch) => {
           // peer username
           dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
         } else if (data.dead || data.dead === '') {
-          // snake killed by head-on-collision or for too much latency
-          dispatch(snakeActions.handleSetTuOfDeath(data.dead, constants.LATENCY));
+          // snake killed for too much latency
+          dispatch(metaActions.handleSnakeDeath(data.dead, constants.LATENCY));
         } else if (Object.keys(data)[0] === 'winnerId') {
           // if peerId received, resolve to username
           const username = p2pHelpers.getUsername(data.winnerId);

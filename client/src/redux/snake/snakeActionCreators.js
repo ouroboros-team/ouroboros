@@ -49,16 +49,6 @@ export const updateSnakeData = (id, data) => ({
   type: actionTypes.UPDATE_SNAKE_DATA,
 });
 
-export const handleUpdateSnakeData = (id, data) => (
-  (dispatch) => {
-    if (data.tuOfDeath) {
-      dispatch(handleSetTuOfDeath(id, data.tuOfDeath));
-    }
-
-    dispatch(updateSnakeData(id, data));
-  }
-);
-
 export const removeSnake = id => ({
   id,
   type: actionTypes.REMOVE_SNAKE,
@@ -121,11 +111,7 @@ export const checkForCollisions = id => (
 
       // if coordinates occupied by living snake, there is a collision
       if (board[squareNumber] && snakeHelpers.snakeIsAlive(board[squareNumber].id)) {
-        dispatch(handleSetTuOfDeath(id, tuCounter));
-        dispatch(infoActions.decrementLivingSnakeCount());
-        if(snakeHelpers.checkForGameOver()) {
-          dispatch(metaActions.declareGameOver());
-        }
+        dispatch(metaActions.handleSnakeDeath(id, tuCounter));
         // tell peers to patch this head set to make sure other snake was not
         // overwritten by your dead snake (leaving a gap in the snake's body)
         p2pActions.p2pBroadcastPatch(tuCounter, squareNumber, board[squareNumber].id);
