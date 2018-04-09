@@ -62,6 +62,7 @@ export const resetGameData = () => (
     dispatch(headSetActions.resetHeadSets());
     dispatch(infoActions.setTu(0));
     dispatch(infoActions.resetWinner());
+    dispatch(infoActions.resetLivingSnakeCount());
   }
 );
 

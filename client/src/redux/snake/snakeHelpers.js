@@ -166,21 +166,12 @@ export const getTuGap = (id, newData) => {
 
 export const checkForGameOver = () => {
   const state = store.getState();
-  const snakeIds = Object.keys(state.snakes);
-  const snakeCount = snakeIds.length;
-  const snakesAlive = [];
-
-  snakeIds.forEach((id) => {
-    if (snakeIsAlive(id, state.snakes)) {
-      snakesAlive.push(id);
-    }
-  });
-
-  const aliveCount = snakesAlive.length;
+  const aliveCount = state.info.livingSnakeCount;
+  const snakeCount = Object.keys(state.snakes).length;
 
   if ((snakeCount > 1 && aliveCount <= 1) ||
     (snakeCount === 1 && aliveCount === 0)) {
-    return snakesAlive[0];
+    return true;
   }
 
   return false;

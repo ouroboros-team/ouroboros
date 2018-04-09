@@ -3,7 +3,6 @@ import * as constants from '../../constants';
 
 import * as actionTypes from '../actionTypes';
 import * as headSetActions from '../headSet/headSetActionCreators';
-import * as p2pActions from '../p2p/p2pActionCreators';
 import * as metaActions from '../metaActionCreators';
 
 export const incrementTu = () => ({
@@ -38,6 +37,19 @@ export const resetWinner = () => ({
   type: actionTypes.RESET_WINNER,
 });
 
+export const setLivingSnakeCount = count => ({
+  count,
+  type: actionTypes.SET_LIVING_SNAKE_COUNT,
+});
+
+export const decrementLivingSnakeCount = () => ({
+  type: actionTypes.DECREMENT_LIVING_SNAKE_COUNT,
+});
+
+export const resetLivingSnakeCount = () => ({
+  type: actionTypes.RESET_LIVING_SNAKE_COUNT,
+});
+
 export const getAvailableRow = () => (
   (dispatch) => {
     const availableRows = [ ...store.getState().info.availableRows ];
@@ -57,7 +69,8 @@ export const handleGameStatusChange = newStatus => (
         break;
       }
       case constants.GAME_STATUS_PLAYING: {
-        p2pActions.p2pBroadcastSnakeData();
+        // set number of living snakes
+        dispatch(setLivingSnakeCount(Object.keys(store.getState().snakes).length));
         break;
       }
       case constants.GAME_STATUS_LOBBY: {
