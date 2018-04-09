@@ -50,6 +50,34 @@ export const resetLivingSnakeCount = () => ({
   type: actionTypes.RESET_LIVING_SNAKE_COUNT,
 });
 
+export const addToDeathBuffer = tu => ({
+  tu,
+  type: actionTypes.ADD_TO_DEATH_BUFFER,
+});
+
+export const removeFromDeathBuffer = tu => ({
+  tu,
+  type: actionTypes.REMOVE_FROM_DEATH_BUFFER,
+});
+
+export const resetDeathBuffer = () => ({
+  type: actionTypes.RESET_DEATH_BUFFER,
+});
+
+export const addToGameOverBuffer = tu => ({
+  tu,
+  type: actionTypes.ADD_TO_GAME_OVER_BUFFER,
+});
+
+export const removeFromGameOverBuffer = tu => ({
+  tu,
+  type: actionTypes.REMOVE_FROM_GAME_OVER_BUFFER,
+});
+
+export const resetGameOverBuffer = () => ({
+  type: actionTypes.RESET_GAME_OVER_BUFFER,
+});
+
 export const getAvailableRow = () => (
   (dispatch) => {
     const availableRows = [ ...store.getState().info.availableRows ];

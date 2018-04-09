@@ -8,6 +8,8 @@ export const defaultState = {
   availableRows: infoHelpers.getShuffledAvailableRows(),
   livingSnakeCount: 0,
   winner: '',
+  deathBuffer: {},
+  gameOverBuffer: {},
 };
 
 export default function infoReducer(state = defaultState, action) {
@@ -65,6 +67,36 @@ export default function infoReducer(state = defaultState, action) {
     case actionTypes.RESET_LIVING_SNAKE_COUNT: {
       const newState = { ...state };
       newState.livingSnakeCount = 0;
+      return newState;
+    }
+    case actionTypes.ADD_TO_DEATH_BUFFER: {
+      const newState = { ...state };
+      newState.deathBuffer[action.tu] = true;
+      return newState;
+    }
+    case actionTypes.REMOVE_FROM_DEATH_BUFFER: {
+      const newState = { ...state };
+      delete newState.deathBuffer[action.tu];
+      return newState;
+    }
+    case actionTypes.RESET_DEATH_BUFFER: {
+      const newState = { ...state };
+      newState.deathBuffer = {};
+      return newState;
+    }
+    case actionTypes.ADD_TO_GAME_OVER_BUFFER: {
+      const newState = { ...state };
+      newState.gameOverBuffer[action.tu] = true;
+      return newState;
+    }
+    case actionTypes.REMOVE_FROM_GAME_OVER_BUFFER: {
+      const newState = { ...state };
+      delete newState.gameOverBuffer[action.tu];
+      return newState;
+    }
+    case actionTypes.RESET_GAME_OVER_BUFFER: {
+      const newState = { ...state };
+      newState.gameOverBuffer = {};
       return newState;
     }
     default: {

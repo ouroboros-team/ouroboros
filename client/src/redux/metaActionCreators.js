@@ -58,13 +58,15 @@ export const checkReadiness = () => (
 
 export const resetGameData = () => (
   (dispatch) => {
-    dispatch(infoActions.resetAvailableRows());
     dispatch(snakeActions.resetSnakeData());
     dispatch(boardActions.resetBoard());
     dispatch(headSetActions.resetHeadSets());
+    dispatch(infoActions.resetAvailableRows());
     dispatch(infoActions.setTu(0));
     dispatch(infoActions.resetWinner());
     dispatch(infoActions.resetLivingSnakeCount());
+    dispatch(infoActions.resetDeathBuffer());
+    dispatch(infoActions.resetGameOverBuffer());
   }
 );
 
