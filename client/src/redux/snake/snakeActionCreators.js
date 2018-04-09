@@ -31,15 +31,7 @@ export const changeSnakeStatus = (id, status) => ({
 export const handleChangeSnakeStatus = (id, status) => (
   (dispatch) => {
     dispatch(changeSnakeStatus(id, status));
-    if (id === p2pHelpers.getOwnId()) {
-      p2pActions.p2pBroadcastSnakeData();
-    }
-
-    const result = snakeHelpers.checkForGameOver();
-
-    if (result !== false) {
-      dispatch(metaActions.declareGameOver(result));
-    }
+    p2pActions.p2pBroadcastSnakeData();
   }
 );
 
@@ -134,18 +126,9 @@ export const checkForCollisions = id => (
       // if coordinates occupied by living snake, there is a collision
       if (board[squareNumber] && snakeHelpers.snakeIsAlive(board[squareNumber].id)) {
         dispatch(handleChangeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
-        // check collision type
-        collisionType = snakeHelpers.getCollisionType(squareNumber, id, board[squareNumber].id, length);
-        console.log(collisionType);
-
-        if (collisionType === constants.COLLISION_TYPE_HEAD_ON_HEAD) {
-          // other snake is also dead
-          dispatch(p2pActions.p2pKillPeerSnake(board[squareNumber].id));
-        } else {
-          // tell peers to patch this head set to make sure other snake was not
-          // overwritten by your dead snake (leaving a gap in the snake's body)
-          p2pActions.p2pBroadcastPatch(tuCounter, squareNumber, board[squareNumber].id);
-        }
+        // tell peers to patch this head set to make sure other snake was not
+        // overwritten by your dead snake (leaving a gap in the snake's body)
+        p2pActions.p2pBroadcastPatch(tuCounter, squareNumber, board[squareNumber].id);
         return;
       }
 
