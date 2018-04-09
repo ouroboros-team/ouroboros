@@ -139,3 +139,16 @@ export const fastForwardTu = id => (
     return oldTu;
   }
 );
+
+export const processDeathBuffer = () => (
+  (dispatch) => {
+    const state = store.getState();
+    const tu = state.info.tu;
+    const buffer = state.info.deathBuffer;
+
+    if (buffer[tu]) {
+      dispatch(decrementLivingSnakeCount());
+      dispatch(removeFromDeathBuffer(tu));
+    }
+  }
+);

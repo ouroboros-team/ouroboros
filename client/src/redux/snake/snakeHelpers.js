@@ -67,7 +67,8 @@ export const snakeIsAlive = (id, snakesObj, currentTU) => {
     tu = state.info.tu;
   }
 
-  // snake exists, has no tuOfDeath or tuOfDeath comes after this TU
+  // snake is alive if...
+  // snake exists, has no tuOfDeath or tuOfDeath comes after current TU
   return snakes[id] && (!snakes[id].tuOfDeath || snakes[id].tuOfDeath > tu);
 };
 

@@ -27,6 +27,8 @@ export const handleTuTick = id => (
     }
     // kill snakes with too much latency
     dispatch(snakeActions.checkForLatentSnakes());
+    // process death buffer (decrement living snakes if needed)
+    dispatch(infoActions.processDeathBuffer());
     // increment TU
     dispatch(infoActions.incrementTu());
     // get next board
@@ -103,18 +105,30 @@ export const declareGameOver = currentWinnerId => (
 
 export const handleSnakeDeath = (id, tuOfDeath) => (
   (dispatch) => {
+    // do nothing if snake is already dead
+    if (!snakeHelpers.snakeIsAlive(id)) {
+      return;
+    }
+
+    dispatch(snakeActions.handleSetTuOfDeath(id, tuOfDeath));
+
     if (id === p2pHelpers.getOwnId()) {
       // broadcast own death to peers
       p2pActions.p2pBroadcastOwnDeath(tuOfDeath);
+
+      dispatch(infoActions.decrementLivingSnakeCount());
+    } else {
+      const tu = store.getState().info.tu;
+
+      if (tuOfDeath <= tu) {
+        dispatch(infoActions.decrementLivingSnakeCount());
+      } else {
+        dispatch(infoActions.addToDeathBuffer(tuOfDeath));
+      }
     }
 
-    if (snakeHelpers.snakeIsAlive(id)) {
-      dispatch(snakeActions.handleSetTuOfDeath(id, tuOfDeath));
-      dispatch(infoActions.decrementLivingSnakeCount());
-
-      if (snakeHelpers.checkForGameOver()) {
-        dispatch(declareGameOver());
-      }
+    if (snakeHelpers.checkForGameOver()) {
+      dispatch(declareGameOver());
     }
   }
 );
