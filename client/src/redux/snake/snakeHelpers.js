@@ -46,7 +46,7 @@ export const setStartPosition = (row) => {
     '-2': { row, column: randomColumn + 2 },
     '-3': { row, column: randomColumn + 3 },
   };
-  const array = [ 0, -1, -2, -3 ];
+  const array = [0, -1, -2, -3];
 
   return {
     byIndex: array,
@@ -157,11 +157,36 @@ export const getTuGap = (id, newData) => {
 };
 
 export const getCollisionType = (ownHead, peerHead, ownId, peerId) => {
-  if (peerHead &&
-      ownId !== peerId &&
-      ownHead.row === peerHead.row &&
-      ownHead.column === peerHead.column) {
-    return constants.COLLISION_TYPE_HEAD_ON_HEAD;
+
+  // if (peerHead &&
+  //   ownId !== peerId &&
+  //   ownHead.row === peerHead.row &&
+  //   ownHead.column === peerHead.column) {
+  //   return constants.COLLISION_TYPE_HEAD_ON_HEAD;
+  // }
+
+  if (peerHead) {
+    console.log('peerHead true');
+
+    if (ownId !== peerId) {
+      console.log(`peerId ${peerId} is not the same as ownId ${ownId}`);
+
+      if (ownHead.row === peerHead.row) {
+        console.log(`own row ${ownHead.row} is same as peer row ${ownHead.row}`);
+
+        if (ownHead.column === peerHead.column) {
+          console.log(`own column ${ownHead.column} is same as peer column ${peerHead.column}`);
+          return constants.COLLISION_TYPE_HEAD_ON_HEAD;
+        }
+        console.log(`own column ${ownHead.column} is not same as peer column ${peerHead.column}`);
+      } else {
+        console.log(`own row ${ownHead.row} is not same as peer row ${ownHead.row}`);
+      }
+    } else {
+      console.log(`peerId ${peerId} is the same as ownId ${ownId}`);
+    }
+  } else {
+    console.log('peerHead false');
   }
 
   return constants.COLLISION_TYPE_HEAD_ON_BODY;
