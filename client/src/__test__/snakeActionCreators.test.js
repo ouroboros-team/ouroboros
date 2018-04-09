@@ -327,7 +327,15 @@ describe('Snake action creators', () => {
     const direction = 'up';
     const positions = { row: 5, column: 3 };
     const tu = 7;
-    const board = { 803: 'a snake' };
+    const board = {
+      803: {
+        snake: {
+          positions: {
+            byKey: {},
+          },
+        },
+      },
+    };
 
     beforeEach(() => {
       dispatchSpy = jest.fn();

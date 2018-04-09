@@ -3,7 +3,6 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import store from '../store';
 import * as constants from '../../constants';
-import * as headSetHelpers from '../headSet/headSetHelpers';
 
 export const getSnakeLength = tu => (
   constants.INITIAL_SNAKE_LENGTH + Math.floor(tu / 10)
@@ -47,7 +46,7 @@ export const setStartPosition = (row) => {
     '-2': { row, column: randomColumn + 2 },
     '-3': { row, column: randomColumn + 3 },
   };
-  const array = [ 0, -1, -2, -3 ];
+  const array = [0, -1, -2, -3];
 
   return {
     byIndex: array,
@@ -157,17 +156,37 @@ export const getTuGap = (id, newData) => {
   return newLastTu - oldLastTu;
 };
 
-export const getCollisionType = (sqNum, myID, peerID, snakeLength) => {
-  const peerSnake = store.getState().snakes[peerID];
-  const peerHeadTU = peerSnake.positions.byIndex[0];
-  const peerHeadSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerHeadTU]);
-  const peerTailTU = peerSnake.positions.byIndex[snakeLength - 1];
-  const peerTailSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerTailTU - 1]);
+export const getCollisionType = (ownHead, peerHead, ownId, peerId) => {
 
-  if (myID !== peerID && sqNum === peerHeadSqNum) {
-    return constants.COLLISION_TYPE_HEAD_ON_HEAD;
-  } else if (sqNum === peerTailSqNum) {
-    return constants.COLLISION_TYPE_HEAD_ON_TAIL;
+  // if (peerHead &&
+  //   ownId !== peerId &&
+  //   ownHead.row === peerHead.row &&
+  //   ownHead.column === peerHead.column) {
+  //   return constants.COLLISION_TYPE_HEAD_ON_HEAD;
+  // }
+
+  if (peerHead) {
+    console.log('peerHead true');
+
+    if (ownId !== peerId) {
+      console.log(`peerId ${peerId} is not the same as ownId ${ownId}`);
+
+      if (ownHead.row === peerHead.row) {
+        console.log(`own row ${ownHead.row} is same as peer row ${ownHead.row}`);
+
+        if (ownHead.column === peerHead.column) {
+          console.log(`own column ${ownHead.column} is same as peer column ${peerHead.column}`);
+          return constants.COLLISION_TYPE_HEAD_ON_HEAD;
+        }
+        console.log(`own column ${ownHead.column} is not same as peer column ${peerHead.column}`);
+      } else {
+        console.log(`own row ${ownHead.row} is not same as peer row ${ownHead.row}`);
+      }
+    } else {
+      console.log(`peerId ${peerId} is the same as ownId ${ownId}`);
+    }
+  } else {
+    console.log('peerHead false');
   }
 
   return constants.COLLISION_TYPE_HEAD_ON_BODY;
