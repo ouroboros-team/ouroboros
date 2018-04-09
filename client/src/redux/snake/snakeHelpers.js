@@ -4,6 +4,8 @@ import cloneDeep from 'lodash/cloneDeep';
 import store from '../store';
 import * as constants from '../../constants';
 
+import * as p2pHelpers from '../p2p/p2pHelpers';
+
 export const getSnakeLength = tu => (
   constants.INITIAL_SNAKE_LENGTH + Math.floor(tu / 10)
 );
@@ -172,4 +174,39 @@ export const checkForGameOver = () => {
 
   return ((snakeCount > 1 && aliveCount <= 1) ||
     (snakeCount === 1 && aliveCount === 0));
+};
+
+export const getWinners = () => {
+  const state = store.getState();
+  const snakes = state.snakes;
+  const snakeIds = Object.keys(state.snakes);
+  const livingSnakeCount = state.info.livingSnakeCount;
+
+  if (livingSnakeCount === 0) {
+    // looking for last death(s)
+    let lastDeathTu = 0;
+    let lastDeathIds = [];
+
+    snakeIds.forEach((id) => {
+      if (snakes[id].tuOfDeath > lastDeathTu) {
+        lastDeathTu = snakes[id].tuOfDeath;
+        lastDeathIds = [ id ];
+      } else if (snakes[id].tuOfDeath === lastDeathTu) {
+        lastDeathIds.push(id);
+      }
+    });
+
+    return p2pHelpers.resolveIdsToUsernames(lastDeathIds);
+  }
+
+  // looking for living snake(s)
+  const livingSnakes = [];
+
+  snakeIds.forEach((id) => {
+    if (!snakes[id].tuOfDeath) {
+      livingSnakes.push(id);
+    }
+  });
+
+  return p2pHelpers.resolveIdsToUsernames(livingSnakes);
 };

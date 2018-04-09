@@ -53,3 +53,11 @@ export const getUsername = (id) => {
 
   return undefined;
 };
+
+export const resolveIdsToUsernames = (ids) => {
+  const usernames = ids.map(id => (
+    getUsername(id)
+  ));
+
+  return usernames.join(' and ');
+};
