@@ -170,10 +170,6 @@ export const checkForGameOver = () => {
   const aliveCount = state.info.livingSnakeCount;
   const snakeCount = Object.keys(state.snakes).length;
 
-  if ((snakeCount > 1 && aliveCount <= 1) ||
-    (snakeCount === 1 && aliveCount === 0)) {
-    return true;
-  }
-
-  return false;
+  return ((snakeCount > 1 && aliveCount <= 1) ||
+    (snakeCount === 1 && aliveCount === 0));
 };
