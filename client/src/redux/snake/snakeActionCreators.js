@@ -9,6 +9,7 @@ import * as metaActions from '../metaActionCreators';
 
 import * as boardHelpers from '../board/boardHelpers';
 import * as headSetHelpers from '../headSet/headSetHelpers';
+import * as p2pHelpers from '../p2p/p2pHelpers';
 import * as snakeHelpers from './snakeHelpers';
 
 import * as constants from '../../constants';
@@ -112,9 +113,19 @@ export const checkForCollisions = id => (
       // if coordinates occupied by living snake, there is a collision
       if (board[squareNumber] && snakeHelpers.snakeIsAlive(board[squareNumber].id)) {
         dispatch(metaActions.handleSnakeDeath(id, tuCounter));
-        // tell peers to patch this head set to make sure other snake was not
-        // overwritten by your dead snake (leaving a gap in the snake's body)
-        p2pActions.p2pBroadcastPatch(tuCounter, squareNumber, board[squareNumber].id);
+
+        if (board[squareNumber].id !== p2pHelpers.getOwnId()) {
+          // if not self, find tu at which peer snake's head was in this square,
+          // then tell peers to patch this head set to make sure
+          // that peer snake was not overwritten by your dead snake
+          // (leaving a gap in the snake's body)
+          const peerSnake = board[squareNumber].snake;
+          let tu = peerSnake.positions.byIndex[0];
+          while (peerSnake.positions.byKey[tu] && headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[tu]) !== squareNumber) {
+            tu -= 1;
+          }
+          p2pActions.p2pBroadcastPatch(tu, squareNumber, board[squareNumber].id);
+        }
         return;
       }
 

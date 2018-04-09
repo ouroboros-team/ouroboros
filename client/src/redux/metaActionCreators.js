@@ -104,7 +104,9 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
     if (id === p2pHelpers.getOwnId()) {
       // broadcast own death to peers
       p2pActions.p2pBroadcastOwnDeath(tuOfDeath);
-    } else if (snakeHelpers.snakeIsAlive(id)) {
+    }
+
+    if (snakeHelpers.snakeIsAlive(id)) {
       dispatch(snakeActions.handleSetTuOfDeath(id, tuOfDeath));
       dispatch(infoActions.decrementLivingSnakeCount());
 
