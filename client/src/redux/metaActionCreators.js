@@ -29,6 +29,8 @@ export const handleTuTick = id => (
     dispatch(snakeActions.checkForLatentSnakes());
     // process death buffer (decrement living snakes if needed)
     dispatch(infoActions.processDeathBuffer());
+    // process game over buffer
+    dispatch(infoActions.processGameOverBuffer());
     // increment TU
     dispatch(infoActions.incrementTu());
     // get next board
@@ -72,37 +74,6 @@ export const resetGameData = () => (
   }
 );
 
-export const declareWinner = peerId => (
-  (dispatch) => {
-    p2pActions.p2pBroadcastWinnerId(peerId);
-    const username = p2pHelpers.getUsername(peerId);
-    const result = username || constants.GAME_RESULT_TIE;
-    dispatch(infoActions.updateWinner(result));
-  }
-);
-
-export const declareGameOver = currentWinnerId => (
-  (dispatch) => {
-    dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
-    if (currentWinnerId) {
-      // if we think we know the winner, wait a bit for new data from peers
-      // and then confirm that this snake is still alive
-      window.setTimeout(() => {
-        if (snakeHelpers.snakeIsAlive(currentWinnerId)) {
-          // if alive, this snake is the winner
-          dispatch(declareWinner(currentWinnerId));
-        } else {
-          // if dead, declare a tie
-          dispatch(declareWinner());
-        }
-      }, constants.GAME_OVER_DELAY * constants.LOOP_INTERVAL);
-    } else {
-      // if it was a tie, declare the tie
-      dispatch(declareWinner());
-    }
-  }
-);
-
 export const handleSnakeDeath = (id, tuOfDeath) => (
   (dispatch) => {
     // do nothing if snake is already dead
@@ -112,14 +83,14 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
 
     dispatch(snakeActions.handleSetTuOfDeath(id, tuOfDeath));
 
+    const tu = store.getState().info.tu;
+
     if (id === p2pHelpers.getOwnId()) {
       // broadcast own death to peers
       p2pActions.p2pBroadcastOwnDeath(tuOfDeath);
 
       dispatch(infoActions.decrementLivingSnakeCount());
     } else {
-      const tu = store.getState().info.tu;
-
       if (tuOfDeath <= tu) {
         dispatch(infoActions.decrementLivingSnakeCount());
       } else {
@@ -128,7 +99,18 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
     }
 
     if (snakeHelpers.checkForGameOver()) {
-      dispatch(declareGameOver());
+      p2pActions.p2pBroadcastGameOver(tu);
+    }
+  }
+);
+
+export const receiveGameOver = tuOfGameOver => (
+  (dispatch) => {
+    const tu = store.getState().info.tu;
+    if (tuOfGameOver <= tu) {
+      dispatch(infoActions.handleGameStatusChange(constants.GAME_STATUS_POSTGAME));
+    } else {
+      dispatch(infoActions.addToGameOverBuffer(tuOfGameOver));
     }
   }
 );

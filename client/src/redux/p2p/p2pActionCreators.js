@@ -73,10 +73,6 @@ export const p2pBroadcast = (data) => {
   });
 };
 
-export const p2pBroadcastWinnerId = (peerId) => {
-  p2pBroadcast({ winnerId: peerId });
-};
-
 export const p2pBroadcastGameStatus = status => (
   (dispatch) => {
     p2pBroadcast(status);
@@ -102,6 +98,14 @@ export const p2pBroadcastStartingRows = () => (
     });
   }
 );
+
+export const p2pBroadcastGameOver = tu => {
+  p2pBroadcast({
+    gameOver: {
+      tu,
+    },
+  });
+};
 
 export const p2pBroadcastSnakeData = () => {
   const ownSnake = snakeHelpers.snakeDataForBroadcast();
@@ -192,21 +196,20 @@ export const p2pSetDataListener = (connection, dispatch) => {
         } else if (data.username || data.username === '') {
           // peer username
           dispatch(p2pUpdatePeerUsername(connection.peer, data.username));
-        } else if (data.kill || data.kill === '') {
+        } else if (data.kill) {
           // snake killed for too much latency
           dispatch(metaActions.handleSnakeDeath(data.kill, constants.LATENCY));
-        } else if (Object.keys(data)[0] === 'winnerId') {
-          // if peerId received, resolve to username
-          const username = p2pHelpers.getUsername(data.winnerId);
-          const result = username || constants.GAME_RESULT_TIE;
-          dispatch(infoActions.updateWinner(result));
-        } else if (data.patch || data.patch === '') {
+        } else if (data.patch) {
           const info = data.patch;
           dispatch(headSetActions.patchHeadSet(info.tu, info.sqNum, info.id));
-        } else if (data.death || data.death === '') {
+        } else if (data.death) {
           // snake death
           const info = data.death;
           dispatch(metaActions.handleSnakeDeath(info.id, info.tu));
+        } else if (data.gameOver) {
+          // game over
+          const info = data.gameOver;
+          dispatch(metaActions.receiveGameOver(info.tu));
         } else {
           // pregame and playing: receive snake data from peers
           dispatch(metaActions.receiveSnakeData(connection.peer, data));

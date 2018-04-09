@@ -89,11 +89,6 @@ export default function infoReducer(state = defaultState, action) {
       newState.gameOverBuffer[action.tu] = true;
       return newState;
     }
-    case actionTypes.REMOVE_FROM_GAME_OVER_BUFFER: {
-      const newState = { ...state };
-      delete newState.gameOverBuffer[action.tu];
-      return newState;
-    }
     case actionTypes.RESET_GAME_OVER_BUFFER: {
       const newState = { ...state };
       newState.gameOverBuffer = {};

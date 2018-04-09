@@ -69,11 +69,6 @@ export const addToGameOverBuffer = tu => ({
   type: actionTypes.ADD_TO_GAME_OVER_BUFFER,
 });
 
-export const removeFromGameOverBuffer = tu => ({
-  tu,
-  type: actionTypes.REMOVE_FROM_GAME_OVER_BUFFER,
-});
-
 export const resetGameOverBuffer = () => ({
   type: actionTypes.RESET_GAME_OVER_BUFFER,
 });
@@ -105,8 +100,11 @@ export const handleGameStatusChange = newStatus => (
         dispatch(metaActions.resetGameData());
         break;
       }
+      case constants.GAME_STATUS_POSTGAME: {
+        console.log('postgame: now calculate the winner');
+        break;
+      }
       // case constants.GAME_STATUS_PREGAME:
-      // case constants.GAME_STATUS_POSTGAME:
       default: {
         break;
       }
@@ -149,6 +147,18 @@ export const processDeathBuffer = () => (
     if (buffer[tu]) {
       dispatch(decrementLivingSnakeCount());
       dispatch(removeFromDeathBuffer(tu));
+    }
+  }
+);
+
+export const processGameOverBuffer = () => (
+  (dispatch) => {
+    const state = store.getState();
+    const tu = state.info.tu;
+    const buffer = state.info.gameOverBuffer;
+
+    if (buffer[tu]) {
+      dispatch(handleGameStatusChange(constants.GAME_STATUS_POSTGAME));
     }
   }
 );
