@@ -29,7 +29,7 @@ export const aggregateOwnSnake = (mostRecentTu) => {
   const aggregate = {};
 
   // return empty object if own snake is dead
-  if (snake.status === constants.SNAKE_STATUS_DEAD) {
+  if (snake.tuOfDeath) {
     return aggregate;
   }
 

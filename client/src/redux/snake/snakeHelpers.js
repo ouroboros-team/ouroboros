@@ -3,7 +3,6 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import store from '../store';
 import * as constants from '../../constants';
-import * as headSetHelpers from '../headSet/headSetHelpers';
 
 export const getSnakeLength = tu => (
   constants.INITIAL_SNAKE_LENGTH + Math.floor(tu / 10)
@@ -11,7 +10,7 @@ export const getSnakeLength = tu => (
 
 export const emptySnakeObject = (positions = {}) => ({
   direction: 'left',
-  status: constants.SNAKE_STATUS_ALIVE,
+  tuOfDeath: null,
   positions,
 });
 
@@ -55,13 +54,21 @@ export const setStartPosition = (row) => {
   };
 };
 
-export const snakeIsAlive = (id, snakesObj) => {
+export const snakeIsAlive = (id, snakesObj, currentTU) => {
   let snakes = snakesObj;
+  let tu = currentTU;
+  const state = store.getState();
+
   if (!snakes) {
-    snakes = store.getState().snakes;
+    snakes = state.snakes;
   }
 
-  return snakes[id] && snakes[id].status === constants.SNAKE_STATUS_ALIVE;
+  if (!tu) {
+    tu = state.info.tu;
+  }
+
+  // snake exists, has no tuOfDeath or tuOfDeath comes after this TU
+  return snakes[id] && (!snakes[id].tuOfDeath || snakes[id].tuOfDeath > tu);
 };
 
 export const validateDirectionChange = (oldDir, newDir) => {

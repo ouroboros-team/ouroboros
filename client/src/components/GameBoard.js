@@ -12,7 +12,7 @@ const GameBoard = (props) => {
 
   for (let n = 0; n < GRID_SIZE * GRID_SIZE; n++) {
       if (props.board[n] && props.board[n].snake) {
-        status = props.board[n].snake.status;
+        status = !props.board[n].snake.tuOfDeath ? 'alive' : 'dead';
         styleId = props.board[n].snake.styleId;
       } else {
         status = 'empty';
