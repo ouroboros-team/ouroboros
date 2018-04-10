@@ -99,7 +99,9 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
     }
 
     if (snakeHelpers.checkForGameOver()) {
-      p2pActions.p2pBroadcastGameOver(tu);
+      window.setTimeout(() => {
+        p2pActions.p2pBroadcastGameOver(tu);
+      }, constants.GAME_OVER_DELAY * constants.LOOP_INTERVAL);
     }
   }
 );
