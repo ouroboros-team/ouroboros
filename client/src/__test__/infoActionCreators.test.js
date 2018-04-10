@@ -169,10 +169,10 @@ describe('Info action creators', () => {
         info: { tu: 5 },
         snakes: {
           ebjkrh: {
-            positions: { byIndex: [ 20 ] },
+            positions: { newest: 20 },
           },
           lakjn: {
-            positions: { byIndex: [ 21 ] },
+            positions: { newest: 21 },
           },
         },
       };
@@ -189,10 +189,10 @@ describe('Info action creators', () => {
         info: { tu: 5 },
         snakes: {
           ebjkrh: {
-            positions: { byIndex: [ 6 ] },
+            positions: { newest: 6 },
           },
           lakjn: {
-            positions: { byIndex: [ 4 ] },
+            positions: { newest: 4 },
           },
         },
       };
@@ -210,10 +210,10 @@ describe('Info action creators', () => {
         info: { tu: 5 },
         snakes: {
           alkenrfg874: {
-            positions: { byIndex: [ 5 ] },
+            positions: { newest: 5 },
           },
           lakjn: {
-            positions: { byIndex: [ 21 ] },
+            positions: { newest: 21 },
           },
         },
       };
