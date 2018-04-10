@@ -44,7 +44,7 @@ export const updateSnakeHeadSets = (headSets, id, snakeData, gap) => {
     snake = store.getState().snakes[id];
   }
 
-  const mostRecentTu = snake.positions.byIndex[0];
+  const mostRecentTu = snake.positions.newest;
   let tuCounter;
 
   if (gap && gap > 0) {
@@ -52,7 +52,7 @@ export const updateSnakeHeadSets = (headSets, id, snakeData, gap) => {
     tuCounter = mostRecentTu - (gap - 1);
   } else {
     // if no gap is given, process all TUs, starting with the earliest
-    tuCounter = snake.positions.byIndex[snake.positions.byIndex.length - 1];
+    tuCounter = snake.positions.oldest;
   }
 
   // add head sets in range, don't add old ones that have already been purged

@@ -15,7 +15,8 @@ describe('Snake reducer', () => {
         previousDirection: 'up',
         status: 'alive',
         positions: {
-          byIndex: [ 1, 0 ],
+          newest: 1,
+          oldest: 0,
           byKey: {
             1: { row: 4, column: 7 },
             0: { row: 4, column: 8 },
@@ -113,7 +114,8 @@ describe('Snake reducer', () => {
       status: 'alive',
       styleId: 0,
       positions: {
-        byIndex: [ 4, 3, 2, 1, 0 ],
+        newest: 4,
+        oldest: 0,
         byKey: {
           4: { row: 5, column: 5 },
           3: { row: 5, column: 6 },
@@ -141,7 +143,8 @@ describe('Snake reducer', () => {
       status: 'alive',
       styleId: 0,
       positions: {
-        byIndex: [ 4, 3, 2 ],
+        newest: 4,
+        oldest: 2,
         byKey: {
           4: { row: 5, column: 5 },
           3: { row: 5, column: 6 },
@@ -158,10 +161,9 @@ describe('Snake reducer', () => {
 
     const newState = snakeReducer(state, actionObj);
 
-    const mergedByIndex = [ ...actionObj.data.positions.byIndex, ...state[actionObj.id].positions.byIndex ];
     const mergedByKey = { ...actionObj.data.positions.byKey, ...state[actionObj.id].positions.byKey };
 
-    expect(newState[actionObj.id].positions.byIndex).toEqual(mergedByIndex);
+    expect(newState[actionObj.id].positions.newest).toEqual(data.positions.newest);
     expect(newState[actionObj.id].positions.byKey).toEqual(mergedByKey);
   });
 
@@ -172,7 +174,8 @@ describe('Snake reducer', () => {
       status: 'alive',
       styleId: 0,
       positions: {
-        byIndex: [ 4, 3, 2 ],
+        newest: 4,
+        oldest: 2,
         byKey: {
           4: { row: 5, column: 5 },
           3: { row: 5, column: 6 },
@@ -202,7 +205,8 @@ describe('Snake reducer', () => {
       status: 'alive',
       styleId: 0,
       positions: {
-        byIndex: [ 4, 3, 2 ],
+        newest: 4,
+        oldest: 2,
         byKey: {
           4: { row: 5, column: 5 },
           3: { row: 5, column: 6 },
@@ -231,7 +235,8 @@ describe('Snake reducer', () => {
       status: 'alive',
       styleId: 0,
       positions: {
-        byIndex: [ 1, 0 ],
+        newest: 1,
+        oldest: 0,
         byKey: {
           1: { row: 4, column: 7 },
           0: { row: 4, column: 8 },
