@@ -93,13 +93,13 @@ export const writeOwnSnakePosition = id => (
   (dispatch) => {
     const state = store.getState();
     const newSnake = cloneDeep(state.snakes[id]);
-    const lastTu = newSnake.positions.byIndex[0];
+    const lastTu = newSnake.positions.newest;
 
     const coords = snakeHelpers.calculateNextCoords(newSnake.direction, newSnake.positions.byKey[`${lastTu}`]);
 
     newSnake.positions.byKey = {};
     newSnake.positions.byKey[`${lastTu + 1}`] = coords;
-    newSnake.positions.byIndex = [`${lastTu + 1}`];
+    newSnake.positions.newest = lastTu + 1;
 
     dispatch(updateSnakeData(id, newSnake));
     p2pActions.p2pBroadcastSnakeData();
@@ -109,7 +109,7 @@ export const writeOwnSnakePosition = id => (
 export const checkForCollisions = id => (
   (dispatch) => {
     const ownSnake = store.getState().snakes[id];
-    const lastTu = ownSnake.positions.byIndex[0];
+    const lastTu = ownSnake.positions.newest;
 
     let ownHead;
     let board;
@@ -169,7 +169,7 @@ export const checkForLatentSnakes = () => (
     let mostRecentTu;
 
     snakeIds.forEach((id) => {
-      mostRecentTu = snakes[id].positions.byIndex[0];
+      mostRecentTu = snakes[id].positions.newest;
 
       if (snakeHelpers.snakeIsAlive(id, snakes[id]) &&
         tu - mostRecentTu > constants.LATENT_SNAKE_TOLERANCE) {

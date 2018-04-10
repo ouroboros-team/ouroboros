@@ -67,7 +67,7 @@ export const buildNextBoard = () => {
   snakeIds.forEach((id) => {
     if (snakeHelpers.snakeIsAlive(id)) {
       snake = snakesObj[id];
-      mostRecentTu = snake.positions.byIndex[0];
+      mostRecentTu = snake.positions.newest;
 
       // run once for all snakes, more for snakes with missing TUs
       while (mostRecentTu < tu) {
@@ -78,7 +78,7 @@ export const buildNextBoard = () => {
 
         // add predicted coordinates to cloned snake object
         snake.positions.byKey[mostRecentTu] = next;
-        snake.positions.byIndex.unshift(mostRecentTu);
+        snake.positions.newest = mostRecentTu;
 
         // add next position to newBoard if it is within range
         // (based on target TU and snake length)

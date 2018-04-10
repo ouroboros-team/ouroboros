@@ -12,7 +12,8 @@ import * as p2pHelpers from '../p2p/p2pHelpers';
 //     status: 'alive',
 //     styleId: 0,
 //     positions: {
-//       byIndex: [4, 3, 2, 1, 0, -1, -2, -3],
+//       newest: 4,
+//       oldest: -3,
 //       byKey: {
 //         4: { row: 5, column: 5 },
 //         3: { row: 5, column: 6 },
@@ -67,7 +68,7 @@ function snakesReducer(state = {}, action) {
       }
 
       // update existing snake (only if new data is current or newer than existing data)
-      if (action.data.positions.byIndex[0] >= newState[action.id].positions.byIndex[0]) {
+      if (action.data.positions.newest >= newState[action.id].positions.newest) {
         newState[action.id] = cloneDeep(newState[action.id]);
 
         snakeHelpers.updateSnakeDataMutate(newState[action.id], action.data);
