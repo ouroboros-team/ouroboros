@@ -5,7 +5,6 @@ import * as actionTypes from '../actionTypes';
 import * as headSetActions from '../headSet/headSetActionCreators';
 import * as metaActions from '../metaActionCreators';
 
-import * as infoHelpers from '../info/infoHelpers';
 import * as snakeHelpers from '../snake/snakeHelpers';
 
 export const incrementTu = () => ({
