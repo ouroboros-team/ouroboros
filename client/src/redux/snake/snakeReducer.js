@@ -9,7 +9,7 @@ import * as p2pHelpers from '../p2p/p2pHelpers';
 //   id: {
 //     direction: 'left',
 //     previousDirection: 'up',
-//     tuOfDeath: undefined,
+//     tuOfDeath: null,
 //     styleId: 0,
 //     positions: {
 //       byIndex: [4, 3, 2, 1, 0, -1, -2, -3],

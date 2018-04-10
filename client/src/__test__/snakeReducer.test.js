@@ -13,7 +13,7 @@ describe('Snake reducer', () => {
       begrdhiuv3267: {
         direction: 'right',
         previousDirection: 'up',
-        status: 'alive',
+        tuOfDeath: null,
         positions: {
           byIndex: [ 1, 0 ],
           byKey: {
@@ -73,21 +73,20 @@ describe('Snake reducer', () => {
     expect(spy).toHaveBeenCalledWith(state[actionObj.id].previousDirection, actionObj.direction);
   });
 
-  it('CHANGE_SNAKE_STATUS changes status of an existing snake', () => {
+  fit('SET_TU_OF_DEATH sets tuOfDeath', () => {
     const actionObj = {
       id,
-      status: 'dead',
-      type: actionTypes.CHANGE_SNAKE_STATUS,
+      tuOfDeath: 7,
+      type: actionTypes.SET_TU_OF_DEATH,
     };
 
     const newState = snakeReducer(state, actionObj);
-    expect(newState[id].status).toBe(actionObj.status);
+    expect(newState[id].tuOfDeath).toBe(actionObj.tuOfDeath);
   });
 
   it('CHANGE_SNAKE_STATUS does nothing if the new status is the same as the old status', () => {
     const actionObj = {
       id,
-      status: 'alive',
       type: actionTypes.CHANGE_SNAKE_STATUS,
     };
 
@@ -98,7 +97,6 @@ describe('Snake reducer', () => {
   it('CHANGE_SNAKE_STATUS does nothing if the passed id is nonexistent', () => {
     const actionObj = {
       id: 'not an id',
-      status: 'alive',
       type: actionTypes.CHANGE_SNAKE_STATUS,
     };
 
@@ -110,7 +108,6 @@ describe('Snake reducer', () => {
     const data = {
       direction: 'left',
       previousDirection: 'up',
-      status: 'alive',
       styleId: 0,
       positions: {
         byIndex: [ 4, 3, 2, 1, 0 ],
@@ -138,7 +135,6 @@ describe('Snake reducer', () => {
     const data = {
       direction: 'left',
       previousDirection: 'up',
-      status: 'alive',
       styleId: 0,
       positions: {
         byIndex: [ 4, 3, 2 ],
@@ -169,7 +165,6 @@ describe('Snake reducer', () => {
     const data = {
       direction: 'left',
       previousDirection: 'up',
-      status: 'alive',
       styleId: 0,
       positions: {
         byIndex: [ 4, 3, 2 ],
@@ -199,7 +194,6 @@ describe('Snake reducer', () => {
     const data = {
       direction: 'left',
       previousDirection: 'up',
-      status: 'alive',
       styleId: 0,
       positions: {
         byIndex: [ 4, 3, 2 ],
@@ -228,7 +222,6 @@ describe('Snake reducer', () => {
     const data = {
       direction: 'left',
       previousDirection: 'up',
-      status: 'alive',
       styleId: 0,
       positions: {
         byIndex: [ 1, 0 ],
