@@ -19,9 +19,9 @@ export default function infoReducer(state = defaultState, action) {
       newState.tu += 1;
       return newState;
     }
-    case actionTypes.SET_TU: {
+    case actionTypes.RESET_TU: {
       const newState = { ...state };
-      newState.tu = action.tu;
+      newState.tu = 0;
       return newState;
     }
     case actionTypes.UPDATE_GAME_STATUS: {

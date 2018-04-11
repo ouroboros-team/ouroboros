@@ -11,9 +11,8 @@ export const incrementTu = () => ({
   type: actionTypes.INCREMENT_TU,
 });
 
-export const setTu = tu => ({
-  tu,
-  type: actionTypes.SET_TU,
+export const resetTu = () => ({
+  type: actionTypes.RESET_TU,
 });
 
 export const updateAvailableRows = availableRows => ({
