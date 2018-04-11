@@ -73,7 +73,7 @@ export const snakeIsAlive = (id, snakesObj, currentTU) => {
 
   // snake is alive if...
   // snake exists, has no tuOfDeath or tuOfDeath comes after current TU
-  return snakes[id] && (!snakes[id].tuOfDeath || snakes[id].tuOfDeath > tu);
+  return snakes[id] && (snakes[id].tuOfDeath === null || snakes[id].tuOfDeath > tu);
 };
 
 export const validateDirectionChange = (oldDir, newDir) => {
