@@ -26,9 +26,6 @@ export default class Postgame extends React.Component {
       case '': {
         return 'Determining winner...';
       }
-      case constants.GAME_RESULT_TIE: {
-        return 'Tie game!';
-      }
       default: {
         return `${winner} won the game!`;
       }

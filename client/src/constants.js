@@ -18,8 +18,6 @@ export const DISCONNECTION = 0;
 
 export const GAME_OVER_DELAY = 10;
 
-export const GAME_RESULT_TIE = 'tie';
-
 export const INITIAL_SNAKE_LENGTH = 4;
 
 // a player that is further behind in TUs than this number will be given
