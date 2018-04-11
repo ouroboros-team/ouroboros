@@ -81,7 +81,7 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
       return;
     }
 
-    dispatch(snakeActions.setTuOfDeath(id, tuOfDeath));
+    dispatch(snakeActions.handleSetTuOfDeath(id, tuOfDeath));
 
     const tu = store.getState().info.tu;
 
