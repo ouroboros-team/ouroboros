@@ -21,23 +21,28 @@ header {
   text-align: center;
   white-space: nowrap;
 
-  > * {
-    display: inline-block;
-    vertical-align: middle;
-    margin: 0 .5rem;
-  }
+  #logo-text {
+    a {
+      display: block;
+      padding-top: .8rem;
+      text-decoration: none;
+      color: inherit;
 
-  .logo {
-    width: 4rem;
-    vertical-align: initial;
+      .logo {
+        width: 4.3rem;
+        vertical-align: baseline;
+      }
+    }
   }
 
   nav {
     margin: 2rem 0;
     text-align: center;
+    white-space: normal;
 
     a {
-      margin: .5rem 1rem;
+      display: inline-block;
+      margin: .25rem .5rem;
       padding: 1rem 2rem;
       border-radius: 4px;
       border: solid $white 1px;

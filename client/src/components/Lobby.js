@@ -54,8 +54,8 @@ export default class Lobby extends React.Component {
         <div>
           <div id='messages'>
             <p>Sharing link: <a
-              href={`${window.location.origin}/${this.props.ownPeerId}`}>
-              {`${window.location.origin}/${this.props.ownPeerId}`}
+              href={`${window.location.origin}/play/${this.props.ownPeerId}`}>
+              {`${window.location.origin}/play/${this.props.ownPeerId}`}
             </a>
             </p>
           </div>
