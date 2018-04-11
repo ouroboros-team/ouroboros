@@ -90,12 +90,10 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
       p2pActions.p2pBroadcastOwnDeath(tuOfDeath);
 
       dispatch(infoActions.decrementLivingSnakeCount());
+    } else if (tuOfDeath <= tu) {
+      dispatch(infoActions.decrementLivingSnakeCount());
     } else {
-      if (tuOfDeath <= tu) {
-        dispatch(infoActions.decrementLivingSnakeCount());
-      } else {
-        dispatch(infoActions.addToDeathBuffer(tuOfDeath));
-      }
+      dispatch(infoActions.addToDeathBuffer(tuOfDeath));
     }
 
     if (snakeHelpers.checkForGameOver()) {
