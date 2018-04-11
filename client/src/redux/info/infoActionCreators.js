@@ -76,7 +76,7 @@ export const resetGameOverBuffer = () => ({
 
 export const getAvailableRow = () => (
   (dispatch) => {
-    const availableRows = [ ...store.getState().info.availableRows ];
+    const availableRows = [...store.getState().info.availableRows];
     const row = availableRows.pop();
     dispatch(updateAvailableRows(availableRows));
     return row;
@@ -85,30 +85,35 @@ export const getAvailableRow = () => (
 
 export const handleGameStatusChange = newStatus => (
   (dispatch) => {
-    dispatch(updateGameStatus(newStatus));
+    const oldStatus = store.getState().info.gameStatus;
 
-    switch (newStatus) {
-      case constants.GAME_STATUS_READY_TO_PLAY: {
-        dispatch(headSetActions.updateHeadSets());
-        break;
-      }
-      case constants.GAME_STATUS_PLAYING: {
-        // set number of living snakes
-        dispatch(setLivingSnakeCount(Object.keys(store.getState().snakes).length));
-        break;
-      }
-      case constants.GAME_STATUS_LOBBY: {
-        dispatch(metaActions.resetGameData());
-        break;
-      }
-      case constants.GAME_STATUS_POSTGAME: {
-        dispatch(updateWinner(snakeHelpers.getWinners()));
-        break;
-      }
-      // case constants.GAME_STATUS_PREGAME:
-      default: {
-        break;
-      }
+    // do nothing if new status is same as old status
+    if (oldStatus === newStatus) {
+      return;
+    }
+
+    // only change game status when in proper sequence,
+    // otherwise set game status to out of sync
+    if (newStatus === constants.GAME_STATUS_LOBBY &&
+      (oldStatus === constants.GAME_STATUS_POSTGAME || oldStatus === constants.GAME_STATUS_OUT_OF_SYNC)) {
+      dispatch(updateGameStatus(newStatus));
+      dispatch(metaActions.resetGameData());
+    } else if (newStatus === constants.GAME_STATUS_PREGAME &&
+      oldStatus === constants.GAME_STATUS_LOBBY) {
+      dispatch(updateGameStatus(newStatus));
+    } else if (newStatus === constants.GAME_STATUS_READY_TO_PLAY &&
+      oldStatus === constants.GAME_STATUS_PREGAME) {
+      dispatch(updateGameStatus(newStatus));
+      dispatch(headSetActions.updateHeadSets());
+    } else if (newStatus === constants.GAME_STATUS_PLAYING &&
+      oldStatus === constants.GAME_STATUS_READY_TO_PLAY) {
+      dispatch(updateGameStatus(newStatus));
+      dispatch(setLivingSnakeCount(Object.keys(store.getState().snakes).length));
+    } else if (newStatus === constants.GAME_STATUS_POSTGAME) {
+      dispatch(updateGameStatus(newStatus));
+      dispatch(updateWinner(snakeHelpers.getWinners()));
+    } else {
+      dispatch(updateGameStatus(constants.GAME_STATUS_OUT_OF_SYNC));
     }
   }
 );
