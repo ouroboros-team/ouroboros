@@ -114,32 +114,6 @@ export const handleGameStatusChange = newStatus => (
   }
 );
 
-export const fastForwardTu = id => (
-  (dispatch) => {
-    const state = store.getState();
-    const snakes = state.snakes;
-    const snakeIds = Object.keys(snakes);
-    const oldTu = state.info.tu;
-    const myId = id || state.p2p.id;
-    let newTu;
-
-    // relying on snakeIds[0] or snakeIds[1] to be sufficiently up to date
-    if (snakeIds[0] !== myId) {
-      newTu = snakes[snakeIds[0]].positions.newest;
-    } else {
-      newTu = snakes[snakeIds[1]].positions.newest;
-    }
-
-    if (newTu - oldTu > 5) {
-      // fast-forward TU
-      dispatch(setTu(newTu));
-      return newTu;
-    }
-
-    return oldTu;
-  }
-);
-
 export const processDeathBuffer = () => (
   (dispatch) => {
     const state = store.getState();

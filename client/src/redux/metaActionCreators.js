@@ -19,11 +19,8 @@ export const handleTuTick = id => (
       // check for collisions
       dispatch(snakeActions.checkForCollisions(id));
     } else {
-      // if own snake is dead or have no snake,
-      // broadcast own death
+      // if own snake is dead, broadcast own death
       p2pActions.p2pBroadcastOwnDeath();
-      // fast-forward to match peers' TU
-      dispatch(infoActions.fastForwardTu(id));
     }
     // kill snakes with too much latency
     dispatch(snakeActions.checkForLatentSnakes());
