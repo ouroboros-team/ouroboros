@@ -161,7 +161,7 @@ export const p2pSetCloseListener = (connection, dispatch) => {
     dispatch(metaActions.checkReadiness());
     const gameStatus = store.getState().info.gameStatus;
     if (gameStatus === constants.GAME_STATUS_PLAYING) {
-      dispatch(snakeActions.handleSetTuOfDeath(connection.peer, constants.DISCONNECTION));
+      dispatch(snakeActions.setTuOfDeath(connection.peer, constants.DISCONNECTION));
     } else if (gameStatus === constants.GAME_STATUS_READY_TO_PLAY) {
       dispatch(snakeActions.removeSnake(connection.peer));
       dispatch(headSetActions.resetHeadSets());
@@ -208,8 +208,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
           dispatch(metaActions.handleSnakeDeath(info.id, info.tu));
         } else if (data.gameOver) {
           // game over
-          const info = data.gameOver;
-          dispatch(metaActions.receiveGameOver(info.tu));
+          dispatch(metaActions.receiveGameOver(data.gameOver.tu));
         } else {
           // pregame and playing: receive snake data from peers
           dispatch(metaActions.receiveSnakeData(connection.peer, data));

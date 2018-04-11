@@ -81,7 +81,7 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
       return;
     }
 
-    dispatch(snakeActions.handleSetTuOfDeath(id, tuOfDeath));
+    dispatch(snakeActions.setTuOfDeath(id, tuOfDeath));
 
     const tu = store.getState().info.tu;
 
@@ -98,6 +98,7 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
 
     if (snakeHelpers.checkForGameOver()) {
       window.setTimeout(() => {
+        dispatch(infoActions.handleGameStatusChange(constants.GAME_STATUS_POSTGAME));
         p2pActions.p2pBroadcastGameOver(tu);
       }, constants.GAME_OVER_DELAY * constants.LOOP_INTERVAL);
     }
