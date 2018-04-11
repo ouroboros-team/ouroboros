@@ -120,7 +120,7 @@ export const checkForCollisions = id => (
           // that peer snake was not overwritten by your dead snake
           // (leaving a gap in the snake's body)
           const peerSnake = board[squareNumber].snake;
-          let tu = peerSnake.positions.byIndex[0];
+          let tu = peerSnake.positions.newest;
           while (peerSnake.positions.byKey[tu] && headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[tu]) !== squareNumber) {
             tu -= 1;
           }
