@@ -28,6 +28,13 @@ export const setTuOfDeath = (id, tuOfDeath) => ({
   type: actionTypes.SET_TU_OF_DEATH,
 });
 
+export const handleSetTuOfDeath = (id, tu) => (
+  (dispatch) => {
+    dispatch(setTuOfDeath(id, tu));
+    p2pActions.p2pBroadcastSnakeData();
+  }
+);
+
 export const handleChangeSnakeDirection = (id, direction) => (
   (dispatch) => {
     if (snakeHelpers.snakeIsAlive(id)) {

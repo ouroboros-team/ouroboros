@@ -161,7 +161,7 @@ export const p2pSetCloseListener = (connection, dispatch) => {
     dispatch(metaActions.checkReadiness());
     const gameStatus = store.getState().info.gameStatus;
     if (gameStatus === constants.GAME_STATUS_PLAYING) {
-      dispatch(snakeActions.setTuOfDeath(connection.peer, constants.DISCONNECTION));
+      dispatch(snakeActions.handleSetTuOfDeath(connection.peer, constants.DISCONNECTION));
     } else if (gameStatus === constants.GAME_STATUS_READY_TO_PLAY) {
       dispatch(snakeActions.removeSnake(connection.peer));
       dispatch(headSetActions.resetHeadSets());
