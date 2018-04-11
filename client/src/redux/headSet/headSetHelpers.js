@@ -26,10 +26,12 @@ export const patchHeadSetMutate = (headSets, tu, sqNum, id) => {
 
   const snakes = store.getState().snakes;
 
-  headSets.byKey[tu][sqNum] = {
-    snake: snakes[id],
-    id,
-  };
+  if (headSets.byKey[tu][sqNum] && headSets.byKey[tu][sqNum].id !== id) {
+    headSets.byKey[tu][sqNum] = {
+      snake: snakes[id],
+      id,
+    };
+  }
 };
 
 export const updateSnakeHeadSets = (headSets, id, snakeData, gap) => {

@@ -4,12 +4,12 @@ import store from '../store';
 
 import * as actionTypes from '../actionTypes';
 import * as infoActions from '../info/infoActionCreators';
-import * as metaActions from '../metaActionCreators';
 import * as p2pActions from '../p2p/p2pActionCreators';
+import * as metaActions from '../metaActionCreators';
 
 import * as boardHelpers from '../board/boardHelpers';
-import * as p2pHelpers from '../p2p/p2pHelpers';
 import * as headSetHelpers from '../headSet/headSetHelpers';
+import * as p2pHelpers from '../p2p/p2pHelpers';
 import * as snakeHelpers from './snakeHelpers';
 
 import * as constants from '../../constants';
@@ -22,24 +22,16 @@ export const changeSnakeDirection = (id, direction) => ({
   type: actionTypes.CHANGE_SNAKE_DIRECTION,
 });
 
-export const changeSnakeStatus = (id, status) => ({
+export const setTuOfDeath = (id, tuOfDeath) => ({
   id,
-  status,
-  type: actionTypes.CHANGE_SNAKE_STATUS,
+  tuOfDeath,
+  type: actionTypes.SET_TU_OF_DEATH,
 });
 
-export const handleChangeSnakeStatus = (id, status) => (
+export const handleSetTuOfDeath = (id, tu) => (
   (dispatch) => {
-    dispatch(changeSnakeStatus(id, status));
-    if (id === p2pHelpers.getOwnId()) {
-      p2pActions.p2pBroadcastSnakeData();
-    }
-
-    const result = snakeHelpers.checkForGameOver();
-
-    if (result !== false) {
-      dispatch(metaActions.declareGameOver(result));
-    }
+    dispatch(setTuOfDeath(id, tu));
+    p2pActions.p2pBroadcastSnakeData();
   }
 );
 
@@ -57,16 +49,6 @@ export const updateSnakeData = (id, data) => ({
   data,
   type: actionTypes.UPDATE_SNAKE_DATA,
 });
-
-export const handleUpdateSnakeData = (id, data) => (
-  (dispatch) => {
-    if (data.status === constants.SNAKE_STATUS_DEAD) {
-      dispatch(handleChangeSnakeStatus(id, data.status));
-    }
-
-    dispatch(updateSnakeData(id, data));
-  }
-);
 
 export const removeSnake = id => ({
   id,
@@ -113,8 +95,6 @@ export const checkForCollisions = id => (
 
     let ownHead;
     let board;
-    let length;
-    let collisionType;
     let squareNumber;
 
     // check the most recent TUs, starting with the earliest in range
@@ -128,23 +108,23 @@ export const checkForCollisions = id => (
         ...boardHelpers.aggregateBoards(tuCounter),
         ...boardHelpers.aggregateOwnSnake(tuCounter - 1),
       };
-      length = snakeHelpers.getSnakeLength(tuCounter);
       squareNumber = headSetHelpers.coordsToSquareNumber(ownHead);
 
       // if coordinates occupied by living snake, there is a collision
       if (board[squareNumber] && snakeHelpers.snakeIsAlive(board[squareNumber].id)) {
-        dispatch(handleChangeSnakeStatus(id, constants.SNAKE_STATUS_DEAD));
-        // check collision type
-        collisionType = snakeHelpers.getCollisionType(squareNumber, id, board[squareNumber].id, length);
-        console.log(collisionType);
+        dispatch(metaActions.handleSnakeDeath(id, tuCounter));
 
-        if (collisionType === constants.COLLISION_TYPE_HEAD_ON_HEAD) {
-          // other snake is also dead
-          dispatch(p2pActions.p2pKillPeerSnake(board[squareNumber].id));
-        } else {
-          // tell peers to patch this head set to make sure other snake was not
-          // overwritten by your dead snake (leaving a gap in the snake's body)
-          p2pActions.p2pBroadcastPatch(tuCounter, squareNumber, board[squareNumber].id);
+        if (board[squareNumber].id !== p2pHelpers.getOwnId()) {
+          // if not self, find tu at which peer snake's head was in this square,
+          // then tell peers to patch this head set to make sure
+          // that peer snake was not overwritten by your dead snake
+          // (leaving a gap in the snake's body)
+          const peerSnake = board[squareNumber].snake;
+          let tu = peerSnake.positions.newest;
+          while (peerSnake.positions.byKey[tu] && headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[tu]) !== squareNumber) {
+            tu -= 1;
+          }
+          p2pActions.p2pBroadcastPatch(tu, squareNumber, board[squareNumber].id);
         }
         return;
       }
@@ -171,7 +151,7 @@ export const checkForLatentSnakes = () => (
     snakeIds.forEach((id) => {
       mostRecentTu = snakes[id].positions.newest;
 
-      if (snakeHelpers.snakeIsAlive(id, snakes[id]) &&
+      if (snakeHelpers.snakeIsAlive(id, snakes, tu) &&
         tu - mostRecentTu > constants.LATENT_SNAKE_TOLERANCE) {
         console.log(`${id}'s latency is too great`);
         dispatch(p2pActions.p2pKillPeerSnake(id));

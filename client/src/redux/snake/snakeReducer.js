@@ -9,7 +9,7 @@ import * as p2pHelpers from '../p2p/p2pHelpers';
 //   id: {
 //     direction: 'left',
 //     previousDirection: 'up',
-//     status: 'alive',
+//     tuOfDeath: null,
 //     styleId: 0,
 //     positions: {
 //       newest: 4,
@@ -43,14 +43,14 @@ function snakesReducer(state = {}, action) {
       newState[action.id].direction = action.direction;
       return newState;
     }
-    case actionTypes.CHANGE_SNAKE_STATUS: {
-      if (!state[action.id] || state[action.id].status === action.status) {
+    case actionTypes.SET_TU_OF_DEATH: {
+      if (!state[action.id] || state[action.id].tuOfDeath) {
         return state;
       }
 
       const newState = { ...state };
       newState[action.id] = { ...newState[action.id] };
-      newState[action.id].status = action.status;
+      newState[action.id].tuOfDeath = action.tuOfDeath;
       return newState;
     }
     case actionTypes.UPDATE_SNAKE_DATA: {
@@ -79,9 +79,6 @@ function snakesReducer(state = {}, action) {
         if (action.id === p2pHelpers.getOwnId()) {
           newState[action.id].previousDirection = action.data.direction;
         }
-
-        // update status
-        newState[action.id].status = action.data.status;
 
         return newState;
       }
