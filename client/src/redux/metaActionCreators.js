@@ -80,14 +80,16 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
 
     dispatch(snakeActions.setTuOfDeath(id, tuOfDeath));
 
-    const tu = store.getState().info.tu;
+    const state = store.getState();
+    const tu = state.info.tu;
+    const status = state.info.gameStatus;
 
     if (id === p2pHelpers.getOwnId()) {
       // broadcast own death to peers
       p2pActions.p2pBroadcastOwnDeath(tuOfDeath);
 
       dispatch(infoActions.decrementLivingSnakeCount());
-    } else if (tuOfDeath <= tu) {
+    } else if (tuOfDeath <= tu || status === constants.GAME_STATUS_OUT_OF_SYNC) {
       dispatch(infoActions.decrementLivingSnakeCount());
     } else {
       dispatch(infoActions.addToDeathBuffer(tuOfDeath));
@@ -104,8 +106,11 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
 
 export const receiveGameOver = tuOfGameOver => (
   (dispatch) => {
-    const tu = store.getState().info.tu;
-    if (tuOfGameOver <= tu) {
+    const state = store.getState();
+    const tu = state.info.tu;
+    const status = state.info.gameStatus;
+
+    if (tuOfGameOver <= tu || status === constants.GAME_STATUS_OUT_OF_SYNC) {
       dispatch(infoActions.handleGameStatusChange(constants.GAME_STATUS_POSTGAME));
     } else {
       dispatch(infoActions.addToGameOverBuffer(tuOfGameOver));
