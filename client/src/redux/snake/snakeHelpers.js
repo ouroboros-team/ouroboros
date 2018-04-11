@@ -205,7 +205,7 @@ export const getWinners = () => {
   const livingSnakes = [];
 
   snakeIds.forEach((id) => {
-    if (!snakes[id].tuOfDeath) {
+    if (snakeIsAlive(id)) {
       livingSnakes.push(id);
     }
   });
