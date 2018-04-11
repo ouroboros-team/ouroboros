@@ -208,8 +208,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
           dispatch(metaActions.handleSnakeDeath(info.id, info.tu));
         } else if (data.gameOver) {
           // game over
-          const info = data.gameOver;
-          dispatch(metaActions.receiveGameOver(info.tu));
+          dispatch(metaActions.receiveGameOver(data.gameOver.tu));
         } else {
           // pregame and playing: receive snake data from peers
           dispatch(metaActions.receiveSnakeData(connection.peer, data));
