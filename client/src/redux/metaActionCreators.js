@@ -16,15 +16,21 @@ export const handleTuTick = id => (
     if (snakeHelpers.snakeIsAlive(id)) {
       // write/broadcast own snake position
       dispatch(snakeActions.writeOwnSnakePosition(id));
-      // Check for collisions, if found, check for game over
+      // check for collisions
       dispatch(snakeActions.checkForCollisions(id));
     } else {
       // if own snake is dead or have no snake,
+      // broadcast own death
+      p2pActions.p2pBroadcastOwnDeath();
       // fast-forward to match peers' TU
       dispatch(infoActions.fastForwardTu(id));
     }
     // kill snakes with too much latency
     dispatch(snakeActions.checkForLatentSnakes());
+    // process death buffer (decrement living snakes if needed)
+    dispatch(infoActions.processDeathBuffer());
+    // process game over buffer
+    dispatch(infoActions.processGameOverBuffer());
     // increment TU
     dispatch(infoActions.incrementTu());
     // get next board
@@ -35,7 +41,7 @@ export const handleTuTick = id => (
 export const receiveSnakeData = (id, data) => (
   (dispatch) => {
     const gap = snakeHelpers.getTuGap(id, data);
-    dispatch(snakeActions.handleUpdateSnakeData(id, data));
+    dispatch(snakeActions.updateSnakeData(id, data));
     dispatch(headSetActions.updateHeadSets(id, null, gap));
   }
 );
@@ -56,42 +62,55 @@ export const checkReadiness = () => (
 
 export const resetGameData = () => (
   (dispatch) => {
-    dispatch(infoActions.resetAvailableRows());
     dispatch(snakeActions.resetSnakeData());
     dispatch(boardActions.resetBoard());
     dispatch(headSetActions.resetHeadSets());
+    dispatch(infoActions.resetAvailableRows());
     dispatch(infoActions.setTu(0));
     dispatch(infoActions.resetWinner());
+    dispatch(infoActions.resetLivingSnakeCount());
+    dispatch(infoActions.resetDeathBuffer());
+    dispatch(infoActions.resetGameOverBuffer());
   }
 );
 
-export const declareWinner = peerId => (
+export const handleSnakeDeath = (id, tuOfDeath) => (
   (dispatch) => {
-    p2pActions.p2pBroadcastWinnerId(peerId);
-    const username = p2pHelpers.getUsername(peerId);
-    const result = username || constants.GAME_RESULT_TIE;
-    dispatch(infoActions.updateWinner(result));
-  }
-);
+    // do nothing if snake is already dead
+    if (!snakeHelpers.snakeIsAlive(id)) {
+      return;
+    }
 
-export const declareGameOver = currentWinnerId => (
-  (dispatch) => {
-    dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_POSTGAME));
-    if (currentWinnerId) {
-      // if we think we know the winner, wait a bit for new data from peers
-      // and then confirm that this snake is still alive
-      window.setTimeout(() => {
-        if (snakeHelpers.snakeIsAlive(currentWinnerId)) {
-          // if alive, this snake is the winner
-          dispatch(declareWinner(currentWinnerId));
-        } else {
-          // if dead, declare a tie
-          dispatch(declareWinner());
-        }
-      }, constants.GAME_OVER_DELAY * constants.LOOP_INTERVAL);
+    dispatch(snakeActions.handleSetTuOfDeath(id, tuOfDeath));
+
+    const tu = store.getState().info.tu;
+
+    if (id === p2pHelpers.getOwnId()) {
+      // broadcast own death to peers
+      p2pActions.p2pBroadcastOwnDeath(tuOfDeath);
+
+      dispatch(infoActions.decrementLivingSnakeCount());
+    } else if (tuOfDeath <= tu) {
+      dispatch(infoActions.decrementLivingSnakeCount());
     } else {
-      // if it was a tie, declare the tie
-      dispatch(declareWinner());
+      dispatch(infoActions.addToDeathBuffer(tuOfDeath));
+    }
+
+    if (snakeHelpers.checkForGameOver()) {
+      window.setTimeout(() => {
+        p2pActions.p2pBroadcastGameOver(tu);
+      }, constants.GAME_OVER_DELAY * constants.LOOP_INTERVAL);
+    }
+  }
+);
+
+export const receiveGameOver = tuOfGameOver => (
+  (dispatch) => {
+    const tu = store.getState().info.tu;
+    if (tuOfGameOver <= tu) {
+      dispatch(infoActions.handleGameStatusChange(constants.GAME_STATUS_POSTGAME));
+    } else {
+      dispatch(infoActions.addToGameOverBuffer(tuOfGameOver));
     }
   }
 );

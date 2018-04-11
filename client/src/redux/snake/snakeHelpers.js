@@ -3,7 +3,8 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import store from '../store';
 import * as constants from '../../constants';
-import * as headSetHelpers from '../headSet/headSetHelpers';
+
+import * as p2pHelpers from '../p2p/p2pHelpers';
 
 export const getSnakeLength = tu => (
   constants.INITIAL_SNAKE_LENGTH + Math.floor(tu / 10)
@@ -11,7 +12,7 @@ export const getSnakeLength = tu => (
 
 export const emptySnakeObject = (positions = {}) => ({
   direction: 'left',
-  status: constants.SNAKE_STATUS_ALIVE,
+  tuOfDeath: null,
   positions,
 });
 
@@ -57,13 +58,22 @@ export const setStartPosition = (row) => {
   };
 };
 
-export const snakeIsAlive = (id, snakesObj) => {
+export const snakeIsAlive = (id, snakesObj, currentTU) => {
   let snakes = snakesObj;
+  let tu = currentTU;
+  const state = store.getState();
+
   if (!snakes) {
-    snakes = store.getState().snakes;
+    snakes = state.snakes;
   }
 
-  return snakes[id] && snakes[id].status === constants.SNAKE_STATUS_ALIVE;
+  if (!tu) {
+    tu = state.info.tu;
+  }
+
+  // snake is alive if...
+  // snake exists, has no tuOfDeath or tuOfDeath comes after current TU
+  return snakes[id] && (!snakes[id].tuOfDeath || snakes[id].tuOfDeath > tu);
 };
 
 export const validateDirectionChange = (oldDir, newDir) => {
@@ -159,40 +169,46 @@ export const getTuGap = (id, newData) => {
   return newLastTu - oldLastTu;
 };
 
-export const getCollisionType = (sqNum, myID, peerID) => {
-  const peerSnake = store.getState().snakes[peerID];
-  const peerHeadTU = peerSnake.positions.newest;
-  const peerHeadSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerHeadTU]);
-  const peerTailTU = peerSnake.positions.oldest;
-  const peerTailSqNum = headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[peerTailTU]);
-
-  if (myID !== peerID && sqNum === peerHeadSqNum) {
-    return constants.COLLISION_TYPE_HEAD_ON_HEAD;
-  } else if (sqNum === peerTailSqNum) {
-    return constants.COLLISION_TYPE_HEAD_ON_TAIL;
-  }
-
-  return constants.COLLISION_TYPE_HEAD_ON_BODY;
-};
-
 export const checkForGameOver = () => {
   const state = store.getState();
+  const aliveCount = state.info.livingSnakeCount;
+  const snakeCount = Object.keys(state.snakes).length;
+
+  return ((snakeCount > 1 && aliveCount <= 1) ||
+    (snakeCount === 1 && aliveCount === 0));
+};
+
+export const getWinners = () => {
+  const state = store.getState();
+  const snakes = state.snakes;
   const snakeIds = Object.keys(state.snakes);
-  const snakeCount = snakeIds.length;
-  const snakesAlive = [];
+  const livingSnakeCount = state.info.livingSnakeCount;
+
+  if (livingSnakeCount === 0) {
+    // looking for last death(s)
+    let lastDeathTu = 0;
+    let lastDeathIds = [];
+
+    snakeIds.forEach((id) => {
+      if (snakes[id].tuOfDeath > lastDeathTu) {
+        lastDeathTu = snakes[id].tuOfDeath;
+        lastDeathIds = [ id ];
+      } else if (snakes[id].tuOfDeath === lastDeathTu) {
+        lastDeathIds.push(id);
+      }
+    });
+
+    return p2pHelpers.resolveIdsToUsernames(lastDeathIds);
+  }
+
+  // looking for living snake(s)
+  const livingSnakes = [];
 
   snakeIds.forEach((id) => {
-    if (snakeIsAlive(id, state.snakes)) {
-      snakesAlive.push(id);
+    if (!snakes[id].tuOfDeath) {
+      livingSnakes.push(id);
     }
   });
 
-  const aliveCount = snakesAlive.length;
-
-  if ((snakeCount > 1 && aliveCount <= 1) ||
-    (snakeCount === 1 && aliveCount === 0)) {
-    return snakesAlive[0];
-  }
-
-  return false;
+  return p2pHelpers.resolveIdsToUsernames(livingSnakes);
 };

@@ -131,13 +131,19 @@ describe('Info action creators', () => {
       expect(dispatchSpy).toHaveBeenCalledWith(headSetActions.updateHeadSets());
     });
 
-    it('calls p2pActions.p2pBroadcastSnakeData when status is playing', () => {
+    it('calls dispatch with setLivingSnakeCount when status is playing', () => {
       const status = constants.GAME_STATUS_PLAYING;
-      const spy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {
-      });
+      const state = {
+        snakes: {
+          1: true,
+          2: true,
+        },
+      };
+      const keys = Object.keys(state.snakes).length;
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
 
       infoActions.handleGameStatusChange(status)(dispatchSpy);
-      expect(spy).toHaveBeenCalled();
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.setLivingSnakeCount(keys));
     });
 
     it('calls dispatch with metaActions.resetGameData (thunk) when status is lobby', () => {
