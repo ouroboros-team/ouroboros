@@ -195,7 +195,7 @@ describe('Snake action creators', () => {
 
       state = { snakes: {} };
       state.snakes[id] = {};
-      state.snakes[id].positions = { byIndex: [ 7 ], byKey: { 7: positions } };
+      state.snakes[id].positions = { newest: 7, oldest: 7, byKey: { 7: positions } };
       state.snakes[id].direction = direction;
     });
 
@@ -248,7 +248,7 @@ describe('Snake action creators', () => {
 
       state = { snakes: {} };
       state.snakes[id] = {};
-      state.snakes[id].positions = { byIndex: [ tu ], byKey: {} };
+      state.snakes[id].positions = { newest: tu, oldest: tu, byKey: {} };
       state.snakes[id].positions.byKey[tu] = positions;
       state.snakes[id].direction = direction;
     });
@@ -287,19 +287,22 @@ describe('Snake action creators', () => {
         snakes: {
           knjlegr: {
             positions: {
-              byIndex: [ tu ],
+              oldest: tu,
+              newest: tu,
               byKey: {},
             },
           },
           vinadsnv: {
             positions: {
-              byIndex: [ tu ],
+              oldest: tu,
+              newest: tu,
               byKey: {},
             },
           },
           iugryea: {
             positions: {
-              byIndex: [ tu - (constants.LATENT_SNAKE_TOLERANCE + 1) ],
+              oldest: tu,
+              newest: tu,
               byKey: {},
             },
           },
@@ -331,7 +334,7 @@ describe('Snake action creators', () => {
       const spy = jest.spyOn(p2pActions, 'p2pKillPeerSnake').mockImplementation(() => {});
 
       const latentCount = Object.keys(state.snakes).reduce((count, id) => {
-        if (state.info.tu - state.snakes[id].positions.byIndex[0] > constants.LATENT_SNAKE_TOLERANCE){
+        if (state.info.tu - state.snakes[id].positions.newest > constants.LATENT_SNAKE_TOLERANCE){
           return count + 1;
         }
         return count;

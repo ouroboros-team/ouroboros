@@ -21,16 +21,18 @@ export const snakeDataForBroadcast = () => {
   const id = state.p2p.id;
   const snakeClone = cloneDeep(state.snakes[id]);
 
-  // if too long, truncate byIndex list
-  if (snakeClone.positions.byIndex.length > constants.P2P_TUS) {
-    snakeClone.positions.byIndex.length = constants.P2P_TUS;
-
+  if (snakeClone.positions.newest - snakeClone.positions.newest >= constants.P2P_TUS) {
     const truncByKey = {};
 
     // populate truncated byKey list
-    snakeClone.positions.byIndex.forEach((tu) => {
+    let counter = 0;
+    let tu = snakeClone.positions.newest - counter;
+
+    while (snakeClone.positions.byKey[tu] && counter < constants.P2P_TUS) {
       truncByKey[tu] = snakeClone.positions.byKey[tu];
-    });
+      counter -= 1;
+      tu = snakeClone.positions.newest - counter;
+    }
 
     // overwrite byKey with truncated list
     snakeClone.positions.byKey = truncByKey;
@@ -48,10 +50,10 @@ export const setStartPosition = (row) => {
     '-2': { row, column: randomColumn + 2 },
     '-3': { row, column: randomColumn + 3 },
   };
-  const array = [ 0, -1, -2, -3 ];
 
   return {
-    byIndex: array,
+    newest: 0,
+    oldest: -3,
     byKey: hash,
   };
 };
@@ -130,27 +132,27 @@ export const updateSnakeDataMutate = (newSnake, data) => {
 
   const oldPositions = newSnake.positions;
   const newPositions = data.positions;
-  const oldLastTu = oldPositions.byIndex[0];
-  const newLastTu = newPositions.byIndex[0];
+  const oldLastTu = oldPositions.newest;
+  const newLastTu = newPositions.newest;
 
   const keepCount = getSnakeLength(newLastTu) + constants.HISTORY_LENGTH;
-  let gap = newLastTu - oldLastTu;
+  const gap = newLastTu - oldLastTu;
   let key;
-  let toRemove;
+  let i = 1;
 
-  while (gap > 0) {
-    key = newLastTu - (gap - 1);
+  while (i <= gap) {
+    key = oldLastTu + i;
     // add new positions to old ones
     oldPositions.byKey[key] = newPositions.byKey[key];
-    oldPositions.byIndex.unshift(key);
+    oldPositions.newest = key;
 
     // purge old data
-    if (oldPositions.byIndex.length > keepCount) {
-      toRemove = oldPositions.byIndex.pop();
-      delete oldPositions.byKey[toRemove];
+    if (oldPositions.newest - oldPositions.oldest > keepCount) {
+      delete oldPositions.byKey[oldPositions.oldest];
+      oldPositions.oldest += 1;
     }
 
-    gap -= 1;
+    i += 1;
   }
 };
 
@@ -161,8 +163,8 @@ export const getTuGap = (id, newData) => {
     return false;
   }
 
-  const oldLastTu = oldSnake.positions.byIndex[0];
-  const newLastTu = newData.positions.byIndex[0];
+  const oldLastTu = oldSnake.positions.newest;
+  const newLastTu = newData.positions.newest;
 
   return newLastTu - oldLastTu;
 };
