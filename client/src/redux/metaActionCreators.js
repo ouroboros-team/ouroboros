@@ -19,11 +19,8 @@ export const handleTuTick = id => (
       // check for collisions
       dispatch(snakeActions.checkForCollisions(id));
     } else {
-      // if own snake is dead or have no snake,
-      // broadcast own death
+      // if own snake is dead, broadcast own death
       p2pActions.p2pBroadcastOwnDeath();
-      // fast-forward to match peers' TU
-      dispatch(infoActions.fastForwardTu(id));
     }
     // kill snakes with too much latency
     dispatch(snakeActions.checkForLatentSnakes());
@@ -66,7 +63,7 @@ export const resetGameData = () => (
     dispatch(boardActions.resetBoard());
     dispatch(headSetActions.resetHeadSets());
     dispatch(infoActions.resetAvailableRows());
-    dispatch(infoActions.setTu(0));
+    dispatch(infoActions.resetTu());
     dispatch(infoActions.resetWinner());
     dispatch(infoActions.resetLivingSnakeCount());
     dispatch(infoActions.resetDeathBuffer());
@@ -83,14 +80,16 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
 
     dispatch(snakeActions.setTuOfDeath(id, tuOfDeath));
 
-    const tu = store.getState().info.tu;
+    const state = store.getState();
+    const tu = state.info.tu;
+    const status = state.info.gameStatus;
 
     if (id === p2pHelpers.getOwnId()) {
       // broadcast own death to peers
       p2pActions.p2pBroadcastOwnDeath(tuOfDeath);
 
       dispatch(infoActions.decrementLivingSnakeCount());
-    } else if (tuOfDeath <= tu) {
+    } else if (tuOfDeath <= tu || status === constants.GAME_STATUS_OUT_OF_SYNC) {
       dispatch(infoActions.decrementLivingSnakeCount());
     } else {
       dispatch(infoActions.addToDeathBuffer(tuOfDeath));
@@ -107,8 +106,11 @@ export const handleSnakeDeath = (id, tuOfDeath) => (
 
 export const receiveGameOver = tuOfGameOver => (
   (dispatch) => {
-    const tu = store.getState().info.tu;
-    if (tuOfGameOver <= tu) {
+    const state = store.getState();
+    const tu = state.info.tu;
+    const status = state.info.gameStatus;
+
+    if (tuOfGameOver <= tu || status === constants.GAME_STATUS_OUT_OF_SYNC) {
       dispatch(infoActions.handleGameStatusChange(constants.GAME_STATUS_POSTGAME));
     } else {
       dispatch(infoActions.addToGameOverBuffer(tuOfGameOver));

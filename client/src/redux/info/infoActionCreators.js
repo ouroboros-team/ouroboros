@@ -11,9 +11,8 @@ export const incrementTu = () => ({
   type: actionTypes.INCREMENT_TU,
 });
 
-export const setTu = tu => ({
-  tu,
-  type: actionTypes.SET_TU,
+export const resetTu = () => ({
+  type: actionTypes.RESET_TU,
 });
 
 export const updateAvailableRows = availableRows => ({
@@ -86,57 +85,44 @@ export const getAvailableRow = () => (
 
 export const handleGameStatusChange = newStatus => (
   (dispatch) => {
-    dispatch(updateGameStatus(newStatus));
-
-    switch (newStatus) {
-      case constants.GAME_STATUS_READY_TO_PLAY: {
-        dispatch(headSetActions.updateHeadSets());
-        break;
-      }
-      case constants.GAME_STATUS_PLAYING: {
-        // set number of living snakes
-        dispatch(setLivingSnakeCount(Object.keys(store.getState().snakes).length));
-        break;
-      }
-      case constants.GAME_STATUS_LOBBY: {
-        dispatch(metaActions.resetGameData());
-        break;
-      }
-      case constants.GAME_STATUS_POSTGAME: {
-        dispatch(updateWinner(snakeHelpers.getWinners()));
-        break;
-      }
-      // case constants.GAME_STATUS_PREGAME:
-      default: {
-        break;
-      }
-    }
-  }
-);
-
-export const fastForwardTu = id => (
-  (dispatch) => {
     const state = store.getState();
-    const snakes = state.snakes;
-    const snakeIds = Object.keys(snakes);
-    const oldTu = state.info.tu;
-    const myId = id || state.p2p.id;
-    let newTu;
+    const oldStatus = state.info.gameStatus;
 
-    // relying on snakeIds[0] or snakeIds[1] to be sufficiently up to date
-    if (snakeIds[0] !== myId) {
-      newTu = snakes[snakeIds[0]].positions.newest;
+    // do nothing if new status is same as old status
+    if (oldStatus === newStatus) {
+      return;
+    }
+
+    // only change game status when in proper sequence,
+    // otherwise set game status to out of sync
+    if (newStatus === constants.GAME_STATUS_LOBBY &&
+      (oldStatus === constants.GAME_STATUS_POSTGAME || oldStatus === constants.GAME_STATUS_OUT_OF_SYNC)) {
+      dispatch(updateGameStatus(newStatus));
+      dispatch(metaActions.resetGameData());
+    } else if (newStatus === constants.GAME_STATUS_PREGAME &&
+      oldStatus === constants.GAME_STATUS_LOBBY) {
+      dispatch(updateGameStatus(newStatus));
+    } else if (newStatus === constants.GAME_STATUS_READY_TO_PLAY &&
+      oldStatus === constants.GAME_STATUS_PREGAME) {
+      dispatch(updateGameStatus(newStatus));
+      dispatch(headSetActions.updateHeadSets());
+    } else if (newStatus === constants.GAME_STATUS_PLAYING &&
+      oldStatus === constants.GAME_STATUS_READY_TO_PLAY) {
+      dispatch(updateGameStatus(newStatus));
+      dispatch(setLivingSnakeCount(Object.keys(state.snakes).length));
+    } else if (newStatus === constants.GAME_STATUS_POSTGAME) {
+      let winners;
+      if (oldStatus !== constants.GAME_STATUS_PLAYING) {
+        // no winner will be given in postgame if you are out of sync
+        winners = constants.GAME_STATUS_OUT_OF_SYNC;
+      } else {
+        winners = snakeHelpers.getWinners();
+      }
+      dispatch(updateGameStatus(newStatus));
+      dispatch(updateWinner(winners));
     } else {
-      newTu = snakes[snakeIds[1]].positions.newest;
+      dispatch(updateGameStatus(constants.GAME_STATUS_OUT_OF_SYNC));
     }
-
-    if (newTu - oldTu > 5) {
-      // fast-forward TU
-      dispatch(setTu(newTu));
-      return newTu;
-    }
-
-    return oldTu;
   }
 );
 

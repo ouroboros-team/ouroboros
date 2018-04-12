@@ -6,6 +6,7 @@ import Loop from './Loop';
 import GameBoard from './GameBoard';
 import PlayerList from './PlayerList';
 import Lobby from './Lobby';
+import OutOfSync from './OutOfSync';
 import Pregame from './Pregame';
 import Postgame from './Postgame';
 
@@ -31,6 +32,12 @@ const Game = (props) => {
         <Loop>
           <GameBoard />
         </Loop>
+      );
+      break;
+    }
+    case constants.GAME_STATUS_OUT_OF_SYNC: {
+      display = (
+        <OutOfSync />
       );
       break;
     }

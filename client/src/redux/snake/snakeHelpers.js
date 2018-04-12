@@ -62,6 +62,7 @@ export const snakeIsAlive = (id, snakesObj, currentTU) => {
   let snakes = snakesObj;
   let tu = currentTU;
   const state = store.getState();
+  const status = state.info.gameStatus;
 
   if (!snakes) {
     snakes = state.snakes;
@@ -69,6 +70,11 @@ export const snakeIsAlive = (id, snakesObj, currentTU) => {
 
   if (!tu) {
     tu = state.info.tu;
+  }
+
+  // if out of sync, ignore relationship to local tu
+  if (status === constants.GAME_STATUS_OUT_OF_SYNC) {
+    return snakes[id] && snakes[id].tuOfDeath === null;
   }
 
   // snake is alive if...
@@ -205,7 +211,7 @@ export const getWinners = () => {
   const livingSnakes = [];
 
   snakeIds.forEach((id) => {
-    if (!snakes[id].tuOfDeath) {
+    if (snakeIsAlive(id)) {
       livingSnakes.push(id);
     }
   });
