@@ -38,7 +38,7 @@ export const aggregateOwnSnake = (mostRecentTu) => {
   let i = mostRecentTu - (length - 1);
 
   while (i <= mostRecentTu && snake.positions.byKey[i]) {
-    headSetHelpers.addCoordinatesMutate(aggregate, snake.positions.byKey[i], snake, ownId);
+    headSetHelpers.addCoordinatesMutate(aggregate, snake.positions.byKey[i], ownId, snake.styleId);
     i += 1;
   }
 
@@ -83,7 +83,7 @@ export const buildNextBoard = () => {
         // add next position to newBoard if it is within range
         // (based on target TU and snake length)
         if (mostRecentTu <= tu && mostRecentTu > tu - length) {
-          headSetHelpers.addCoordinatesMutate(newBoard, next, snake, id);
+          headSetHelpers.addCoordinatesMutate(newBoard, next, id, snake.styleId);
         }
       }
     }

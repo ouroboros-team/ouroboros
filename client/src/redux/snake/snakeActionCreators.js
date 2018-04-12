@@ -83,7 +83,8 @@ export const writeOwnSnakePosition = id => (
 
 export const checkForCollisions = id => (
   (dispatch) => {
-    const ownSnake = store.getState().snakes[id];
+    const snakes = store.getState().snakes;
+    const ownSnake = snakes[id];
     const lastTu = ownSnake.positions.newest;
 
     let ownHead;
@@ -112,7 +113,7 @@ export const checkForCollisions = id => (
           // then tell peers to patch this head set to make sure
           // that peer snake was not overwritten by your dead snake
           // (leaving a gap in the snake's body)
-          const peerSnake = board[squareNumber].snake;
+          const peerSnake = snakes[board[squareNumber].id];
           let tu = peerSnake.positions.newest;
           while (peerSnake.positions.byKey[tu] && headSetHelpers.coordsToSquareNumber(peerSnake.positions.byKey[tu]) !== squareNumber) {
             tu -= 1;

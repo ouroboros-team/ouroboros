@@ -1,8 +1,7 @@
 import * as actionTypes from '../actionTypes';
 
-export const updateHeadSets = (id, snake, gap) => ({
+export const updateHeadSets = (id, gap) => ({
   id, // if present, update for only this snake; if absent, update all
-  snake,
   gap,
   type: actionTypes.UPDATE_HEAD_SETS,
 });

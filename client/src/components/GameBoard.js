@@ -13,13 +13,13 @@ const GameBoard = (props) => {
   const statuses = {};
 
   for (let n = 0; n < GRID_SIZE * GRID_SIZE; n++) {
-    if (props.board[n] && props.board[n].snake) {
+    if (props.board[n] && props.board[n].id) {
       // memoize snake statuses
       if (!statuses[props.board[n].id]) {
         statuses[props.board[n].id] = snakeIsAlive(props.board[n].id) ? 'alive' : 'dead';
       }
       status = statuses[props.board[n].id];
-      styleId = props.board[n].snake.styleId;
+      styleId = props.board[n].styleId;
     } else {
       status = 'empty';
       styleId = undefined;
