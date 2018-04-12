@@ -1,7 +1,7 @@
 import React from 'react';
 import FilterLink from './FilterLink';
 
-import logo from '../assets/images/logo.png';
+import logo from '../assets/images/logo.svg';
 
 const Header = () => (
   <header>

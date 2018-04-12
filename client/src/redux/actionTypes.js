@@ -10,7 +10,7 @@ export const RESET_BOARD = 'RESET_BOARD';
 
 // info
 export const INCREMENT_TU = 'INCREMENT_TU';
-export const SET_TU = 'SET_TU'; // for resetting and fast-forwarding
+export const RESET_TU = 'RESET_TU';
 export const UPDATE_GAME_STATUS = 'UPDATE_GAME_STATUS';
 export const UPDATE_AVAILABLE_ROWS = 'UPDATE_AVAILABLE_ROWS';
 export const RESET_AVAILABLE_ROWS = 'RESET_AVAILABLE_ROWS';

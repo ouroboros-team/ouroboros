@@ -1,9 +1,13 @@
 import store from '../redux/store';
+
 import * as actionTypes from '../redux/actionTypes';
+
 import * as headSetActions from '../redux/headSet/headSetActionCreators';
 import * as infoActions from '../redux/info/infoActionCreators';
 import * as metaActions from '../redux/metaActionCreators';
-import * as p2pActions from '../redux/p2p/p2pActionCreators';
+
+import * as snakeHelpers from '../redux/snake/snakeHelpers';
+
 import * as constants from '../constants';
 
 describe('Info action creators', () => {
@@ -12,12 +16,10 @@ describe('Info action creators', () => {
     expect(obj).toEqual({ type: actionTypes.INCREMENT_TU });
   });
 
-  it('setTu returns expected object', () => {
-    const tu = 23;
-    const obj = infoActions.setTu(tu);
+  it('resetTu returns expected object', () => {
+    const obj = infoActions.resetTu();
     expect(obj).toEqual({
-      tu,
-      type: actionTypes.SET_TU,
+      type: actionTypes.RESET_TU,
     });
   });
 
@@ -77,6 +79,7 @@ describe('Info action creators', () => {
 
     afterEach(() => {
       jest.clearAllMocks();
+      jest.resetAllMocks();
     });
 
     it('returns a function', () => {
@@ -94,38 +97,174 @@ describe('Info action creators', () => {
     });
 
     it('generates a row that is >= 0 and < GRID_SIZE', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
+
       const row = infoActions.getAvailableRow()(dispatchSpy);
       const result = row >= 0 && row < constants.GRID_SIZE;
       expect(result).toBe(true);
     });
 
     it('generates a row that is in info.availableRows', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
+
       const row = infoActions.getAvailableRow()(dispatchSpy);
       expect(initialState.info.availableRows.includes(row)).toBe(true);
     });
   });
 
   describe('handleGameStatusChange thunk', () => {
-    const dispatchSpy = jest.fn();
+    let dispatchSpy;
+    let state;
+    const tu = 17;
+    const dummyStatus = 'lkadjn';
+
+    beforeEach(() => {
+      dispatchSpy = jest.fn();
+      state = { info: { tu } };
+    });
 
     afterEach(() => {
       jest.clearAllMocks();
+      jest.resetAllMocks();
     });
 
     it('returns a function', () => {
       expect(typeof infoActions.handleGameStatusChange()).toBe('function');
     });
 
-    it('calls dispatch with updateGameStatus with passed status as an argument', () => {
-      const status = 'lkadjn';
+    it('does nothing if passed status is same as previous status', () => {
+      state.info.gameStatus = dummyStatus;
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+
+      infoActions.handleGameStatusChange(dummyStatus)(dispatchSpy);
+      expect(dispatchSpy).not.toHaveBeenCalled();
+      expect(dispatchSpy).not.toHaveBeenCalled();
+    });
+
+    it('calls dispatch with updateGameStatus with out-of-sync as an argument as default behavior', () => {
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+
+      infoActions.handleGameStatusChange(dummyStatus)(dispatchSpy);
+      expect(dispatchSpy).toHaveBeenCalled();
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(constants.GAME_STATUS_OUT_OF_SYNC));
+    });
+
+    // lobby
+    it('updates game status to lobby if previous status was postgame', () => {
+      const status = constants.GAME_STATUS_LOBBY;
+      state.info.gameStatus = constants.GAME_STATUS_POSTGAME;
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
 
       infoActions.handleGameStatusChange(status)(dispatchSpy);
       expect(dispatchSpy).toHaveBeenCalled();
       expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(status));
     });
 
+    it('updates game status to lobby if previous status was out-of-sync', () => {
+      const status = constants.GAME_STATUS_LOBBY;
+      state.info.gameStatus = constants.GAME_STATUS_OUT_OF_SYNC;
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+
+      infoActions.handleGameStatusChange(status)(dispatchSpy);
+      expect(dispatchSpy).toHaveBeenCalled();
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(status));
+    });
+
+    it('does not update game status to lobby if previous status was not postgame or out-of-sync', () => {
+      state.info.gameStatus = dummyStatus;
+      const status = constants.GAME_STATUS_LOBBY;
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+
+      infoActions.handleGameStatusChange(status)(dispatchSpy);
+      expect(dispatchSpy).not.toHaveBeenCalledWith(infoActions.updateGameStatus(status));
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(constants.GAME_STATUS_OUT_OF_SYNC));
+    });
+
+    // pregame
+    it('updates game status to pregame if previous status was lobby', () => {
+      const status = constants.GAME_STATUS_PREGAME;
+      state.info.gameStatus = constants.GAME_STATUS_LOBBY;
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+
+      infoActions.handleGameStatusChange(status)(dispatchSpy);
+      expect(dispatchSpy).toHaveBeenCalled();
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(status));
+    });
+
+    it('does not update game status to pregame if previous status was not lobby', () => {
+      const status = constants.GAME_STATUS_PREGAME;
+      state.info.gameStatus = dummyStatus;
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+
+      infoActions.handleGameStatusChange(status)(dispatchSpy);
+      expect(dispatchSpy).not.toHaveBeenCalledWith(infoActions.updateGameStatus(status));
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(constants.GAME_STATUS_OUT_OF_SYNC));
+    });
+
+    // ready-to-play
+    it('updates game status to ready-to-play if previous status was pregame', () => {
+      const status = constants.GAME_STATUS_READY_TO_PLAY;
+      state.info.gameStatus = constants.GAME_STATUS_PREGAME;
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+
+      infoActions.handleGameStatusChange(status)(dispatchSpy);
+      expect(dispatchSpy).toHaveBeenCalled();
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(status));
+    });
+
+    it('does not update game status to ready-to-play if previous status was not pregame', () => {
+      const status = constants.GAME_STATUS_READY_TO_PLAY;
+      state.info.gameStatus = dummyStatus;
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+
+      infoActions.handleGameStatusChange(status)(dispatchSpy);
+      expect(dispatchSpy).not.toHaveBeenCalledWith(infoActions.updateGameStatus(status));
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(constants.GAME_STATUS_OUT_OF_SYNC));
+    });
+
+    // playing
+    it('updates game status to playing if previous status was ready-to-play', () => {
+      const status = constants.GAME_STATUS_PLAYING;
+      state.info.gameStatus = constants.GAME_STATUS_READY_TO_PLAY;
+      state.snakes = { afephrig: true };
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      const livingSpy = jest.spyOn(infoActions, 'setLivingSnakeCount').mockImplementation(() => {});
+
+      infoActions.handleGameStatusChange(status)(dispatchSpy);
+      expect(dispatchSpy).toHaveBeenCalled();
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(status));
+
+      livingSpy.mockRestore();
+    });
+
+    it('does not update game status to playing if previous status was not ready-to-play', () => {
+      const status = constants.GAME_STATUS_PLAYING;
+      state.info.gameStatus = dummyStatus;
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+
+      infoActions.handleGameStatusChange(status)(dispatchSpy);
+      expect(dispatchSpy).not.toHaveBeenCalledWith(infoActions.updateGameStatus(status));
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(constants.GAME_STATUS_OUT_OF_SYNC));
+    });
+
+    // postgame
+    it('updates game status to postgame regardles of previous status', () => {
+      const status = constants.GAME_STATUS_POSTGAME;
+      state.info.gameStatus = dummyStatus;
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      jest.spyOn(infoActions, 'updateWinner').mockImplementation(() => {});
+      jest.spyOn(snakeHelpers, 'getWinners').mockImplementation(() => {});
+
+      infoActions.handleGameStatusChange(status)(dispatchSpy);
+      expect(dispatchSpy).toHaveBeenCalled();
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(status));
+    });
+
+    // secondary actions
     it('calls dispatch with headSetActions.updateHeadSets when status is ready-to-play', () => {
       const status = constants.GAME_STATUS_READY_TO_PLAY;
+      state.info.gameStatus = constants.GAME_STATUS_PREGAME;
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
 
       infoActions.handleGameStatusChange(status)(dispatchSpy);
       expect(dispatchSpy).toHaveBeenCalledWith(headSetActions.updateHeadSets());
@@ -133,103 +272,29 @@ describe('Info action creators', () => {
 
     it('calls dispatch with setLivingSnakeCount when status is playing', () => {
       const status = constants.GAME_STATUS_PLAYING;
-      const state = {
-        snakes: {
-          1: true,
-          2: true,
-        },
-      };
+      state.info.gameStatus = constants.GAME_STATUS_READY_TO_PLAY;
+      state.snakes = { afephrig: true };
       const keys = Object.keys(state.snakes).length;
       jest.spyOn(store, 'getState').mockImplementation(() => (state));
 
+      const items = [
+        [ infoActions.updateGameStatus(status) ],
+        [ infoActions.setLivingSnakeCount(keys) ],
+      ];
+
       infoActions.handleGameStatusChange(status)(dispatchSpy);
-      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.setLivingSnakeCount(keys));
+      expect(dispatchSpy.mock.calls).toEqual(items);
     });
 
     it('calls dispatch with metaActions.resetGameData (thunk) when status is lobby', () => {
       const status = constants.GAME_STATUS_LOBBY;
-      const spy = jest.spyOn(metaActions, 'resetGameData').mockImplementation(() => {
-      });
+      state.info.gameStatus = constants.GAME_STATUS_POSTGAME;
+      const spy = jest.spyOn(metaActions, 'resetGameData').mockImplementation(() => {});
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
 
       infoActions.handleGameStatusChange(status)(dispatchSpy);
       expect(dispatchSpy).toHaveBeenCalledWith(metaActions.resetGameData());
       expect(spy).toHaveBeenCalled();
     });
-  });
-
-  describe('fastForwardTu thunk', () => {
-    let initialState;
-    const id = 'alkenrfg874';
-    const dispatchSpy = jest.fn();
-
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-
-    it('returns a function', () => {
-      expect(typeof infoActions.fastForwardTu()).toBe('function');
-    });
-
-    it('calls dispatch with setTu with newTu to fast-forward TU when peer TUs are ahead significantly', () => {
-      initialState = {
-        info: { tu: 5 },
-        snakes: {
-          ebjkrh: {
-            positions: { newest: 20 },
-          },
-          lakjn: {
-            positions: { newest: 21 },
-          },
-        },
-      };
-
-      const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
-
-      const newTu = infoActions.fastForwardTu(id)(dispatchSpy);
-      expect(getStateSpy).toHaveBeenCalledTimes(1);
-      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.setTu(newTu));
-    });
-
-    it('takes no action when peer TUs are close', () => {
-      initialState = {
-        info: { tu: 5 },
-        snakes: {
-          ebjkrh: {
-            positions: { newest: 6 },
-          },
-          lakjn: {
-            positions: { newest: 4 },
-          },
-        },
-      };
-
-      const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
-
-      const newTu = infoActions.fastForwardTu(id)(dispatchSpy);
-      expect(getStateSpy).toHaveBeenCalledTimes(1);
-      expect(dispatchSpy).not.toHaveBeenCalledWith(infoActions.setTu(newTu));
-      expect(newTu).toBe(initialState.info.tu);
-    });
-
-    it('checks another peer\'s TU if first peer checked is self', () => {
-      initialState = {
-        info: { tu: 5 },
-        snakes: {
-          alkenrfg874: {
-            positions: { newest: 5 },
-          },
-          lakjn: {
-            positions: { newest: 21 },
-          },
-        },
-      };
-
-      const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
-
-      const newTu = infoActions.fastForwardTu(id)(dispatchSpy);
-      expect(getStateSpy).toHaveBeenCalledTimes(1);
-      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.setTu(newTu));
-    });
-
   });
 });

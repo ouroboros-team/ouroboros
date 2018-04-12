@@ -161,7 +161,7 @@ export const p2pSetCloseListener = (connection, dispatch) => {
     dispatch(metaActions.checkReadiness());
     const gameStatus = store.getState().info.gameStatus;
     if (gameStatus === constants.GAME_STATUS_PLAYING) {
-      dispatch(snakeActions.setTuOfDeath(connection.peer, constants.DISCONNECTION));
+      dispatch(metaActions.handleSnakeDeath(connection.peer, constants.DISCONNECTION));
     } else if (gameStatus === constants.GAME_STATUS_READY_TO_PLAY) {
       dispatch(snakeActions.removeSnake(connection.peer));
       dispatch(headSetActions.resetHeadSets());
@@ -199,6 +199,9 @@ export const p2pSetDataListener = (connection, dispatch) => {
         } else if (data.kill) {
           // snake killed for too much latency
           dispatch(metaActions.handleSnakeDeath(data.kill, constants.LATENCY));
+          if (data.kill === p2pHelpers.getOwnId()) {
+            dispatch(infoActions.handleGameStatusChange(constants.GAME_STATUS_OUT_OF_SYNC));
+          }
         } else if (data.patch) {
           const info = data.patch;
           dispatch(headSetActions.patchHeadSet(info.tu, info.sqNum, info.id));

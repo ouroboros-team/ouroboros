@@ -24,13 +24,12 @@ describe('Info reducer', () => {
     expect(newState.tu).toBe(state.tu + 1);
   });
 
-  it('SET_TU sets the TU to the passed integer', () => {
+  it('RESET_TU sets the TU to 0', () => {
     const actionObj = {
-      tu: 9,
-      type: actionTypes.SET_TU,
+      type: actionTypes.RESET_TU,
     };
     const newState = infoReducer(state, actionObj);
-    expect(newState.tu).toBe(actionObj.tu);
+    expect(newState.tu).toBe(0);
   });
 
   it('UPDATE_GAME_STATUS changes the status to the passed string', () => {

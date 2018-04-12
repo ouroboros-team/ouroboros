@@ -19,9 +19,9 @@ export default function infoReducer(state = defaultState, action) {
       newState.tu += 1;
       return newState;
     }
-    case actionTypes.SET_TU: {
+    case actionTypes.RESET_TU: {
       const newState = { ...state };
-      newState.tu = action.tu;
+      newState.tu = 0;
       return newState;
     }
     case actionTypes.UPDATE_GAME_STATUS: {
@@ -45,6 +45,11 @@ export default function infoReducer(state = defaultState, action) {
       return newState;
     }
     case actionTypes.UPDATE_WINNER: {
+      // don't overwrite if no change
+      if (state.winner === action.winner) {
+        return state;
+      }
+
       const newState = { ...state };
       newState.winner = action.winner;
       return newState;

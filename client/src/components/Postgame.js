@@ -23,11 +23,11 @@ export default class Postgame extends React.Component {
     }
 
     switch (winner) {
+      case constants.GAME_STATUS_OUT_OF_SYNC: {
+        return '';
+      }
       case '': {
         return 'Determining winner...';
-      }
-      case constants.GAME_RESULT_TIE: {
-        return 'Tie game!';
       }
       default: {
         return `${winner} won the game!`;
