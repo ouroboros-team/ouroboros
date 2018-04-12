@@ -71,7 +71,7 @@ export default class Lobby extends React.Component {
 
     return (
       <div>
-        <h1>Welcome</h1>
+        <h1>Play Ouroboros</h1>
         {content}
       </div>
     );
