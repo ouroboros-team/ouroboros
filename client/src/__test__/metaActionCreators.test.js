@@ -44,14 +44,13 @@ describe('Meta action creators', () => {
       expect(collisionsSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('calls dispatch with infoActions.fastForwardTu if snake is dead', () => {
+    it('calls p2pActions.p2pBroadcastOwnDeath if snake is dead', () => {
       jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (false));
-      jest.spyOn(p2pActions, 'p2pBroadcastOwnDeath').mockImplementation(() => {});
-      jest.spyOn(infoActions, 'fastForwardTu').mockImplementation(() => {});
+      const spy = jest.spyOn(p2pActions, 'p2pBroadcastOwnDeath').mockImplementation(() => {});
 
       metaActions.handleTuTick(id)(dispatchSpy);
 
-      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.fastForwardTu(id));
+      expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('calls snakeActions.checkForLatentSnakes', () => {
@@ -98,8 +97,7 @@ describe('Meta action creators', () => {
     });
 
     it('calls snakeHelpers.getTuGap with passed id and data', () => {
-      const spy = jest.spyOn(snakeHelpers, 'getTuGap').mockImplementation(() => {
-      });
+      const spy = jest.spyOn(snakeHelpers, 'getTuGap').mockImplementation(() => {});
 
       metaActions.receiveSnakeData(id, data)(dispatchSpy);
 
@@ -118,8 +116,7 @@ describe('Meta action creators', () => {
     it('calls dispatch with headSetActions.updateHeadSets with passed id and gap', () => {
       const gap = 5;
       jest.spyOn(snakeHelpers, 'getTuGap').mockImplementation(() => (gap));
-      const spy = jest.spyOn(headSetActions, 'updateHeadSets').mockImplementation(() => {
-      });
+      const spy = jest.spyOn(headSetActions, 'updateHeadSets').mockImplementation(() => {});
 
       metaActions.receiveSnakeData(id, data)(dispatchSpy);
       expect(dispatchSpy).toHaveBeenCalledWith(headSetActions.updateHeadSets(id, null, gap));
@@ -191,8 +188,7 @@ describe('Meta action creators', () => {
       };
 
       const getStateSpy = jest.spyOn(store, 'getState').mockImplementation(() => (initialState));
-      const spy = jest.spyOn(p2pActions, 'p2pBroadcastGameStatus').mockImplementation(() => {
-      });
+      const spy = jest.spyOn(p2pActions, 'p2pBroadcastGameStatus').mockImplementation(() => {});
 
       metaActions.checkReadiness()(dispatchSpy);
 
@@ -215,8 +211,7 @@ describe('Meta action creators', () => {
     });
 
     it('calls dispatch with infoActions.resetAvailableRows', () => {
-      const spy = jest.spyOn(infoActions, 'resetAvailableRows').mockImplementation(() => {
-      });
+      const spy = jest.spyOn(infoActions, 'resetAvailableRows').mockImplementation(() => {});
 
       metaActions.resetGameData()(dispatchSpy);
 
@@ -225,8 +220,7 @@ describe('Meta action creators', () => {
     });
 
     it('calls dispatch with snakeActions.resetSnakeData', () => {
-      const spy = jest.spyOn(snakeActions, 'resetSnakeData').mockImplementation(() => {
-      });
+      const spy = jest.spyOn(snakeActions, 'resetSnakeData').mockImplementation(() => {});
 
       metaActions.resetGameData()(dispatchSpy);
 
@@ -235,8 +229,7 @@ describe('Meta action creators', () => {
     });
 
     it('calls dispatch with boardActions.resetBoard', () => {
-      const spy = jest.spyOn(boardActions, 'resetBoard').mockImplementation(() => {
-      });
+      const spy = jest.spyOn(boardActions, 'resetBoard').mockImplementation(() => {});
 
       metaActions.resetGameData()(dispatchSpy);
 
@@ -245,8 +238,7 @@ describe('Meta action creators', () => {
     });
 
     it('calls dispatch with headSetActions.resetHeadSets', () => {
-      const spy = jest.spyOn(headSetActions, 'resetHeadSets').mockImplementation(() => {
-      });
+      const spy = jest.spyOn(headSetActions, 'resetHeadSets').mockImplementation(() => {});
 
       metaActions.resetGameData()(dispatchSpy);
 
@@ -254,19 +246,17 @@ describe('Meta action creators', () => {
       expect(dispatchSpy).toHaveBeenCalledWith(headSetActions.resetHeadSets());
     });
 
-    it('calls dispatch with infoActions.setTu', () => {
-      const spy = jest.spyOn(infoActions, 'setTu').mockImplementation(() => {
-      });
+    it('calls dispatch with infoActions.resetTu', () => {
+      const spy = jest.spyOn(infoActions, 'resetTu').mockImplementation(() => {});
 
       metaActions.resetGameData()(dispatchSpy);
 
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.setTu(0));
+      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.resetTu());
     });
 
     it('calls dispatch with infoActions.resetWinner', () => {
-      const spy = jest.spyOn(infoActions, 'resetWinner').mockImplementation(() => {
-      });
+      const spy = jest.spyOn(infoActions, 'resetWinner').mockImplementation(() => {});
 
       metaActions.resetGameData()(dispatchSpy);
 
