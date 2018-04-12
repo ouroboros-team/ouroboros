@@ -42,7 +42,7 @@ export const receiveSnakeData = (id, data) => (
   (dispatch) => {
     const gap = snakeHelpers.getTuGap(id, data);
     dispatch(snakeActions.updateSnakeData(id, data));
-    dispatch(headSetActions.updateHeadSets(id, null, gap));
+    dispatch(headSetActions.updateHeadSets(id, gap));
   }
 );
 
