@@ -76,7 +76,7 @@ export const resetGameOverBuffer = () => ({
 
 export const getAvailableRow = () => (
   (dispatch) => {
-    const availableRows = [...store.getState().info.availableRows];
+    const availableRows = [ ...store.getState().info.availableRows ];
     const row = availableRows.pop();
     dispatch(updateAvailableRows(availableRows));
     return row;
@@ -85,7 +85,8 @@ export const getAvailableRow = () => (
 
 export const handleGameStatusChange = newStatus => (
   (dispatch) => {
-    const oldStatus = store.getState().info.gameStatus;
+    const state = store.getState();
+    const oldStatus = state.info.gameStatus;
 
     // do nothing if new status is same as old status
     if (oldStatus === newStatus) {
@@ -108,7 +109,7 @@ export const handleGameStatusChange = newStatus => (
     } else if (newStatus === constants.GAME_STATUS_PLAYING &&
       oldStatus === constants.GAME_STATUS_READY_TO_PLAY) {
       dispatch(updateGameStatus(newStatus));
-      dispatch(setLivingSnakeCount(Object.keys(store.getState().snakes).length));
+      dispatch(setLivingSnakeCount(Object.keys(state.snakes).length));
     } else if (newStatus === constants.GAME_STATUS_POSTGAME) {
       dispatch(updateGameStatus(newStatus));
       dispatch(updateWinner(snakeHelpers.getWinners()));
