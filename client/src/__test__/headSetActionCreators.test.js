@@ -4,13 +4,11 @@ import * as headSetActions from '../redux/headSet/headSetActionCreators';
 describe('Head set action creators', () => {
   it('updateHeadSets returns expected object', () => {
     const id = 'aeirgjfn5678';
-    const snake = {};
     const gap = 7;
 
-    const obj = headSetActions.updateHeadSets(id, snake, gap);
+    const obj = headSetActions.updateHeadSets(id, gap);
     expect(obj).toEqual({
       id,
-      snake,
       gap,
       type: actionTypes.UPDATE_HEAD_SETS,
     });

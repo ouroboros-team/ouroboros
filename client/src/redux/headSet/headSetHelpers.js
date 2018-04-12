@@ -11,10 +11,10 @@ export const coordsToSquareNumber = coords => (
   (coords.row * constants.GRID_SIZE) + coords.column
 );
 
-export const addCoordinatesMutate = (headSet, coords, snake, id) => {
+export const addCoordinatesMutate = (headSet, coords, id, styleId) => {
   headSet[coordsToSquareNumber(coords)] = {
-    snake,
     id,
+    styleId,
   };
 };
 
@@ -24,28 +24,23 @@ export const patchHeadSetMutate = (headSets, tu, sqNum, id) => {
     return;
   }
 
-  const snakes = store.getState().snakes;
+  const styleId = store.getState().snakes[id].styleId;
 
   if (headSets.byKey[tu][sqNum] && headSets.byKey[tu][sqNum].id !== id) {
     headSets.byKey[tu][sqNum] = {
-      snake: snakes[id],
       id,
+      styleId,
     };
   }
 };
 
-export const updateSnakeHeadSets = (headSets, id, snakeData, gap) => {
+export const updateSnakeHeadSets = (headSets, id, gap) => {
   // don't aggregate for own snake
   if (id === p2pHelpers.getOwnId()) {
     return;
   }
 
-  let snake = snakeData;
-
-  if (!snake) {
-    snake = store.getState().snakes[id];
-  }
-
+  const snake = store.getState().snakes[id];
   const mostRecentTu = snake.positions.newest;
   let tuCounter;
 
@@ -68,7 +63,7 @@ export const updateSnakeHeadSets = (headSets, id, snakeData, gap) => {
       }
     }
 
-    addCoordinatesMutate(headSets.byKey[tuCounter], snake.positions.byKey[tuCounter], snake, id);
+    addCoordinatesMutate(headSets.byKey[tuCounter], snake.positions.byKey[tuCounter], id, snake.styleId);
     tuCounter += 1;
   }
 
@@ -88,7 +83,7 @@ export const updateAllHeadSets = (headSets) => {
   const snakeIds = Object.keys(snakesObj);
 
   snakeIds.forEach((id) => {
-    updateSnakeHeadSets(headSets, id, snakesObj[id]);
+    updateSnakeHeadSets(headSets, id);
   });
 
   return headSets;
