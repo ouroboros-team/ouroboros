@@ -33,16 +33,18 @@ const Troubleshooting = () => (
         link and try again. This will renew your connection to the signaling
         server that brokers connections between peers.
       </li>
-      <li><b>My snake died for no reason</b> - You may have high latency.
-        The effect of this is that your peers do not have current information
-        about your snake and are automatically marking you as dead.
+      <li><b>My game is interrupted with the 'Out of Sync' page</b> - You may
+        have high latency with the other players, which means that your peers are
+        not getting timely updates about your snake's position. When this is the
+        case you are automatically removed from the game and sent to the 'Out of
+        Sync' page.
       </li>
       <li><b>A collision did not kill me</b> - When peer data is unavailable,
         the game will predict the positions of peer snakes based on their latest
         information. Collisions are not calculated against these predictions, so
         it will sometimes appear that you have hit another snake when you have
         only hit a prediction.  When peer data is unavailable for too long, the
-        game will automatically mark that snake as dead.
+        game will automatically remove that snake from the game.
       </li>
     </ul>
   </main>
