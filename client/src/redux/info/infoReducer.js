@@ -45,6 +45,11 @@ export default function infoReducer(state = defaultState, action) {
       return newState;
     }
     case actionTypes.UPDATE_WINNER: {
+      // don't overwrite if no change
+      if (state.winner === action.winner) {
+        return state;
+      }
+
       const newState = { ...state };
       newState.winner = action.winner;
       return newState;

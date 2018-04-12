@@ -111,8 +111,15 @@ export const handleGameStatusChange = newStatus => (
       dispatch(updateGameStatus(newStatus));
       dispatch(setLivingSnakeCount(Object.keys(state.snakes).length));
     } else if (newStatus === constants.GAME_STATUS_POSTGAME) {
+      let winners;
+      if (oldStatus !== constants.GAME_STATUS_PLAYING) {
+        // no winner will be given in postgame if you are out of sync
+        winners = constants.GAME_STATUS_OUT_OF_SYNC;
+      } else {
+        winners = snakeHelpers.getWinners();
+      }
       dispatch(updateGameStatus(newStatus));
-      dispatch(updateWinner(snakeHelpers.getWinners()));
+      dispatch(updateWinner(winners));
     } else {
       dispatch(updateGameStatus(constants.GAME_STATUS_OUT_OF_SYNC));
     }
