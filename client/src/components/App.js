@@ -10,8 +10,8 @@ import Header from './Header';
 import Game from './Game';
 import Incompatible from './Incompatible';
 import Troubleshooting from './Troubleshooting';
-
-// TODO: routes for informational screens
+import Home from './Home';
+import HowToPlay from './HowToPlay';
 
 class App extends React.Component {
   state = {
@@ -37,9 +37,11 @@ class App extends React.Component {
       <div>
         <Header />
         <Switch>
+          <Route exact path='/' component={Home} />
+          <Route exact path='/how-to-play' component={HowToPlay} />
           <Route exact path='/troubleshooting' component={Troubleshooting} />
           <Route
-            path='/:peerId?'
+            path='/play/:peerId?'
             render={({ match }) => {
               // save peerId to redux store
               if (match.params.peerId) {
