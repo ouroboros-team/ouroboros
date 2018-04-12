@@ -7,19 +7,19 @@ import * as snakeHelpers from '../snake/snakeHelpers';
 
 import * as constants from '../../constants';
 
-export const aggregateBoards = (mostRecentTu) => {
+export const aggregateBoard = (mostRecentTu) => {
   const state = store.getState();
   const headSets = state.headSets.byKey;
   const length = snakeHelpers.getSnakeLength(mostRecentTu);
-  let aggregatedBoard = {};
+  let board = {};
 
   let i = mostRecentTu - (length - 1);
   while (i <= mostRecentTu) {
-    aggregatedBoard = { ...aggregatedBoard, ...headSets[i] };
+    board = { ...board, ...headSets[i] };
     i += 1;
   }
 
-  return aggregatedBoard;
+  return board;
 };
 
 export const aggregateOwnSnake = (mostRecentTu) => {
@@ -29,7 +29,7 @@ export const aggregateOwnSnake = (mostRecentTu) => {
   const aggregate = {};
 
   // return empty object if own snake is dead
-  if (snake.tuOfDeath) {
+  if (snakeHelpers.snakeIsAlive(ownId)) {
     return aggregate;
   }
 
@@ -46,14 +46,14 @@ export const aggregateOwnSnake = (mostRecentTu) => {
 };
 
 export const getInitialBoard = () => (
-  { ...aggregateBoards(constants.INITIAL_TU), ...aggregateOwnSnake(constants.INITIAL_TU) }
+  { ...aggregateBoard(constants.INITIAL_TU), ...aggregateOwnSnake(constants.INITIAL_TU) }
 );
 
 export const buildNextBoard = () => {
   const state = store.getState();
   const tu = state.info.tu;
 
-  const newBoard = { ...aggregateBoards(tu), ...aggregateOwnSnake(tu) };
+  const newBoard = { ...aggregateBoard(tu), ...aggregateOwnSnake(tu) };
 
   const snakesObj = cloneDeep(state.snakes);
   const snakeIds = Object.keys(snakesObj);

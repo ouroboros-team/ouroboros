@@ -262,10 +262,10 @@ describe('Snake action creators', () => {
       expect(typeof snakeActions.checkForCollisions()).toBe('function');
     });
 
-    it('calls boardHelpers.aggregateBoards and boardHelpers.aggregateOwnSnake for TUs in range', () => {
+    it('calls boardHelpers.aggregateBoard and boardHelpers.aggregateOwnSnake for TUs in range', () => {
       jest.spyOn(store, 'getState').mockImplementation(() => (state));
       jest.spyOn(headSetHelpers, 'coordsToSquareNumber').mockImplementation(() => {});
-      const boardSpy = jest.spyOn(boardHelpers, 'aggregateBoards').mockImplementation(() => {});
+      const boardSpy = jest.spyOn(boardHelpers, 'aggregateBoard').mockImplementation(() => {});
       const snakeSpy = jest.spyOn(boardHelpers, 'aggregateOwnSnake').mockImplementation(() => {});
 
       snakeActions.checkForCollisions(id)(dispatchSpy);
