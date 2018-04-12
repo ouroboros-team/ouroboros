@@ -49,11 +49,15 @@ header {
       color: $darkgray;
       text-decoration: none;
 
-      &:hover {
+      &:hover, &.active {
         background-color: $white;
       }
     }
   }
+}
+
+main.container {
+  padding: 2.5rem 0 10rem 0;
 }
 
 #game {
@@ -171,6 +175,10 @@ header {
   @keyframes spin { 100% { -webkit-transform: rotate(-360deg); transform:rotate(-360deg); } }
 }
 
+img.keyboard {
+  max-width: 20rem;
+}
+
 .label {
   font-size: 11px;
   font-weight: 600;
@@ -186,4 +194,8 @@ header {
   &:disabled {
     color: $gray;
   }
+}
+
+img {
+  max-width: 100%;
 }
