@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 const FilterLink = ({ filter, children, ...other }) => (
-  <NavLink {...other} exact to={filter === 'home' ? '/' : `/${filter}`}>
+  <NavLink {...other} to={filter === 'home' ? '/' : `/${filter}`}>
     {children}
   </NavLink>
 );

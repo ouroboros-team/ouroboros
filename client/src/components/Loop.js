@@ -25,6 +25,7 @@ class Loop extends React.Component {
   }
 
   handleKeypress = (e) => {
+    e.preventDefault();
     const code = String(e.keyCode);
 
     // left: 37, up: 38, right: 39, down: 40
