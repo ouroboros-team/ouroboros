@@ -22,24 +22,25 @@ export const aggregateBoard = (mostRecentTu) => {
   return board;
 };
 
-export const aggregateOwnSnake = (mostRecentTu) => {
+export const aggregateOwnSnake = (mostRecentTu, excludeHead = false) => {
   const state = store.getState();
   const ownId = state.p2p.id;
   const snake = state.snakes[ownId];
   const aggregate = {};
 
   // return empty object if own snake is dead
-  if (snakeHelpers.snakeIsAlive(ownId)) {
+  if (!snakeHelpers.snakeIsAlive(ownId)) {
     return aggregate;
   }
 
   const length = snakeHelpers.getSnakeLength(mostRecentTu);
 
-  let i = mostRecentTu - (length - 1);
+  let tuCounter = mostRecentTu - (length - 1);
+  const lastTu = excludeHead ? mostRecentTu - 1 : mostRecentTu;
 
-  while (i <= mostRecentTu && snake.positions.byKey[i]) {
-    headSetHelpers.addCoordinatesMutate(aggregate, snake.positions.byKey[i], ownId, snake.styleId);
-    i += 1;
+  while (tuCounter <= lastTu && snake.positions.byKey[tuCounter]) {
+    headSetHelpers.addCoordinatesMutate(aggregate, snake.positions.byKey[tuCounter], ownId, snake.styleId);
+    tuCounter += 1;
   }
 
   return aggregate;

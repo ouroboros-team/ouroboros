@@ -100,7 +100,7 @@ export const checkForCollisions = id => (
       // compare own head to other snakes and rest of own body
       board = {
         ...boardHelpers.aggregateBoard(tuCounter),
-        ...boardHelpers.aggregateOwnSnake(tuCounter - 1),
+        ...boardHelpers.aggregateOwnSnake(tuCounter, true),
       };
       squareNumber = headSetHelpers.coordsToSquareNumber(ownHead);
 
