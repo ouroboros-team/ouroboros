@@ -19,10 +19,10 @@ const Header = () => (
         </div>
       </div>
       <nav className='label seven columns'>
-        <FilterLink filter='home'>Home</FilterLink>
+        <FilterLink exact filter='home'>Home</FilterLink>
         <FilterLink filter='play'>Play</FilterLink>
-        <FilterLink filter='how-to-play'>How to Play</FilterLink>
-        <FilterLink filter='troubleshooting'>Troubleshooting</FilterLink>
+        <FilterLink exact filter='how-to-play'>How to Play</FilterLink>
+        <FilterLink exact filter='troubleshooting'>Troubleshooting</FilterLink>
       </nav>
     </div>
   </header>
