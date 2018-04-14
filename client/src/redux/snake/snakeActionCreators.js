@@ -99,8 +99,8 @@ export const checkForCollisions = id => (
 
       // compare own head to other snakes and rest of own body
       board = {
-        ...boardHelpers.aggregateBoards(tuCounter),
-        ...boardHelpers.aggregateOwnSnake(tuCounter - 1),
+        ...boardHelpers.aggregateBoard(tuCounter),
+        ...boardHelpers.aggregateOwnSnake(tuCounter, true),
       };
       squareNumber = headSetHelpers.coordsToSquareNumber(ownHead);
 
@@ -139,7 +139,7 @@ export const checkForLatentSnakes = () => (
     }
 
     const snakes = state.snakes;
-    const snakeIds = Object.keys(state.snakes);
+    const snakeIds = Object.keys(snakes);
     let mostRecentTu;
 
     snakeIds.forEach((id) => {
