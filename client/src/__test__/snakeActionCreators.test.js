@@ -234,7 +234,7 @@ describe('Snake action creators', () => {
     });
   });
 
-  fdescribe('checkForCollisions thunk', () => {
+  describe('checkForCollisions thunk', () => {
     let dispatchSpy;
     let state;
     const id = 'knjerg658';
