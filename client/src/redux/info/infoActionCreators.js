@@ -133,7 +133,13 @@ export const processDeathBuffer = () => (
     const buffer = state.info.deathBuffer;
 
     if (buffer[tu]) {
-      dispatch(decrementLivingSnakeCount());
+      let n = buffer[tu];
+
+      while (n > 0) {
+        dispatch(decrementLivingSnakeCount());
+        n -= 1;
+      }
+
       dispatch(removeFromDeathBuffer(tu));
     }
   }
