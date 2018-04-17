@@ -76,7 +76,13 @@ export default function infoReducer(state = defaultState, action) {
     }
     case actionTypes.ADD_TO_DEATH_BUFFER: {
       const newState = { ...state };
-      newState.deathBuffer[action.tu] = true;
+      if (newState.deathBuffer[action.tu]) {
+        // increment
+        newState.deathBuffer[action.tu] += 1;
+      } else {
+        // initialize to 1
+        newState.deathBuffer[action.tu] = 1;
+      }
       return newState;
     }
     case actionTypes.REMOVE_FROM_DEATH_BUFFER: {

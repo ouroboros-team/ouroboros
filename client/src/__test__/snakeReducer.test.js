@@ -74,7 +74,7 @@ describe('Snake reducer', () => {
     expect(spy).toHaveBeenCalledWith(state[actionObj.id].previousDirection, actionObj.direction);
   });
 
-  fit('SET_TU_OF_DEATH sets tuOfDeath', () => {
+  it('SET_TU_OF_DEATH sets tuOfDeath', () => {
     const actionObj = {
       id,
       tuOfDeath: 7,
