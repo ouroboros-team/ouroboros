@@ -8,7 +8,8 @@ const PlayerList = (props) => {
   const peerIds = Object.keys(props.peers);
 
   peerIds.forEach((peerId) => {
-    className = `id-${props.peers[peerId].styleId}`;
+    className = `id-${props.peers[peerId].styleId} ${props.peers[peerId].status}`;
+
     if (props.peers[peerId].username) {
       name = props.peers[peerId].username;
     } else {
