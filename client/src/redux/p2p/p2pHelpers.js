@@ -1,5 +1,6 @@
 import Peer from 'peerjs';
 import store from '../store';
+import * as constants from '../../constants';
 
 export const initializeOwnPeerObject = () => {
   const host = window.location.hostname;
@@ -65,4 +66,12 @@ export const resolveIdsToUsernames = (ids) => {
 export const getPeerCount = () => {
   const peers = store.getState().p2p.peers;
   return Object.keys(peers).length;
+};
+
+export const allPeersReady = () => {
+  const peers = store.getState().p2p.peers;
+
+  return Object.keys(peers).every(id => (
+    peers[id].status === constants.PEER_STATUS_READY
+  ));
 };

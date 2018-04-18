@@ -42,7 +42,12 @@ export const snakeDataForBroadcast = () => {
 };
 
 export const setStartPosition = (row) => {
-  const randomColumn = random(0, constants.GRID_SIZE - constants.INITIAL_SNAKE_LENGTH);
+  let randomColumn = random(0, constants.GRID_SIZE - (constants.INITIAL_SNAKE_LENGTH + 1));
+
+  // start on an odd column (simplifies head-on-collision logic)
+  if (randomColumn % 2 === 0) {
+    randomColumn += 1;
+  }
 
   const hash = {
     '0': { row, column: randomColumn },

@@ -4,6 +4,7 @@ import * as constants from '../../constants';
 import * as actionTypes from '../actionTypes';
 import * as headSetActions from '../headSet/headSetActionCreators';
 import * as metaActions from '../metaActionCreators';
+import * as p2pActions from '../p2p/p2pActionCreators';
 
 import * as snakeHelpers from '../snake/snakeHelpers';
 
@@ -22,6 +23,15 @@ export const updateAvailableRows = availableRows => ({
 
 export const resetAvailableRows = () => ({
   type: actionTypes.RESET_AVAILABLE_ROWS,
+});
+
+export const updateOwnStartingRow = startingRow => ({
+  startingRow,
+  type: actionTypes.UPDATE_OWN_STARTING_ROW,
+});
+
+export const resetOwnStartingRow = () => ({
+  type: actionTypes.RESET_OWN_STARTING_ROW,
 });
 
 export const updateGameStatus = status => ({
@@ -101,13 +111,14 @@ export const handleGameStatusChange = newStatus => (
       dispatch(metaActions.resetGameData());
     } else if (newStatus === constants.GAME_STATUS_PREGAME &&
       oldStatus === constants.GAME_STATUS_LOBBY) {
+      // if ownStartingRow is not defined, broadcast starting rows for everybody
+      if (state.info.ownStartingRow === null) {
+        dispatch(p2pActions.p2pBroadcastStartingRows());
+      }
       dispatch(updateGameStatus(newStatus));
-    } else if (newStatus === constants.GAME_STATUS_READY_TO_PLAY &&
-      oldStatus === constants.GAME_STATUS_PREGAME) {
-      dispatch(updateGameStatus(newStatus));
-      dispatch(headSetActions.updateHeadSets());
     } else if (newStatus === constants.GAME_STATUS_PLAYING &&
-      oldStatus === constants.GAME_STATUS_READY_TO_PLAY) {
+      oldStatus === constants.GAME_STATUS_PREGAME) {
+      dispatch(headSetActions.updateHeadSets());
       dispatch(updateGameStatus(newStatus));
       dispatch(setLivingSnakeCount(Object.keys(state.snakes).length));
     } else if (newStatus === constants.GAME_STATUS_POSTGAME) {
