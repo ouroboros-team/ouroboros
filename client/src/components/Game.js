@@ -17,8 +17,7 @@ const Game = (props) => {
   let display;
 
   switch (props.status) {
-    case constants.GAME_STATUS_PREGAME:
-    case constants.GAME_STATUS_READY_TO_PLAY: {
+    case constants.GAME_STATUS_PREGAME: {
       display = (
         <Pregame
           changeGameStatus={props.p2pBroadcastGameStatus}
@@ -55,7 +54,7 @@ const Game = (props) => {
     default: {
       display = (
         <Lobby
-          changeGameStatus={props.p2pBroadcastGameStatus}
+          broadcastReady={props.p2pBroadcastReady}
           ownPeerId={props.ownPeerId}
           setOwnUsername={props.p2pSetOwnUsername}
         />
@@ -83,6 +82,7 @@ Game.propTypes = {
   peers: propTypes.object, // eslint-disable-line react/forbid-prop-types
   snakes: propTypes.object, // eslint-disable-line react/forbid-prop-types
   p2pBroadcastGameStatus: propTypes.func,
+  p2pBroadcastReady: propTypes.func,
   p2pSetOwnUsername: propTypes.func,
 };
 
@@ -93,6 +93,7 @@ Game.defaultProps = {
   peers: {},
   snakes: {},
   p2pBroadcastGameStatus: () => {},
+  p2pBroadcastReady: () => {},
   p2pSetOwnUsername: () => {},
 };
 
@@ -107,6 +108,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   p2pBroadcastGameStatus: (status) => {
     dispatch(p2pActions.p2pBroadcastGameStatus(status));
+  },
+  p2pBroadcastReady: () => {
+    dispatch(p2pActions.p2pBroadcastReady());
   },
   p2pSetOwnUsername: (username) => {
     dispatch(p2pActions.p2pSetOwnUsername(username));

@@ -94,28 +94,33 @@ export const p2pBroadcast = (data) => {
   });
 };
 
+export const p2pBroadcastReady = () => (
+  (dispatch) => {
+    const ownId = p2pHelpers.getOwnId();
+    dispatch(infoActions.handleGameStatusChange(constants.GAME_STATUS_PREGAME));
+    dispatch(snakeActions.initializeOwnSnake(ownId));
+    dispatch(p2pUpdatePeerStatus(ownId, constants.PEER_STATUS_READY));
+  }
+);
+
 export const p2pBroadcastGameStatus = status => (
   (dispatch) => {
     p2pBroadcast(status);
 
     // these actions are shared with all players
     dispatch(infoActions.handleGameStatusChange(status));
-
-    // these actions are only for the player that made the change
-    if (status === constants.GAME_STATUS_PREGAME) {
-      dispatch(p2pBroadcastStartingRows());
-      dispatch(snakeActions.initializeOwnSnake(p2pHelpers.getOwnId()));
-    }
   }
 );
 
 export const p2pBroadcastStartingRows = () => (
   (dispatch) => {
-    // player who set new game status to pregame
-    // chooses random starting row positions for all peers
+    // choose random starting row for all peers
     Object.values(peerConnections).forEach((connection) => {
       connection.send(dispatch(infoActions.getAvailableRow()));
     });
+
+    // choose random starting row for self
+    dispatch(infoActions.updateOwnStartingRow(dispatch(infoActions.getAvailableRow())));
   }
 );
 

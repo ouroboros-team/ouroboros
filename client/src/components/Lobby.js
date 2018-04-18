@@ -1,7 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
 
-import * as constants from '../constants';
 import { ownUsernameIsSet } from '../redux/p2p/p2pHelpers';
 
 export default class Lobby extends React.Component {
@@ -11,13 +10,13 @@ export default class Lobby extends React.Component {
   };
 
   static propTypes = {
-    changeGameStatus: propTypes.func,
+    broadcastReady: propTypes.func,
     ownPeerId: propTypes.string,
     setOwnUsername: propTypes.func,
   };
 
   static defaultProps = {
-    changeGameStatus: () => {},
+    broadcastReady: () => {},
     ownPeerId: '',
     setOwnUsername: () => {},
   };
@@ -27,7 +26,7 @@ export default class Lobby extends React.Component {
   };
 
   handlePlayClick = () => {
-    this.props.changeGameStatus(constants.GAME_STATUS_PREGAME);
+    this.props.broadcastReady();
   };
 
   handleSubmit = (e) => {
