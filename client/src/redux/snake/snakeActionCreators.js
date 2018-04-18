@@ -52,9 +52,9 @@ export const resetSnakeData = () => ({
   type: actionTypes.RESET_SNAKE_DATA,
 });
 
-export const initializeOwnSnake = (id, row) => (
+export const initializeOwnSnake = id => (
   (dispatch) => {
-    const startingRow = row || dispatch(infoActions.getAvailableRow());
+    const startingRow = store.getState().info.ownStartingRow || dispatch(infoActions.getAvailableRow());
 
     const positions = snakeHelpers.setStartPosition(startingRow);
     const snake = snakeHelpers.emptySnakeObject(positions);
