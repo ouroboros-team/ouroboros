@@ -1,6 +1,8 @@
 import React from 'react';
 import propTypes from 'prop-types';
 
+import * as constants from '../constants';
+
 const PlayerList = (props) => {
   const players = [];
   let className = '';
@@ -8,7 +10,13 @@ const PlayerList = (props) => {
   const peerIds = Object.keys(props.peers);
 
   peerIds.forEach((peerId) => {
-    className = `id-${props.peers[peerId].styleId} ${props.peers[peerId].status}`;
+    className = `id-${props.peers[peerId].styleId}`;
+
+    // show player status except while playing or postgame
+    if (props.status !== constants.GAME_STATUS_PLAYING &&
+      props.status !== constants.GAME_STATUS_POSTGAME) {
+      className += ` ${props.peers[peerId].status}`;
+    }
 
     if (props.peers[peerId].username) {
       name = props.peers[peerId].username;

@@ -69,7 +69,7 @@ const Game = (props) => {
         {display}
       </div>
       <div className='three columns'>
-        <PlayerList peers={props.peers} />
+        <PlayerList status={props.status} peers={props.peers} />
       </div>
     </main>
   );
