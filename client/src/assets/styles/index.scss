@@ -81,18 +81,33 @@ main.container {
       padding: 0;
 
       li {
+        position: relative;
         width: 100%;
         max-width: $grid-size * $square-size;
         text-align: center;
         display: block;
-        padding: .5rem;
+        padding: .5rem 3rem;
         margin: 1px auto;
         background-color: $black;
         color: $lightgray;
+        word-break: break-word;
 
         &.label {
           background-color: transparent;
           color: $darkgray;
+        }
+
+        &.ready:before {
+          content: '\2713'; // checkmark
+          display: block;
+          color: white;
+          background-color: green;
+          border-radius: 50%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          margin: .5rem 1rem .5rem .5rem;
+          width: 2rem;
         }
       }
     }

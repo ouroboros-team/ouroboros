@@ -78,6 +78,7 @@ describe('Snake action creators', () => {
       snakeActions.handleChangeSnakeDirection(id, direction)(dispatchSpy);
       expect(spy).toHaveBeenCalledWith(id);
 
+      spy.mockRestore();
       mockDir.mockRestore();
       mockBroadcast.mockRestore();
     });
@@ -85,21 +86,27 @@ describe('Snake action creators', () => {
     it('calls dispatch with changeSnakeDirection if snake is alive', () => {
       const id = 'sbihou38457';
       const direction = 'lejrb';
-      jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
-      jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
+      const aliveSpy = jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
+      const broadcastSpy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
 
       snakeActions.handleChangeSnakeDirection(id, direction)(dispatchSpy);
       expect(dispatchSpy).toHaveBeenCalledWith(snakeActions.changeSnakeDirection(id, direction));
+
+      aliveSpy.mockRestore();
+      broadcastSpy.mockRestore();
     });
 
     it('calls p2pActions.p2pBroadcastSnakeData if snake is alive', () => {
       const id = 'sbihou38457';
       const direction = 'lejrb';
-      jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
+      const aliveSpy = jest.spyOn(snakeHelpers, 'snakeIsAlive').mockImplementation(() => (true));
       const broadcastSpy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
 
       snakeActions.handleChangeSnakeDirection(id, direction)(dispatchSpy);
       expect(broadcastSpy).toHaveBeenCalledTimes(1);
+
+      aliveSpy.mockRestore();
+      broadcastSpy.mockRestore();
     });
   });
 
@@ -119,67 +126,103 @@ describe('Snake action creators', () => {
       expect(typeof snakeActions.initializeOwnSnake()).toBe('function');
     });
 
-    it('calls dispatch with infoActions.getAvailableRow if no row is passed', () => {
+    it('calls dispatch with infoActions.getAvailableRow if ownStartingRow is null', () => {
       const id = 'knjerg658';
-      jest.spyOn(infoActions, 'getAvailableRow').mockImplementation(() => {});
+      const state = { info: { ownStartingRow: null } };
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      const broadcastSpy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
+      const rowSpy = jest.spyOn(infoActions, 'getAvailableRow').mockImplementation(() => {});
 
       snakeActions.initializeOwnSnake(id)(dispatchSpy);
 
       expect(dispatchSpy).toHaveBeenCalledWith(infoActions.getAvailableRow());
+
+      broadcastSpy.mockRestore();
+      rowSpy.mockRestore();
     });
 
-    it('does not call dispatch with infoActions.getAvailableRow if row is passed', () => {
+    it('does not call dispatch with infoActions.getAvailableRow if ownStartingRow is defined', () => {
       const id = 'knjerg658';
       const row = 7;
-      jest.spyOn(infoActions, 'getAvailableRow').mockImplementation(() => (row));
+      const state = { info: { ownStartingRow: row } };
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      const broadcastSpy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
+      const rowSpy = jest.spyOn(infoActions, 'getAvailableRow').mockImplementation((row) => {});
 
-      snakeActions.initializeOwnSnake(id, row)(dispatchSpy);
+      snakeActions.initializeOwnSnake(id)(dispatchSpy);
 
       expect(dispatchSpy).not.toHaveBeenCalledWith(infoActions.getAvailableRow());
+
+      broadcastSpy.mockRestore();
+      rowSpy.mockRestore();
     });
 
-    it('calls snakeHelpers.setStartPosition with passed row', () => {
+    it('calls snakeHelpers.setStartPosition with ownStartingRow', () => {
       const id = 'knjerg658';
       const row = 7;
+      const state = { info: { ownStartingRow: row } };
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      const broadcastSpy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
       const spy = jest.spyOn(snakeHelpers, 'setStartPosition').mockImplementation(() => {});
 
-      snakeActions.initializeOwnSnake(id, row)(dispatchSpy);
+      snakeActions.initializeOwnSnake(id)(dispatchSpy);
 
       expect(spy).toHaveBeenCalledWith(row);
+
+      spy.mockRestore();
+      broadcastSpy.mockRestore();
     });
 
     it('calls snakeHelpers.emptySnakeObject with positions from snakeHelpers.setStartPosition', () => {
       const id = 'knjerg658';
       const row = 7;
+      const state = { info: { ownStartingRow: row } };
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
       const positions = { hello: 'world' };
-      jest.spyOn(snakeHelpers, 'setStartPosition').mockImplementation(() => (positions));
+      const startSpy = jest.spyOn(snakeHelpers, 'setStartPosition').mockImplementation(() => (positions));
+      const broadcastSpy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
       const spy = jest.spyOn(snakeHelpers, 'emptySnakeObject');
 
-      snakeActions.initializeOwnSnake(id, row)(dispatchSpy);
+      snakeActions.initializeOwnSnake(id)(dispatchSpy);
 
       expect(spy).toHaveBeenCalledWith(positions);
+
+      startSpy.mockRestore();
+      broadcastSpy.mockRestore();
+      spy.mockRestore();
     });
 
     it('calls dispatch with updateSnakeData with generated snake', () => {
       const id = 'knjerg658';
       const row = 7;
+      const state = { info: { ownStartingRow: row } };
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
       const object = { snake: 'object' };
-      jest.spyOn(snakeHelpers, 'setStartPosition').mockImplementation(() => ({}));
-      jest.spyOn(snakeHelpers, 'emptySnakeObject').mockImplementation(() => (object));
+      const broadcastSpy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
+      const startSpy = jest.spyOn(snakeHelpers, 'setStartPosition').mockImplementation(() => ({}));
+      const emptySpy = jest.spyOn(snakeHelpers, 'emptySnakeObject').mockImplementation(() => (object));
 
-      snakeActions.initializeOwnSnake(id, row)(dispatchSpy);
+      snakeActions.initializeOwnSnake(id)(dispatchSpy);
 
       expect(dispatchSpy).toHaveBeenCalledWith(snakeActions.updateSnakeData(id, object));
+
+      broadcastSpy.mockRestore();
+      startSpy.mockRestore();
+      emptySpy.mockRestore();
     });
 
     it('calls p2pActions.p2pBroadcastSnakeData', () => {
       const id = 'knjerg658';
       const row = 7;
+      const state = { info: { ownStartingRow: row } };
+      jest.spyOn(store, 'getState').mockImplementation(() => (state));
       const spy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
 
       snakeActions.initializeOwnSnake(id, row)(dispatchSpy);
 
       expect(spy).toHaveBeenCalledTimes(1);
+
+      spy.mockRestore();
     });
   });
 
@@ -211,17 +254,24 @@ describe('Snake action creators', () => {
     it('calls snakeHelpers.calculateNextCoords with direction and most recent position of own snake', () => {
       jest.spyOn(store, 'getState').mockImplementation(() => (state));
       const spy = jest.spyOn(snakeHelpers, 'calculateNextCoords').mockImplementation(() => {});
+      const broadcastSpy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
 
       snakeActions.writeOwnSnakePosition(id)(dispatchSpy);
 
       expect(spy).toHaveBeenCalledWith(direction, positions);
+
+      spy.mockRestore();
+      broadcastSpy.mockRestore();
     });
     it('calls dispatch with updateSnakeData', () => {
       jest.spyOn(store, 'getState').mockImplementation(() => (state));
+      const broadcastSpy = jest.spyOn(p2pActions, 'p2pBroadcastSnakeData').mockImplementation(() => {});
 
       snakeActions.writeOwnSnakePosition(id)(dispatchSpy);
 
       expect(dispatchSpy.mock.calls[0][0].type).toBe(actionTypes.UPDATE_SNAKE_DATA);
+
+      broadcastSpy.mockRestore();
     });
 
     it('calls p2pActions.p2pBroadcastSnakeData', () => {
@@ -231,6 +281,8 @@ describe('Snake action creators', () => {
       snakeActions.writeOwnSnakePosition(id)(dispatchSpy);
 
       expect(spy).toHaveBeenCalledTimes(1);
+
+      spy.mockRestore();
     });
   });
 
@@ -241,7 +293,6 @@ describe('Snake action creators', () => {
     const direction = 'up';
     const positions = { row: 5, column: 3 };
     const tu = 7;
-    const board = { 803: 'a snake' };
 
     beforeEach(() => {
       dispatchSpy = jest.fn();

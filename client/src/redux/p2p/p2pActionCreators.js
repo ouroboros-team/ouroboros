@@ -41,6 +41,27 @@ export const p2pUpdatePeerUsername = (id, username) => ({
   type: actionTypes.P2P_UPDATE_PEER_USERNAME,
 });
 
+export const p2pUpdatePeerStatus = (id, status) => ({
+  id,
+  status,
+  type: actionTypes.P2P_UPDATE_PEER_STATUS,
+});
+
+export const p2pResetPeerStatus = id => ({
+  id,
+  type: actionTypes.P2P_RESET_PEER_STATUS,
+});
+
+export const p2pResetAllPeerStatuses = () => (
+  (dispatch) => {
+    const peerIds = Object.keys(store.getState().p2p.peers);
+
+    peerIds.forEach((peerId) => {
+      dispatch(p2pResetPeerStatus(peerId));
+    });
+  }
+);
+
 export const p2pConnectToNewPeers = (list, dispatch) => {
   const peers = store.getState().p2p.peers;
 
@@ -73,29 +94,37 @@ export const p2pBroadcast = (data) => {
   });
 };
 
+export const p2pBroadcastReady = () => (
+  (dispatch) => {
+    const ownId = p2pHelpers.getOwnId();
+    dispatch(infoActions.handleGameStatusChange(constants.GAME_STATUS_PREGAME));
+    dispatch(snakeActions.initializeOwnSnake(ownId));
+    dispatch(p2pUpdatePeerStatus(ownId, constants.PEER_STATUS_READY));
+
+    if (p2pHelpers.allPeersReady()) {
+      dispatch(p2pBroadcastGameStatus(constants.GAME_STATUS_PLAYING));
+    }
+  }
+);
+
 export const p2pBroadcastGameStatus = status => (
   (dispatch) => {
     p2pBroadcast(status);
 
     // these actions are shared with all players
     dispatch(infoActions.handleGameStatusChange(status));
-
-    // these actions are only for the player that made the change
-    if (status === constants.GAME_STATUS_PREGAME) {
-      dispatch(p2pBroadcastStartingRows());
-      dispatch(snakeActions.initializeOwnSnake(p2pHelpers.getOwnId()));
-      dispatch(metaActions.checkReadiness());
-    }
   }
 );
 
 export const p2pBroadcastStartingRows = () => (
   (dispatch) => {
-    // player who set new game status to pregame
-    // chooses random starting row positions for all peers
+    // choose random starting row for all peers
     Object.values(peerConnections).forEach((connection) => {
       connection.send(dispatch(infoActions.getAvailableRow()));
     });
+
+    // choose random starting row for self
+    dispatch(infoActions.updateOwnStartingRow(dispatch(infoActions.getAvailableRow())));
   }
 );
 
@@ -157,11 +186,10 @@ export const p2pSetOwnUsername = username => (
 export const p2pSetCloseListener = (connection, dispatch) => {
   connection.on('close', () => {
     dispatch(p2pRemovePeerFromList(connection.peer));
-    dispatch(metaActions.checkReadiness());
     const gameStatus = store.getState().info.gameStatus;
     if (gameStatus === constants.GAME_STATUS_PLAYING) {
       dispatch(metaActions.handleSnakeDeath(connection.peer, constants.DISCONNECTION));
-    } else if (gameStatus === constants.GAME_STATUS_READY_TO_PLAY) {
+    } else if (gameStatus === constants.GAME_STATUS_PREGAME) {
       dispatch(snakeActions.removeSnake(connection.peer));
       dispatch(headSetActions.resetHeadSets());
       dispatch(headSetActions.updateHeadSets());
@@ -182,10 +210,8 @@ export const p2pSetDataListener = (connection, dispatch) => {
         break;
       }
       case 'number': {
-        // pregame: receive starting row and initialize own snake,
-        // then send snake data to peers
-        dispatch(snakeActions.initializeOwnSnake(p2pHelpers.getOwnId(), data));
-        p2pBroadcastSnakeData();
+        // receive starting row
+        dispatch(infoActions.updateOwnStartingRow(data));
         break;
       }
       case 'object': {
@@ -212,12 +238,15 @@ export const p2pSetDataListener = (connection, dispatch) => {
           // game over
           dispatch(metaActions.receiveGameOver(data.gameOver.tu));
         } else {
-          // pregame and playing: receive snake data from peers
+          // receive snake data from peers
           dispatch(metaActions.receiveSnakeData(connection.peer, data));
 
-          if (status === constants.GAME_STATUS_PREGAME || status === constants.GAME_STATUS_READY_TO_PLAY) {
-            // check readiness (do I have snake data for all peers?)
-            dispatch(metaActions.checkReadiness());
+          if (status === constants.GAME_STATUS_LOBBY || status === constants.GAME_STATUS_PREGAME) {
+            dispatch(p2pUpdatePeerStatus(connection.peer, constants.PEER_STATUS_READY));
+
+            if (p2pHelpers.allPeersReady()) {
+              dispatch(p2pBroadcastGameStatus(constants.GAME_STATUS_PLAYING));
+            }
           }
         }
         break;
@@ -264,8 +293,14 @@ export const p2pInitialize = () => (
             const state = store.getState();
             const peers = state.p2p.peers;
             const ownId = p2pHelpers.getOwnId();
+            const gameStatus = state.info.gameStatus;
             dataConnection.send(Object.keys(peers));
-            dataConnection.send(state.info.gameStatus);
+            if (gameStatus === constants.GAME_STATUS_PREGAME) {
+              dataConnection.send(constants.GAME_STATUS_LOBBY);
+            } else {
+              dataConnection.send(state.info.gameStatus);
+            }
+
             if (peers[ownId].username) {
               dataConnection.send({ username: peers[ownId].username });
             }

@@ -13,7 +13,7 @@ describe('Pregame', () => {
     expect(wrapper.length).toEqual(1);
   });
 
-  it('renders a button', () => {
-    expect(wrapper.find('input[type="button"]').length).toEqual(1);
+  it('renders wait div', () => {
+    expect(wrapper.find('div.wait').length).toEqual(1);
   });
 });
