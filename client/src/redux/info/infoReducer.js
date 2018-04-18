@@ -6,6 +6,7 @@ export const defaultState = {
   tu: constants.INITIAL_TU,
   gameStatus: constants.GAME_STATUS_LOBBY,
   availableRows: infoHelpers.getShuffledAvailableRows(),
+  ownStartingRow: null,
   livingSnakeCount: 0,
   winner: '',
   deathBuffer: {},
@@ -32,6 +33,20 @@ export default function infoReducer(state = defaultState, action) {
       const newState = { ...state };
       newState.gameStatus = action.status;
 
+      return newState;
+    }
+    case actionTypes.UPDATE_OWN_STARTING_ROW: {
+      if (state.ownStartingRow !== null) {
+        return state;
+      }
+
+      const newState = { ...state };
+      newState.ownStartingRow = action.startingRow;
+      return newState;
+    }
+    case actionTypes.RESET_OWN_STARTING_ROW: {
+      const newState = { ...state };
+      newState.ownStartingRow = null;
       return newState;
     }
     case actionTypes.UPDATE_AVAILABLE_ROWS: {

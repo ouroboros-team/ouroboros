@@ -49,6 +49,7 @@ export const resetGameData = () => (
     dispatch(boardActions.resetBoard());
     dispatch(headSetActions.resetHeadSets());
     dispatch(infoActions.resetAvailableRows());
+    dispatch(infoActions.resetOwnStartingRow());
     dispatch(infoActions.resetTu());
     dispatch(infoActions.resetWinner());
     dispatch(infoActions.resetLivingSnakeCount());

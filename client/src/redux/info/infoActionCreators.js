@@ -24,6 +24,15 @@ export const resetAvailableRows = () => ({
   type: actionTypes.RESET_AVAILABLE_ROWS,
 });
 
+export const updateOwnStartingRow = startingRow => ({
+  startingRow,
+  type: actionTypes.UPDATE_OWN_STARTING_ROW,
+});
+
+export const resetOwnStartingRow = () => ({
+  type: actionTypes.RESET_OWN_STARTING_ROW,
+});
+
 export const updateGameStatus = status => ({
   status,
   type: actionTypes.UPDATE_GAME_STATUS,
