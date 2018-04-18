@@ -1,4 +1,5 @@
 import * as actionTypes from '../actionTypes';
+import * as constants from '../../constants';
 
 const defaultState = {
   id: '',
@@ -26,6 +27,7 @@ export default function p2pReducer(state = defaultState, action) {
       newState.peers[action.id] = {
         styleId: newState.nextStyleId,
         defaultUsername: `Player ${newState.nextStyleId}`,
+        status: constants.PEER_STATUS_CONNECTED,
       };
       newState.nextStyleId += 1;
       return newState;
@@ -57,6 +59,17 @@ export default function p2pReducer(state = defaultState, action) {
       const newState = { ...state };
       newState.id = action.id;
       newState.ready = true;
+      return newState;
+    }
+    case actionTypes.P2P_UPDATE_PEER_STATUS: {
+      if (state.peers[action.id].status === action.status) {
+        return state;
+      }
+
+      const newState = { ...state };
+      newState.peers = { ...newState.peers };
+      newState.peers[action.id] = { ...newState.peers[action.id] };
+      newState.peers[action.id].status = action.status;
       return newState;
     }
     default: {
