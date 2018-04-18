@@ -1,6 +1,7 @@
 export const GRID_SIZE = 40;
 export const LOOP_INTERVAL = 250;
 export const INITIAL_TU = 0;
+export const MAX_PEERS = 15;
 
 // number of TUs retained for snakes and boards
 // beyond what is currently displayed (according to snake length)
