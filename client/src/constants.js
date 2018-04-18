@@ -31,3 +31,7 @@ export const GAME_STATUS_READY_TO_PLAY = 'ready'; // all initial positions recei
 export const GAME_STATUS_PLAYING = 'playing';
 export const GAME_STATUS_POSTGAME = 'postgame'; // show winner, play again?
 export const GAME_STATUS_OUT_OF_SYNC = 'out of sync';
+
+// peer statuses
+export const PEER_STATUS_CONNECTED = 'connected';
+export const PEER_STATUS_READY = 'ready';
