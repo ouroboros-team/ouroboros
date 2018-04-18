@@ -23,7 +23,7 @@ export const initializeOwnPeerObject = () => {
         },
       ],
     },
-    debug: 3,
+    debug: 1,
   });
 };
 
@@ -60,4 +60,9 @@ export const resolveIdsToUsernames = (ids) => {
   ));
 
   return usernames.join(' and ');
+};
+
+export const getPeerCount = () => {
+  const peers = store.getState().p2p.peers;
+  return Object.keys(peers).length;
 };
