@@ -99,7 +99,7 @@ export const p2pBroadcastStartingRows = () => (
   }
 );
 
-export const p2pBroadcastGameOver = tu => {
+export const p2pBroadcastGameOver = (tu) => {
   p2pBroadcast({
     gameOver: {
       tu,
@@ -156,7 +156,6 @@ export const p2pSetOwnUsername = username => (
 
 export const p2pSetCloseListener = (connection, dispatch) => {
   connection.on('close', () => {
-    console.log(`Removing peer: ${connection.peer}`);
     dispatch(p2pRemovePeerFromList(connection.peer));
     dispatch(metaActions.checkReadiness());
     const gameStatus = store.getState().info.gameStatus;
@@ -253,17 +252,23 @@ export const p2pInitialize = () => (
       })
       .on('connection', (dataConnection) => {
         dataConnection.on('open', () => {
-          p2pSetDataListener(dataConnection, dispatch);
-          dispatch(p2pAddPeerToList(dataConnection.peer));
-          peerConnections[dataConnection.peer] = dataConnection;
+          // refuse connection if too many peers
+          if (p2pHelpers.getPeerCount() >= constants.MAX_PEERS) {
+            dataConnection.close();
+          } else {
+            p2pSetDataListener(dataConnection, dispatch);
+            dispatch(p2pAddPeerToList(dataConnection.peer));
+            peerConnections[dataConnection.peer] = dataConnection;
 
-          // send list of peer ids, own username, game status to new peer
-          const state = store.getState();
-          const peers = state.p2p.peers;
-          dataConnection.send(Object.keys(peers));
-          dataConnection.send(state.info.gameStatus);
-          if (peers[p2pHelpers.getOwnId()].username) {
-            dataConnection.send({ username: peers[p2pHelpers.getOwnId()].username });
+            // send list of peer ids, own username, game status to new peer
+            const state = store.getState();
+            const peers = state.p2p.peers;
+            const ownId = p2pHelpers.getOwnId();
+            dataConnection.send(Object.keys(peers));
+            dataConnection.send(state.info.gameStatus);
+            if (peers[ownId].username) {
+              dataConnection.send({ username: peers[ownId].username });
+            }
           }
         });
         p2pSetCloseListener(dataConnection, dispatch);
