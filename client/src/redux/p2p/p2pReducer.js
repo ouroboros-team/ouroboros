@@ -72,6 +72,13 @@ export default function p2pReducer(state = defaultState, action) {
       newState.peers[action.id].status = action.status;
       return newState;
     }
+    case actionTypes.P2P_RESET_PEER_STATUS: {
+      const newState = { ...state };
+      newState.peers = { ...newState.peers };
+      newState.peers[action.id] = { ...newState.peers[action.id] };
+      newState.peers[action.id].status = constants.PEER_STATUS_CONNECTED;
+      return newState;
+    }
     default: {
       return state;
     }

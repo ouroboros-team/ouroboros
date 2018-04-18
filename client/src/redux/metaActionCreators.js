@@ -48,6 +48,7 @@ export const resetGameData = () => (
     dispatch(snakeActions.resetSnakeData());
     dispatch(boardActions.resetBoard());
     dispatch(headSetActions.resetHeadSets());
+    dispatch(p2pActions.p2pResetAllPeerStatuses());
     dispatch(infoActions.resetAvailableRows());
     dispatch(infoActions.resetOwnStartingRow());
     dispatch(infoActions.resetTu());

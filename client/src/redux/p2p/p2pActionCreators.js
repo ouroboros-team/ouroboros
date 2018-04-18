@@ -47,6 +47,21 @@ export const p2pUpdatePeerStatus = (id, status) => ({
   type: actionTypes.P2P_UPDATE_PEER_STATUS,
 });
 
+export const p2pResetPeerStatus = id => ({
+  id,
+  type: actionTypes.P2P_RESET_PEER_STATUS,
+});
+
+export const p2pResetAllPeerStatuses = () => (
+  (dispatch) => {
+    const peerIds = Object.keys(store.getState().p2p.peers);
+
+    peerIds.forEach((peerId) => {
+      dispatch(p2pResetPeerStatus(peerId));
+    });
+  }
+);
+
 export const p2pConnectToNewPeers = (list, dispatch) => {
   const peers = store.getState().p2p.peers;
 
