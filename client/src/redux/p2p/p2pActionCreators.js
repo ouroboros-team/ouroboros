@@ -41,6 +41,12 @@ export const p2pUpdatePeerUsername = (id, username) => ({
   type: actionTypes.P2P_UPDATE_PEER_USERNAME,
 });
 
+export const p2pUpdatePeerStatus = (id, status) => ({
+  id,
+  status,
+  type: actionTypes.P2P_UPDATE_PEER_STATUS,
+});
+
 export const p2pConnectToNewPeers = (list, dispatch) => {
   const peers = store.getState().p2p.peers;
 
@@ -84,7 +90,6 @@ export const p2pBroadcastGameStatus = status => (
     if (status === constants.GAME_STATUS_PREGAME) {
       dispatch(p2pBroadcastStartingRows());
       dispatch(snakeActions.initializeOwnSnake(p2pHelpers.getOwnId()));
-      dispatch(metaActions.checkReadiness());
     }
   }
 );
@@ -157,7 +162,6 @@ export const p2pSetOwnUsername = username => (
 export const p2pSetCloseListener = (connection, dispatch) => {
   connection.on('close', () => {
     dispatch(p2pRemovePeerFromList(connection.peer));
-    dispatch(metaActions.checkReadiness());
     const gameStatus = store.getState().info.gameStatus;
     if (gameStatus === constants.GAME_STATUS_PLAYING) {
       dispatch(metaActions.handleSnakeDeath(connection.peer, constants.DISCONNECTION));
@@ -216,8 +220,7 @@ export const p2pSetDataListener = (connection, dispatch) => {
           dispatch(metaActions.receiveSnakeData(connection.peer, data));
 
           if (status === constants.GAME_STATUS_PREGAME || status === constants.GAME_STATUS_READY_TO_PLAY) {
-            // check readiness (do I have snake data for all peers?)
-            dispatch(metaActions.checkReadiness());
+            dispatch(p2pUpdatePeerStatus(connection.peer, constants.PEER_STATUS_READY));
           }
         }
         break;
