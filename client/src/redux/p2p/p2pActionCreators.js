@@ -100,6 +100,10 @@ export const p2pBroadcastReady = () => (
     dispatch(infoActions.handleGameStatusChange(constants.GAME_STATUS_PREGAME));
     dispatch(snakeActions.initializeOwnSnake(ownId));
     dispatch(p2pUpdatePeerStatus(ownId, constants.PEER_STATUS_READY));
+
+    if (p2pHelpers.allPeersReady()) {
+      dispatch(p2pBroadcastGameStatus(constants.GAME_STATUS_PLAYING));
+    }
   }
 );
 
@@ -239,6 +243,10 @@ export const p2pSetDataListener = (connection, dispatch) => {
 
           if (status === constants.GAME_STATUS_LOBBY || status === constants.GAME_STATUS_PREGAME) {
             dispatch(p2pUpdatePeerStatus(connection.peer, constants.PEER_STATUS_READY));
+
+            if (p2pHelpers.allPeersReady()) {
+              dispatch(p2pBroadcastGameStatus(constants.GAME_STATUS_PLAYING));
+            }
           }
         }
         break;
