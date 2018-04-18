@@ -201,31 +201,10 @@ describe('Info action creators', () => {
       expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(constants.GAME_STATUS_OUT_OF_SYNC));
     });
 
-    // ready-to-play
-    it('updates game status to ready-to-play if previous status was pregame', () => {
-      const status = constants.GAME_STATUS_READY_TO_PLAY;
-      state.info.gameStatus = constants.GAME_STATUS_PREGAME;
-      jest.spyOn(store, 'getState').mockImplementation(() => (state));
-
-      infoActions.handleGameStatusChange(status)(dispatchSpy);
-      expect(dispatchSpy).toHaveBeenCalled();
-      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(status));
-    });
-
-    it('does not update game status to ready-to-play if previous status was not pregame', () => {
-      const status = constants.GAME_STATUS_READY_TO_PLAY;
-      state.info.gameStatus = dummyStatus;
-      jest.spyOn(store, 'getState').mockImplementation(() => (state));
-
-      infoActions.handleGameStatusChange(status)(dispatchSpy);
-      expect(dispatchSpy).not.toHaveBeenCalledWith(infoActions.updateGameStatus(status));
-      expect(dispatchSpy).toHaveBeenCalledWith(infoActions.updateGameStatus(constants.GAME_STATUS_OUT_OF_SYNC));
-    });
-
     // playing
-    it('updates game status to playing if previous status was ready-to-play', () => {
+    it('updates game status to playing if previous status was pregame', () => {
       const status = constants.GAME_STATUS_PLAYING;
-      state.info.gameStatus = constants.GAME_STATUS_READY_TO_PLAY;
+      state.info.gameStatus = constants.GAME_STATUS_PREGAME;
       state.snakes = { afephrig: true };
       jest.spyOn(store, 'getState').mockImplementation(() => (state));
       const livingSpy = jest.spyOn(infoActions, 'setLivingSnakeCount').mockImplementation(() => {});
@@ -237,7 +216,7 @@ describe('Info action creators', () => {
       livingSpy.mockRestore();
     });
 
-    it('does not update game status to playing if previous status was not ready-to-play', () => {
+    it('does not update game status to playing if previous status was not pregame', () => {
       const status = constants.GAME_STATUS_PLAYING;
       state.info.gameStatus = dummyStatus;
       jest.spyOn(store, 'getState').mockImplementation(() => (state));
@@ -261,23 +240,15 @@ describe('Info action creators', () => {
     });
 
     // secondary actions
-    it('calls dispatch with headSetActions.updateHeadSets when status is ready-to-play', () => {
-      const status = constants.GAME_STATUS_READY_TO_PLAY;
-      state.info.gameStatus = constants.GAME_STATUS_PREGAME;
-      jest.spyOn(store, 'getState').mockImplementation(() => (state));
-
-      infoActions.handleGameStatusChange(status)(dispatchSpy);
-      expect(dispatchSpy).toHaveBeenCalledWith(headSetActions.updateHeadSets());
-    });
-
-    it('calls dispatch with setLivingSnakeCount when status is playing', () => {
+    it('calls dispatch with updateHeadSets, updateGameStatus, and setLivingSnakeCount when status is playing', () => {
       const status = constants.GAME_STATUS_PLAYING;
-      state.info.gameStatus = constants.GAME_STATUS_READY_TO_PLAY;
+      state.info.gameStatus = constants.GAME_STATUS_PREGAME;
       state.snakes = { afephrig: true };
       const keys = Object.keys(state.snakes).length;
       jest.spyOn(store, 'getState').mockImplementation(() => (state));
 
       const items = [
+        [ headSetActions.updateHeadSets() ],
         [ infoActions.updateGameStatus(status) ],
         [ infoActions.setLivingSnakeCount(keys) ],
       ];
