@@ -132,33 +132,19 @@ export const calculateNextCoords = (direction, oldCoords) => {
   return { row, column };
 };
 
-// data is assumed to be in the same format as snakes in the Redux store
-export const updateSnakeDataMutate = (newSnake, data) => {
-  newSnake.direction = data.direction;
+// received data is in the same format as local snake data
+export const updateSnakeDataMutate = (snake, data) => {
+  snake.direction = data.direction;
 
-  const oldPositions = newSnake.positions;
-  const newPositions = data.positions;
-  const oldLastTu = oldPositions.newest;
-  const newLastTu = newPositions.newest;
+  snake.positions.byKey = { ...snake.positions.byKey, ...data.positions.byKey };
+  snake.positions.newest = data.positions.newest;
 
-  const keepCount = getSnakeLength(newLastTu) + constants.HISTORY_LENGTH;
-  const gap = newLastTu - oldLastTu;
-  let key;
-  let i = 1;
+  const keepCount = getSnakeLength(snake.positions.newest) + constants.HISTORY_LENGTH;
 
-  while (i <= gap) {
-    key = oldLastTu + i;
-    // add new positions to old ones
-    oldPositions.byKey[key] = newPositions.byKey[key];
-    oldPositions.newest = key;
-
-    // purge old data
-    if (oldPositions.newest - oldPositions.oldest > keepCount) {
-      delete oldPositions.byKey[oldPositions.oldest];
-      oldPositions.oldest += 1;
-    }
-
-    i += 1;
+  // purge old data
+  while (snake.positions.newest - snake.positions.oldest > keepCount) {
+    delete snake.positions.byKey[snake.positions.oldest];
+    snake.positions.oldest += 1;
   }
 };
 
