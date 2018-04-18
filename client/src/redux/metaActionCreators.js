@@ -43,20 +43,6 @@ export const receiveSnakeData = (id, data) => (
   }
 );
 
-export const checkReadiness = () => (
-  (dispatch) => {
-    const state = store.getState();
-    if (state.info.gameStatus !== constants.GAME_STATUS_PREGAME) {
-      return;
-    }
-    const peerList = Object.keys(state.p2p.peers);
-    const snakeList = Object.keys(state.snakes);
-    if (peerList.length === snakeList.length) {
-      dispatch(p2pActions.p2pBroadcastGameStatus(constants.GAME_STATUS_READY_TO_PLAY));
-    }
-  }
-);
-
 export const resetGameData = () => (
   (dispatch) => {
     dispatch(snakeActions.resetSnakeData());
