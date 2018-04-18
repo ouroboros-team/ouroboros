@@ -293,8 +293,14 @@ export const p2pInitialize = () => (
             const state = store.getState();
             const peers = state.p2p.peers;
             const ownId = p2pHelpers.getOwnId();
+            const gameStatus = state.info.gameStatus;
             dataConnection.send(Object.keys(peers));
-            dataConnection.send(state.info.gameStatus);
+            if (gameStatus === constants.GAME_STATUS_PREGAME) {
+              dataConnection.send(constants.GAME_STATUS_LOBBY);
+            } else {
+              dataConnection.send(state.info.gameStatus);
+            }
+
             if (peers[ownId].username) {
               dataConnection.send({ username: peers[ownId].username });
             }
