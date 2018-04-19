@@ -168,17 +168,27 @@ const lookup = (snake, tu) => (
         Then the app registers its location (public IP address) with the server.
         The server then assigns a random, unique ID to the user which the app
         uses to create and display a sharing link. So, when a new peer follows
-        the URL, a connection is brokered between her and all other peers
-        connected to this WebRTC data channel.</p>
+        the link, this ID is extracted from the URL and is passed to the server
+        to request a connection to the peer that is represents. Once a
+        connection is established between the two peers, a WebRTC data channel
+        is opened and peer-to-peer messaging can begin.</p>
       <p>Establishing a peer-to-peer connection over the internet can be a
-        multi-step process. When a user follows the URL to a game room, she
+        multi-step process. When a user follows the link to a game room, she
         sends a request to a STUN (Session Traversal Utilities for NAT) server
         to determine her public IP address and whether or not she is accessible
         behind her router’s NAT (Network Address Translation). If she is
         accessible, a direct WebRTC data connection is created between her and
         her peers. If she is not accessible, a TURN (Traversal Using Relays
         around NAT) server must act as an intermediary between her and her
-        peers, such that it is not a true “peer-to-peer” connection.</p>
+        peers, such that it is not a true “peer-to-peer” connection.
+        <Citation
+          url='https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/'
+          creator='Sam Dutton'
+          creationDate='November 4, 2013'
+          contributingOrganization='HTML5Rocks.com'
+          title='WebRTC in the Real World: STUN, TURN and Signaling'
+        />
+      </p>
 
       <h2>Synchronization</h2>
       <p>Latency will always prevent peers from being precisely synchronized,
@@ -452,12 +462,12 @@ const lookup = (snake, tu) => (
         existing data are simply added to the collection. Changes in direction
         are made whenever the most recent TU in the message is the same or
         greater than the most recent TU in the local data structure.</p>
-      <p>So, if the current state of <code>snake 1</code> is…</p>
+      <p>So, if the current state of <code>snake 1</code> is...</p>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {currentStateCode}
       </SyntaxHighlighter>
-      <p>…and we receive the following data from the peer controlling <code>snake
-        1</code>…</p>
+      <p>...and we receive the following data from the peer controlling <code>snake
+        1</code>...</p>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {receivedStateCode}
       </SyntaxHighlighter>
@@ -539,7 +549,7 @@ snakeInBoard = board[1][2];`}
       <table className='coordinates'>
         <thead>
         <tr>
-          <th></th>
+          <th />
           <th>0</th>
           <th>1</th>
           <th>2</th>
@@ -674,18 +684,18 @@ snakeInBoard = board[42];`}
       <p>Ouroboros currently supports up to 15 players on a 40x40 grid. Scaling
         up the number of players or expanding the game world would offer several
         interesting challenges. For one, increasing the number of players would
-        make our full-mesh peer-to-peer topology impractical.  We would need to
+        make our full-mesh peer-to-peer topology impractical. We would need to
         select a new configuration that would reduce the number of peer
         connections while still keeping the number of intermediary nodes to a
-        minimum.  Changing our topology would also fundamentally change our
+        minimum. Changing our topology would also fundamentally change our
         messaging patterns, so we would need to develop a new method of
         aggregating and disseminating peer messages as efficiently as possible.
         Increasing the number of peers would also eventually cause a computation
-        bottleneck. We might be able to address this by having peers share larger
-        chunks of state (head sets or boards, perhaps) so that local computation
-        is reduced.  If the playing grid were only one small part of a larger
-        game world, we would require an interest algorithm to reduce the amount
-        of game state held by each individual player.
+        bottleneck. We might be able to address this by having peers share
+        larger chunks of state (head sets or boards, perhaps) so that local
+        computation is reduced. If the playing grid were only one small part of
+        a larger game world, we would require an interest algorithm to reduce
+        the amount of game state held by each individual player.
       </p>
     </main>
   );
