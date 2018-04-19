@@ -1,5 +1,6 @@
 @import './normalize';
 @import './skeleton';
+@import url('https://fonts.googleapis.com/css?family=Palanquin+Dark');
 
 $black: #000;
 $darkgray: #555;
@@ -14,6 +15,47 @@ body {
   background: url("../images/snake-texture.png");
 }
 
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Palanquin Dark', sans-serif;
+}
+
+h1 {
+  font-size: 4rem;
+}
+
+h2 {
+  font-size: 3.3rem;
+}
+
+h3 {
+  font-size: 2.9rem;
+}
+
+h4 {
+  font-size: 2.5rem;
+}
+
+h5 {
+  font-size: 2.3rem;
+}
+
+h6 {
+  font-size: 2.0rem;
+}
+
+// Forms and Lists
+ul {
+  list-style: disc outside;
+  margin-left: 2rem;
+}
+.button, button, input[type="submit"], input[type="reset"], input[type="button"] {
+  &:disabled {
+    color: $gray;
+  }
+}
+
+// Header
 header {
   padding: 1rem;
   background-color: $lightgray;
@@ -22,15 +64,26 @@ header {
   white-space: nowrap;
 
   #logo-text {
+    text-align: center;
     a {
       display: block;
       padding-top: .8rem;
       text-decoration: none;
       color: inherit;
 
+      h1 {
+        display: inline-block;
+        font-size: 5rem;
+        position: relative;
+        text-align: left;
+        padding-left: 4.3rem;
+      }
+
       .logo {
         width: 4.3rem;
-        vertical-align: baseline;
+        position: absolute;
+        bottom: 0.8rem;
+        left: 0;
       }
     }
   }
@@ -56,10 +109,12 @@ header {
   }
 }
 
+// Main
 main.container {
   padding: 2.5rem 0 10rem 0;
 }
 
+// Game
 #game {
   * {
     box-sizing: border-box;
@@ -168,6 +223,7 @@ main.container {
   }
 }
 
+// Miscellaneous
 #messages {
   min-height: 2.5rem;
   word-break: break-word;
@@ -190,10 +246,6 @@ main.container {
   @keyframes spin { 100% { -webkit-transform: rotate(-360deg); transform:rotate(-360deg); } }
 }
 
-img.keyboard {
-  max-width: 20rem;
-}
-
 .label {
   font-size: 11px;
   font-weight: 600;
@@ -205,12 +257,12 @@ img.keyboard {
   color: red;
 }
 
-.button, button, input[type="submit"], input[type="reset"], input[type="button"] {
-  &:disabled {
-    color: $gray;
-  }
+// Page-specific
+img.keyboard {
+  max-width: 20rem;
 }
 
+// Responsive
 img {
   max-width: 100%;
 }
