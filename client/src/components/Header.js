@@ -21,8 +21,9 @@ const Header = () => (
       <nav className='label seven columns'>
         <FilterLink exact filter='home'>Home</FilterLink>
         <FilterLink filter='play'>Play</FilterLink>
-        <FilterLink exact filter='how-to-play'>How to Play</FilterLink>
-        <FilterLink exact filter='troubleshooting'>Troubleshooting</FilterLink>
+        <FilterLink exact filter='about'>About</FilterLink>
+        <FilterLink exact filter='Help'>Help</FilterLink>
+        <a href='https://github.com/ouroboros-team/ouroboros' rel='noopener noreferrer' target='_blank'>GitHub</a>
       </nav>
     </div>
   </header>
