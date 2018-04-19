@@ -7,9 +7,16 @@ $darkgray: #555;
 $gray: #999;
 $lightgray: #ebebeb;
 $white: #FFF;
+$skeleton-blue: #1EAEDB;
 
 $square-size: 1rem;
 $grid-size: 40;
+
+@mixin all-caps() {
+  font-weight: 600;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+}
 
 body {
   background: url("../images/snake-texture.png");
@@ -44,11 +51,38 @@ h6 {
   font-size: 2.0rem;
 }
 
-// Forms and Lists
+aside {
+  color: $gray;
+  font-style: italic;
+  text-align: center;
+}
+
+// Lists, Tables, Forms
 ul {
   list-style: disc outside;
   margin-left: 2rem;
 }
+
+table {
+  width: 100%;
+
+  tbody {
+    th {
+      text-align: right;
+    }
+
+    td {
+      text-align: left;
+    }
+  }
+
+  &.align-center {
+    td, th {
+      text-align: center;
+    }
+  }
+}
+
 .button, button, input[type="submit"], input[type="reset"], input[type="button"] {
   &:disabled {
     color: $gray;
@@ -223,6 +257,72 @@ main.container {
   }
 }
 
+// Citations
+.citation {
+  position: relative;
+  cursor: help;
+  margin: 0 .5rem;
+  font-style: normal;
+
+  > a {
+    border-radius: 50%;
+    background-color: $skeleton-blue;
+    color: $white;
+    width: 2rem;
+    height: 2rem;
+    line-height: 1.5;
+    display: inline-block;
+    text-align: center;
+  }
+
+  > div {
+    color: $black;
+    font-size: 80%;
+    display: block;
+    position: absolute;
+    top: 1rem;
+    left: -5rem;
+    background-color: $white;
+    border: solid 1px $gray;
+    padding: 1rem;
+    border-radius: .5rem;
+
+    p {
+      @include all-caps();
+      text-align: center;
+      color: $gray;
+      margin: 0 0 1rem 0;
+    }
+
+    a {
+      word-break: break-word;
+    }
+
+    table {
+      margin: 0;
+
+      th, td {
+        vertical-align: top;
+      }
+
+      th {
+        padding: .2rem 1rem .2rem .2rem ;
+      }
+
+      td {
+        padding: .2rem .2rem .2rem 1rem ;
+        min-width: 15rem;
+      }
+
+      tr:last-child {
+        th, td {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}
+
 // Miscellaneous
 #messages {
   min-height: 2.5rem;
@@ -237,20 +337,31 @@ main.container {
   text-align: center;
   .logo {
     width: 10rem;
-    -webkit-animation:spin 4s linear infinite;
-    -moz-animation:spin 4s linear infinite;
-    animation:spin 4s linear infinite;
+    -webkit-animation: spin 4s linear infinite;
+    -moz-animation: spin 4s linear infinite;
+    animation: spin 4s linear infinite;
   }
-  @-moz-keyframes spin { 100% { -moz-transform: rotate(-360deg); } }
-  @-webkit-keyframes spin { 100% { -webkit-transform: rotate(-360deg); } }
-  @keyframes spin { 100% { -webkit-transform: rotate(-360deg); transform:rotate(-360deg); } }
+  @-moz-keyframes spin {
+    100% {
+      -moz-transform: rotate(-360deg);
+    }
+  }
+  @-webkit-keyframes spin {
+    100% {
+      -webkit-transform: rotate(-360deg);
+    }
+  }
+  @keyframes spin {
+    100% {
+      -webkit-transform: rotate(-360deg);
+      transform: rotate(-360deg);
+    }
+  }
 }
 
 .label {
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .1rem;
-  text-transform: uppercase;
+  @include all-caps();
 }
 
 .alert-text {
