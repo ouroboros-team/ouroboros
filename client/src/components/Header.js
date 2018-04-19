@@ -23,7 +23,7 @@ const Header = () => (
         <FilterLink filter='play'>Play</FilterLink>
         <FilterLink exact filter='about'>About</FilterLink>
         <FilterLink exact filter='Help'>Help</FilterLink>
-        <a href='https://github.com/ouroboros-team/ouroboros' rel='noopener noreferrer' target='_blank'>GitHub</a>
+        <a href='https://github.com/ouroboros-team/ouroboros'>GitHub</a>
       </nav>
     </div>
   </header>

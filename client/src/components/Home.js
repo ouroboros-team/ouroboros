@@ -8,12 +8,8 @@ const Home = () => (
     <h1>Welcome</h1>
     <div className='row'>
       <div className='seven columns'>
-        <p>Ouroboros is a peer-to-peer snake game built by <a
-            href='http://siennamwood.com/'
-            rel='noopener noreferrer' target='_blank'
-          >Sienna M. Wood</a> and <a
-            href='https://grantdreed.github.io/'
-            rel='noopener noreferrer' target='_blank'
+        <p>Ouroboros is a peer-to-peer snake game built by <a href='http://siennamwood.com/'
+          >Sienna M. Wood</a> and <a href='https://grantdreed.github.io/'
           >Grant Reed</a> to explore peer-to-peer gaming architectures and their
           challenges.
         </p>
@@ -21,7 +17,7 @@ const Home = () => (
           <li><FilterLink filter='play'>Play the game</FilterLink></li>
           <li><FilterLink filter='about'>About this project</FilterLink></li>
           <li><FilterLink filter='help'>Having trouble? Get help</FilterLink></li>
-          <li><a href='https://github.com/ouroboros-team/ouroboros' rel='noopener noreferrer' target='_blank'>Check out our code on GitHub</a></li>
+          <li><a href='https://github.com/ouroboros-team/ouroboros'>Check out our code on GitHub</a></li>
         </ul>
       </div>
       <div className='five columns align-center'>
