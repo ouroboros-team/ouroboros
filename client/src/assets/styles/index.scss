@@ -28,6 +28,10 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Palanquin Dark', sans-serif;
 }
 
+h3, h4, h5, h6 {
+  color: $darkgray;
+}
+
 h1 {
   font-size: 4rem;
 }
@@ -282,11 +286,12 @@ main.container {
     display: block;
     position: absolute;
     top: 1rem;
-    left: -5rem;
+    left: -15rem;
     background-color: $white;
     border: solid 1px $gray;
     padding: 1rem;
     border-radius: .5rem;
+    width: 30rem;
 
     p {
       @include all-caps();
@@ -301,6 +306,7 @@ main.container {
 
     table {
       margin: 0;
+      width: 100%;
 
       th, td {
         vertical-align: top;
@@ -312,7 +318,7 @@ main.container {
 
       td {
         padding: .2rem .2rem .2rem 1rem;
-        min-width: 15rem;
+        min-width: 70%;
       }
 
       tr:last-child {
@@ -374,8 +380,11 @@ img.keyboard {
   max-width: 20rem;
 }
 
-table.coordinates, table.numbers {
+.hljs { // syntax highlighting
+  background-color: transparent;
+}
 
+table.coordinates, table.numbers {
   * {
     border: none;
     margin: 0;
