@@ -64,7 +64,7 @@ ul {
 }
 
 table {
-  width: 100%;
+  margin: 0 auto 2.5rem auto;
 
   tbody {
     th {
@@ -306,11 +306,11 @@ main.container {
       }
 
       th {
-        padding: .2rem 1rem .2rem .2rem ;
+        padding: .2rem 1rem .2rem .2rem;
       }
 
       td {
-        padding: .2rem .2rem .2rem 1rem ;
+        padding: .2rem .2rem .2rem 1rem;
         min-width: 15rem;
       }
 
@@ -371,6 +371,26 @@ main.container {
 // Page-specific
 img.keyboard {
   max-width: 20rem;
+}
+
+table.coordinates, table.numbers {
+
+  * {
+    border: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  td, th {
+    padding: .5rem 1rem;
+    margin: 0;
+  }
+
+  td {
+    border: solid $black 1px;
+  }
 }
 
 // Responsive
