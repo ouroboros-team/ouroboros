@@ -68,15 +68,21 @@ pre > code {
 }
 
 // Lists, Tables, Forms
+ul, ol {
+  margin-left: 3rem;
+  text-indent: -2rem;
+}
+
 ul {
-  list-style: disc outside;
-  margin-left: 2rem;
+  list-style-type: disc;
 }
 
 ol {
-  line-height: 1;
-
-  > ol > li {
+  li {
+    margin-bottom: .3rem;
+  }
+  > ol {
+    margin-top: 1rem;
     list-style-type: lower-alpha;
   }
 }
@@ -394,6 +400,21 @@ img.keyboard {
   max-width: 20rem;
 }
 
+.toc h2 {
+  @include all-caps();
+  font-size: 100%;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+@media (min-width: 750px) {
+  .toc {
+    width: 25%;
+    margin-left: 5%;
+    float: right;
+  }
+}
+
 .snake-heads, .head-sets {
   text-align: center;
   margin: 0 0 2.5rem 0;
@@ -402,7 +423,7 @@ img.keyboard {
     display: inline-block;
     vertical-align: middle;
     font-size: 175%;
-    margin: 0.5rem 1%;
+    padding: 0.5rem 1%;
     max-width: 24%;
 
     p {
