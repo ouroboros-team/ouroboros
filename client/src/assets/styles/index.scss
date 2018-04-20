@@ -73,6 +73,14 @@ ul {
   margin-left: 2rem;
 }
 
+ol {
+  line-height: 1;
+
+  > ol > li {
+    list-style-type: lower-alpha;
+  }
+}
+
 table {
   margin: 0 auto 2.5rem auto;
 
