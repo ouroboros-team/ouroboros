@@ -117,51 +117,70 @@ const lookup = (snake, tu) => (
   return (
     <main className='container'>
       <h1>Building Ouroboros</h1>
-      <aside>Hover over the blue circles for citations
-        <Citation creator='Example Author' url='https://example.com' />
-      </aside>
-      <h2>Table of Contents</h2>
-      <ol>
-        <li><a href='#introduction'>Introduction</a></li>
-        <li><a href='#background-webrtc'>Background: WebRTC</a></li>
-        <li><a href='#synchronization'>Synchronization</a></li>
+      <div class='toc row'>
+        <aside>Hover over the blue circles for citations
+          <Citation creator='Example Author' url='https://example.com' />
+        </aside>
+        <h2>Table of Contents</h2>
         <ol>
-          <li><a href='#tus-and-snake-bodies'>TUs and Snake Bodies</a></li>
-          <li><a href='#collision-checking'>Collision Checking</a></li>
-          <li><a href='#death-buffer'>Death Buffer</a></li>
-          <li><a href='#living-snake-count-and-end-of-game'>Living Snake Count and End of Game</a></li>
-          <li><a href='#game-over-buffer'>Game Over Buffer</a></li>
-          <li><a href='#tus-for-latency-tolerance'>TUs for Latency Tolerance</a></li>
+          <li><a href='#introduction'>Introduction</a></li>
+          <li><a href='#background-webrtc'>Background: WebRTC</a></li>
+          <li><a href='#synchronization'>Synchronization</a></li>
+          <ol>
+            <li><a href='#tus-and-snake-bodies'>TUs and Snake Bodies</a></li>
+            <li><a href='#collision-checking'>Collision Checking</a></li>
+            <li><a href='#living-snake-count-and-end-of-game'>Living Snake Count
+              and End of Game</a></li>
+            <li><a href='#death-buffer'>Death Buffer</a></li>
+            <li><a href='#game-over-buffer'>Game Over Buffer</a></li>
+            <li><a href='#tus-for-latency-tolerance'>TUs for Latency
+              Tolerance</a>
+            </li>
+          </ol>
+          <li><a href='#smooth-gameplay-with-missing-peer-data'>Smooth Gameplay
+            with Missing Peer Data</a></li>
+          <ol>
+            <li><a href='#prediction-algorithm'>Prediction Algorithm</a></li>
+            <li><a href='#convergence-technique'>Convergence Technique</a></li>
+            <li><a href='#predictions-and-collision-checking'>Predictions and
+              Collision Checking</a></li>
+          </ol>
+          <li><a href='#authority-and-consistency'>Authority and Consistency</a>
+          </li>
+          <ol>
+            <li><a href='#peer-to-peer-messaging-transport-protocol'>Peer-to-Peer
+              Messaging Transport Protocol</a></li>
+            <li><a href='#peer-to-peer-message-content'>Peer-to-Peer Message
+              Content</a></li>
+            <li><a href='#overlap-and-redundancy-in-peer-messages'>Overlap and
+              Redundancy in Peer Messages</a></li>
+            <li><a href='#ensuring-consistency-with-a-crdt'>Ensuring Consistency
+              with a CRDT</a></li>
+            <li><a href='#incorporating-a-crdt'>Incorporating a CRDT</a></li>
+          </ol>
+          <li><a href='#optimizations'>Optimizations</a></li>
+          <ol>
+            <li><a href='#data-structure-for-snake-bodies'>Data Structure for
+              Snake Bodies</a></li>
+            <li><a href='#data-structure-for-the-game-board'>Data Structure for
+              the Game Board</a></li>
+            <li><a href='#head-sets-for-display-boards-and-collision-checking'>
+              Head Sets for Display Boards and Collision Checking</a></li>
+            <li><a href='#p2p-network-topology'>P2P Network Topology</a></li>
+          </ol>
+          <li><a href='#future-work'>Future Work</a></li>
+          <ol>
+            <li><a href='#automated-testing-for-p2p-network'>Automated Testing
+              for
+              P2P Network</a></li>
+            <li><a href='#latency-testing'>Latency Testing</a></li>
+            <li><a href='#migrate-to-a-more-current-library-for-webrtc'>Migrate
+              to
+              a More Current Library for WebRTC</a></li>
+            <li><a href='#scaling'>Scaling</a></li>
+          </ol>
         </ol>
-        <li><a href='#smooth-gameplay-with-missing-peer-data'>Smooth Gameplay with Missing Peer Data</a></li>
-        <ol>
-          <li><a href='#prediction-algorithm'>Prediction Algorithm</a></li>
-          <li><a href='#convergence-technique'>Convergence Technique</a></li>
-          <li><a href='#predictions-and-collision-checking'>Predictions and Collision Checking</a></li>
-        </ol>
-        <li><a href='#authority-and-consistency'>Authority and Consistency</a></li>
-        <ol>
-          <li><a href='#peer-to-peer-messaging-transport-protocol'>Peer-to-Peer Messaging Transport Protocol</a></li>
-          <li><a href='#peer-to-peer-message-content'>Peer-to-Peer Message Content</a></li>
-          <li><a href='#overlap-and-redundancy-in-peer-messages'>Overlap and Redundancy in Peer Messages</a></li>
-          <li><a href='#ensuring-consistency-with-a-crdt'>Ensuring Consistency with a CRDT</a></li>
-          <li><a href='#incorporating-a-crdt'>Incorporating a CRDT</a></li>
-        </ol>
-        <li><a href='#optimizations'>Optimizations</a></li>
-        <ol>
-          <li><a href='#data-structure-for-snake-bodies'>Data Structure for Snake Bodies</a></li>
-          <li><a href='#data-structure-for-the-game-board'>Data Structure for the Game Board</a></li>
-          <li><a href='#head-sets-for-display-boards-and-collision-checking'>Head Sets for Display Boards and Collision Checking</a></li>
-          <li><a href='#p2p-network-topology'>P2P Network Topology</a></li>
-        </ol>
-        <li><a href='#future-work'>Future Work</a></li>
-        <ol>
-          <li><a href='#automated-testing-for-p2p-network'>Automated Testing for P2P Network</a></li>
-          <li><a href='#latency-testing'>Latency Testing</a></li>
-          <li><a href='#migrate-to-a-more-current-library-for-webrtc'>Migrate to a More Current Library for WebRTC</a></li>
-          <li><a href='#scaling'>Scaling</a></li>
-        </ol>
-      </ol>
+      </div>
       <h2 id='introduction'>Introduction</h2>
       <p>In distributed multiplayer gaming, the client-server model has long
         been the dominant architecture. Clients send inputs to a central server
@@ -192,8 +211,7 @@ const lookup = (snake, tu) => (
       <ul>
         <li>What are the security risks of P2P communications?</li>
         <li>How do we mitigate the effects of latency resulting from
-          geographical
-          separation?
+          geographical separation?
         </li>
         <li>Without the authority of a central server, how is consistency of
           game state maintained?
@@ -205,16 +223,16 @@ const lookup = (snake, tu) => (
         wanted to push the limits of using the WebRTC data channel for
         time-critical communications while keeping game logic relatively simple.
         Turn-based games provide natural delays that mitigate the challenges of
-        working with direct peer-to-peer communications, but our snake game
-        proceeds relentlessly and smoothly forward regardless of latency and
+        working with direct peer-to-peer communications, but our snake game must
+        proceed relentlessly and smoothly forward regardless of latency and
         peer disconnections. Our use case necessitated efficiency of both local
         processing and peer-to-peer messaging, a prediction algorithm to fill in
-        missing peer data, and data structures and algorithms that ensured
+        missing peer data, and data structures and algorithms that could ensure
         eventual consistency across all peers.</p>
-      <p>In summary, our main challenges in building Ouroboros were</p>
+      <p>In summary, our main challenges were</p>
       <ul>
         <li>Synchronization</li>
-        <li>Providing smooth gameplay even when peer data is missing</li>
+        <li>Providing smooth gameplay even with missing peer data</li>
         <li>Replicating the game state across all peers</li>
       </ul>
 
@@ -233,25 +251,26 @@ const lookup = (snake, tu) => (
         typically used to support an accompanying chat box. However, the data
         channel is highly configurable and has a variety of use-cases, including
         online gaming.</p>
-      <p>We use a link-sharing model to broker connections between peers. When a
-        user sends an initial request to our server, a
-        WebSocket connection is established between the user and the server.
-        Then the app registers its location (public IP address) with the server.
-        The server then assigns a random, unique ID to the user which the app
-        uses to create and display a sharing link. So, when a new peer follows
-        the link, this ID is extracted from the URL and is passed to the server
-        to request a connection to the peer that is represents. Once a
-        connection is established between the two peers, a WebRTC data channel
-        is opened and peer-to-peer messaging can begin.</p>
-      <p>Establishing a peer-to-peer connection over the internet can be a
-        multi-step process. When a user follows the link to a game room, she
-        sends a request to a STUN (Session Traversal Utilities for NAT) server
-        to determine her public IP address and whether or not she is accessible
-        behind her router’s NAT (Network Address Translation). If she is
-        accessible, a direct WebRTC data connection is created between her and
-        her peers. If she is not accessible, a TURN (Traversal Using Relays
-        around NAT) server must act as an intermediary between her and her
-        peers, such that it is not a true “peer-to-peer” connection.
+      <p>In Ouroboros, we use a link-sharing model to make connections between
+        peers. When a user sends an initial request to our server, a WebSocket
+        connection is established and the app registers its location (public IP
+        address) with the server. The server then assigns a random, unique ID to
+        the user which is used by the app to create a sharing link that is
+        displayed in the user interface. When a new peer follows the link, the
+        ID is extracted from the URL and is passed to the server to request a
+        connection to the peer that it represents. Once a connection is
+        established between the two peers, a WebRTC data channel is opened and
+        direct peer-to-peer messaging can begin.</p>
+      <p>Under the hood, establishing a peer-to-peer connection over WebRTC is a
+        multi-step process. After a user follows a sharing link to the game
+        site, she sends a request to a STUN (Session Traversal Utilities for
+        NAT) server to determine her public IP address and whether or not she is
+        accessible behind her router’s NAT (Network Address Translation). If she
+        is accessible, a direct connection is created between her and the peer
+        associated with the ID in the sharing link. If she is not accessible, a
+        TURN (Traversal Using Relays around NAT) server must act as an
+        intermediary between her and her peers, such that it is not a direct
+        peer-to-peer connection.
         <Citation
           url='https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/'
           creator='Sam Dutton'
@@ -286,7 +305,7 @@ const lookup = (snake, tu) => (
         of the coordinates of the head. For example, if a snake is 5 squares
         long, those 5 squares are the current position of the head plus the
         previous 4 positions. Therefore, to represent the position of each snake
-        we track the coordinates of the head and store that history, flagging
+        we track the coordinates of the head and store that history, tagging
         each with a TU. The snake’s body is the coordinate pair at the current
         TU (the head) plus as many of the coordinates from previous TUs as
         needed given the current length of the snake.</p>
@@ -294,39 +313,60 @@ const lookup = (snake, tu) => (
         {tuSnakeBodiesCode}
       </SyntaxHighlighter>
       <div className='snake-heads'>
-        <span><img src={head0} alt='Snake Head at TU 10' /><p>Snake Head at TU 10</p></span>
+        <span>
+          <img src={head0} alt='Snake Head at TU 10' />
+          <p>Snake Head at TU 10</p>
+        </span>
         <span>+</span>
-        <span><img src={head1} alt='Snake Head at TU 9' /><p>Snake Head at TU 9</p></span>
+        <span>
+          <img src={head1} alt='Snake Head at TU 9' />
+          <p>Snake Head at TU 9</p>
+        </span>
         <span>+</span>
-        <span><img src={head2} alt='Snake Head at TU 8' /><p>Snake Head at TU 8</p></span>
+        <span>
+          <img src={head2} alt='Snake Head at TU 8' />
+          <p>Snake Head at TU 8</p>
+        </span>
         <span>+</span>
-        <span><img src={head3} alt='Snake Head at TU 7' /><p>Snake Head at TU 7</p></span>
+        <span>
+          <img src={head3} alt='Snake Head at TU 7' />
+          <p>Snake Head at TU 7</p>
+        </span>
         <span>+</span>
-        <span><img src={head4} alt='Snake Head at TU 6' /><p>Snake Head at TU 6</p></span>
+        <span>
+          <img src={head4} alt='Snake Head at TU 6' />
+          <p>Snake Head at TU 6</p>
+        </span>
         <span>=</span>
-        <span><img src={snakeBody} alt='Snake Body at TU 10' /><p>Snake Body at TU 10</p></span>
+        <span>
+          <img src={snakeBody} alt='Snake Body at TU 10' />
+          <p>Snake Body at TU 10, Body Length of 5</p>
+        </span>
       </div>
       <h3 id='collision-checking'>Collision Checking</h3>
       <p>In our game, a collision is defined as the head of your own snake
-        occupying the coordinates as a peer snake or another part of your own
-        body. So, in order to check for collisions, we must aggregate peer snake
-        positions and the position of your own snake, minus its head, into a
-        board. Then, we simply check the coordinates of the head against this
+        occupying the same coordinates as a peer snake or another part of your
+        own body. So, in order to check for collisions, we must aggregate peer
+        snake positions and the position of your own snake, minus its head, into
+        a board. Then, we simply check the coordinates of the head against this
         aggregate. If that position is occupied, there has been a collision and
         your snake is now dead.</p>
-      <h3 id='death-buffer'>Death Buffer</h3>
-      <p>When your snake dies, you announce a TU of death to your peers. If the
-        receiving peer has not yet reached the TU at which your snake died, this
-        information will be added to the death buffer. At every TU tick, the
-        death buffer is checked and any corresponding deaths are applied.</p>
-      <h3 id='living-snake-count-and-end-of-game'>Living Snake Count and End of Game</h3>
+      <h3 id='living-snake-count-and-end-of-game'>Living Snake Count and End of
+        Game</h3>
       <p>A count of living snakes is maintained throughout the game. Each time a
-        peer snake dies (either directly or by way of the death buffer), the
-        count is decremented. Maintaining this count allows us to check for the
-        game over conditions with minimal processing. In a single-player game,
-        the game ends when the sole snake dies. In a multi-player game, the game
-        ends when one or zero snakes remain (two snakes may die simultaneously
-        in a head-on collision).</p>
+        peer snake dies, the count is decremented. Maintaining this count allows
+        us to check for the game over conditions with minimal processing. In a
+        single-player game, the game ends when the sole snake dies. In a
+        multi-player game, the game ends when one or zero snakes remain (two
+        snakes may die simultaneously in a head-on collision).</p>
+      <h3 id='death-buffer'>Death Buffer</h3>
+      <p>When your snake dies, you announce a TU of death to your peers. This is
+        immediately captured in your peers&apos; local snake data structure,
+        but their living snake count is not decremented if they have not yet
+        reached the TU at which your snake died. In that case, the TU is added
+        to the death buffer. At every TU tick, the death buffer is checked and
+        any corresponding deaths are applied by decrementing the living snake
+        count accordingly.</p>
       <h3 id='game-over-buffer'>Game Over Buffer</h3>
       <p>When the game over condition is reached, a player will announce this to
         the other players after a short delay. The delay is put in place to
@@ -348,7 +388,8 @@ const lookup = (snake, tu) => (
         the local timer and a peer’s most recent TU exceeds latency threshold,
         that peer is removed from the current game; their snake is marked as
         dead, and they are shown an ‘out-of-sync’ message.</p>
-      <h2 id='smooth-gameplay-with-missing-peer-data'>Smooth Gameplay with Missing Peer Data</h2>
+      <h2 id='smooth-gameplay-with-missing-peer-data'>Smooth Gameplay with
+        Missing Peer Data</h2>
       <p>Network latency & interruptions can delay P2P messages, which means
         that peer data may not always be available when it is needed. How do we
         ensure a smooth gaming experience when peer data is missing?</p>
@@ -439,7 +480,8 @@ const lookup = (snake, tu) => (
         Every time snakes advance one square on the board, we discard the old
         board data, redraw the board with any new peer data, and then apply any
         necessary predictions.</p>
-      <h3 id='predictions-and-collision-checking'>Predictions and Collision Checking</h3>
+      <h3 id='predictions-and-collision-checking'>Predictions and Collision
+        Checking</h3>
       <p>Predicted data is not used for collision checking. As a result,
         apparent collisions in the board may not be confirmed by real peer data
         and will not cause a snake to die. Although this policy may seem
@@ -457,7 +499,8 @@ const lookup = (snake, tu) => (
         a TU tick), this information is broadcast to the other peers. Each peer
         must then efficiently incorporate this data into her local data
         structure in such a way that eventual consistency is ensured.</p>
-      <h3 id='peer-to-peer-messaging-transport-protocol'>Peer-to-Peer Messaging Transport Protocol</h3>
+      <h3 id='peer-to-peer-messaging-transport-protocol'>Peer-to-Peer Messaging
+        Transport Protocol</h3>
       <p>The WebRTC data channel is implemented with Stream Control Transmission
         Protocol (SCTP), which can be configured to behave like TCP or UDP
         depending on the desired functionality. Using a reliable TCP-like
@@ -508,7 +551,8 @@ const lookup = (snake, tu) => (
       <p>Moreover, we need strategies to prevent data loss when messages are
         dropped, and to keep the game state from being distorted when messages
         are duplicated or received out of order.</p>
-      <h3 id='overlap-and-redundancy-in-peer-messages'>Overlap and Redundancy in Peer Messages</h3>
+      <h3 id='overlap-and-redundancy-in-peer-messages'>Overlap and Redundancy in
+        Peer Messages</h3>
       <p>Because our messaging protocol does not guarantee that messages will be
         received, we must structure our messaging to provide redundancy so that
         dropped messages do not result in data loss. So, with each TU tick, each
@@ -524,7 +568,8 @@ const lookup = (snake, tu) => (
           comment='Journal of Parallel and Distributed Computing, Volume 111, Pages 162-173'
         />
       </p>
-      <h3 id='ensuring-consistency-with-a-crdt'>Ensuring Consistency with a CRDT</h3>
+      <h3 id='ensuring-consistency-with-a-crdt'>Ensuring Consistency with a
+        CRDT</h3>
       <p>A conflict-free replicated data type, or <b>CRDT</b>, is any
         distributed data structure that guarantees eventual consistency of
         replicas that are updated independently and without direct coordination.
@@ -551,8 +596,8 @@ const lookup = (snake, tu) => (
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {currentStateCode}
       </SyntaxHighlighter>
-      <p>...and we receive the following data from the peer controlling <code>snake
-        1</code>...</p>
+      <p>...and we receive the following data from the peer controlling <code>
+        snake 1</code>...</p>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {receivedStateCode}
       </SyntaxHighlighter>
@@ -571,7 +616,8 @@ const lookup = (snake, tu) => (
         relevant to gameplay and can be safely discarded.</p>
 
       <h2 id='optimizations'>Optimizations</h2>
-      <h3 id='data-structure-for-snake-bodies'>Data Structure for Snake Bodies</h3>
+      <h3 id='data-structure-for-snake-bodies'>Data Structure for Snake
+        Bodies</h3>
       <p>We had three requirements for our snake data structure:</p>
       <ul>
         <li>Fast insertion of new coordinates</li>
@@ -608,7 +654,8 @@ const lookup = (snake, tu) => (
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {lhmOperationsCode}
       </SyntaxHighlighter>
-      <h3 id='data-structure-for-the-game-board'>Data Structure for the Game Board</h3>
+      <h3 id='data-structure-for-the-game-board'>Data Structure for the Game
+        Board</h3>
       <p>The game board, which is used for display and for collision checking,
         was initially implemented as a sparse matrix using nested arrays:</p>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
@@ -689,7 +736,8 @@ snakeInBoard = board[42];`}
       <p>This structure gave us <code>O(1)</code> lookup by square number and
         efficient shallow
         merging.</p>
-      <h3 id='head-sets-for-display-boards-and-collision-checking'>Head Sets for Display Boards and Collision Checking</h3>
+      <h3 id='head-sets-for-display-boards-and-collision-checking'>Head Sets for
+        Display Boards and Collision Checking</h3>
       <p>In order to display a game board or to check for snake collisions,
         snake data must be aggregated into boards. It would be very inefficient
         to re-aggregate boards from snake data each time a new board was needed,
@@ -703,17 +751,35 @@ snakeInBoard = board[42];`}
         snake lengths increase, using them dramatically improves efficiency of
         aggregating boards for collision checking and display.</p>
       <div className='head-sets'>
-        <span><img src={headset0} alt='Snake Heads at TU 10' /><p>Snake Heads at TU 10</p></span>
+        <span>
+          <img src={headset0} alt='Snake Heads at TU 10' />
+          <p>Snake Heads at TU 10</p>
+        </span>
         <span>+</span>
-        <span><img src={headset1} alt='Snake Heads at TU 9' /><p>Snake Heads at TU 9</p></span>
+        <span>
+          <img src={headset1} alt='Snake Heads at TU 9' />
+          <p>Snake Heads at TU 9</p>
+        </span>
         <span>+</span>
-        <span><img src={headset2} alt='Snake Heads at TU 8' /><p>Snake Heads at TU 8</p></span>
+        <span>
+          <img src={headset2} alt='Snake Heads at TU 8' />
+          <p>Snake Heads at TU 8</p>
+        </span>
         <span>+</span>
-        <span><img src={headset3} alt='Snake Heads at TU 7' /><p>Snake Heads at TU 7</p></span>
+        <span>
+          <img src={headset3} alt='Snake Heads at TU 7' />
+          <p>Snake Heads at TU 7</p>
+        </span>
         <span>+</span>
-        <span><img src={headset4} alt='Snake Heads at TU 6' /><p>Snake Heads at TU 6</p></span>
+        <span>
+          <img src={headset4} alt='Snake Heads at TU 6' />
+          <p>Snake Heads at TU 6</p>
+        </span>
         <span>=</span>
-        <span><img src={board} alt='Board at TU 10' /><p>Board at TU 10</p></span>
+        <span>
+          <img src={board} alt='Board at TU 10' />
+          <p>Board at TU 10</p>
+        </span>
       </div>
       <p>The local snake is not included in the head sets to prevent the local
         snake from overwriting another snake’s coordinates, which would
@@ -754,12 +820,14 @@ snakeInBoard = board[42];`}
         </div>
         <div className='four columns'>
           <img alt='full-mesh peer-to-peer network topology' src={fullMesh} />
-          <p className='align-center'>Full-Mesh Peer-to-Peer Network Topology</p>
+          <p className='align-center'>Full-Mesh Peer-to-Peer Network
+            Topology</p>
         </div>
       </div>
 
       <h2 id='future-work'>Future Work</h2>
-      <h3 id='automated-testing-for-p2p-network'>Automated Testing for P2P Network</h3>
+      <h3 id='automated-testing-for-p2p-network'>Automated Testing for P2P
+        Network</h3>
       <p>All of the testing of our P2P network was manual, which is inefficient
         and error prone. Our initial research suggests that simulating P2P
         networks is a very complex task,
@@ -781,7 +849,8 @@ snakeInBoard = board[42];`}
         simple as implementing a simple peer-to-peer ping test and developing
         criteria for adjusting game settings accordingly.
       </p>
-      <h3 id='migrate-to-a-more-current-library-for-webrtc'>Migrate to a More Current Library for WebRTC</h3>
+      <h3 id='migrate-to-a-more-current-library-for-webrtc'>Migrate to a More
+        Current Library for WebRTC</h3>
       <p>We are currently using <a href='https://github.com/peers'>Peer.js</a>,
         a library that provides a wrapper for the WebRTC API and code to
         broker peer-to-peer connections on our signalling server. Unfortunately,
