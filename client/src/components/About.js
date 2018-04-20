@@ -2,6 +2,33 @@ import React from 'react';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
+import webrtc from '../assets/images/about/webrtc.png';
+import fullMesh from '../assets/images/about/full-mesh.png';
+import head0
+  from '../assets/images/about/snake-heads-into-bodies-light-bkgnd_h.png';
+import head1
+  from '../assets/images/about/snake-heads-into-bodies-light-bkgnd_h-1.png';
+import head2
+  from '../assets/images/about/snake-heads-into-bodies-light-bkgnd_h-2.png';
+import head3
+  from '../assets/images/about/snake-heads-into-bodies-light-bkgnd_h-3.png';
+import head4
+  from '../assets/images/about/snake-heads-into-bodies-light-bkgnd_h-4.png';
+import snakeBody
+  from '../assets/images/about/snake-heads-into-bodies-light-bkgnd_all.png';
+import headset0
+  from '../assets/images/about/head-sets-into-boards-light-bkgnd_h.png';
+import headset1
+  from '../assets/images/about/head-sets-into-boards-light-bkgnd_h-1.png';
+import headset2
+  from '../assets/images/about/head-sets-into-boards-light-bkgnd_h-2.png';
+import headset3
+  from '../assets/images/about/head-sets-into-boards-light-bkgnd_h-3.png';
+import headset4
+  from '../assets/images/about/head-sets-into-boards-light-bkgnd_h-4.png';
+import board
+  from '../assets/images/about/head-sets-into-boards-light-bkgnd_all.png';
+
 import Citation from './Citation';
 
 const About = () => {
@@ -189,6 +216,7 @@ const lookup = (snake, tu) => (
           title='WebRTC in the Real World: STUN, TURN and Signaling'
         />
       </p>
+      <img alt='peer connections via WebRTC' src={webrtc} />
 
       <h2>Synchronization</h2>
       <p>Latency will always prevent peers from being precisely synchronized,
@@ -221,6 +249,19 @@ const lookup = (snake, tu) => (
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {tuSnakeBodiesCode}
       </SyntaxHighlighter>
+      <div className='snake-heads'>
+        <img src={head0} />
+        <span>+</span>
+        <img src={head1} />
+        <span>+</span>
+        <img src={head2} />
+        <span>+</span>
+        <img src={head3} />
+        <span>+</span>
+        <img src={head4} />
+        <span>=</span>
+        <img src={snakeBody} />
+      </div>
       <h3>Collision Checking</h3>
       <p>In our game, a collision is defined as the head of your own snake
         occupying the coordinates as a peer snake or another part of your own
@@ -617,6 +658,19 @@ snakeInBoard = board[42];`}
         Because the head sets are reusable for a range of TUs that increases as
         snake lengths increase, using them dramatically improves efficiency of
         aggregating boards for collision checking and display.</p>
+      <div className='head-sets'>
+        <img src={headset0} />
+        <span>+</span>
+        <img src={headset1} />
+        <span>+</span>
+        <img src={headset2} />
+        <span>+</span>
+        <img src={headset3} />
+        <span>+</span>
+        <img src={headset4} />
+        <span>=</span>
+        <img src={board} />
+      </div>
       <p>The local snake is not included in the head sets to prevent the local
         snake from overwriting another snake’s coordinates, which would
         complicate the detection of collisions. A board that will be used to
@@ -636,18 +690,29 @@ snakeInBoard = board[42];`}
         head sets are idempotent, commutative, and associative to protect their
         integrity.</p>
       <h3>P2P Network Topology</h3>
-      <p>When selecting a P2P network topology, our goal was to minimize the
-        effect of latency as much as possible by eliminating intermediaries
-        between peers. The topology that best accomplishes this is a
-        fully-connected or full-mesh structure. In this structure, each peer is
-        connected directly to all other peers with no intermediaries. This
-        eliminates the need to relay messages, which would compound latency
-        between peers. Although it requires more effort in the initial setup,
-        once a full-mesh network is in place broadcasting becomes a simple
-        matter of iterating through all connections. This model has a higher
-        bandwidth overhead because each message is sent individually (no message
-        aggregation), but this is not a concern for the small, text-based
-        messages that are exchanged in Ouroboros.</p>
+      <div className='row'>
+        <div className='eight columns'>
+          <p>When selecting a P2P network topology, our goal was to minimize the
+            effect of latency as much as possible by eliminating intermediaries
+            between peers. The topology that best accomplishes this is a
+            fully-connected or full-mesh structure. In this structure, each peer
+            is
+            connected directly to all other peers with no intermediaries. This
+            eliminates the need to relay messages, which would compound latency
+            between peers. Although it requires more effort in the initial
+            setup,
+            once a full-mesh network is in place broadcasting becomes a simple
+            matter of iterating through all connections. This model has a higher
+            bandwidth overhead because each message is sent individually (no
+            message
+            aggregation), but this is not a concern for the small, text-based
+            messages that are exchanged in Ouroboros.</p>
+        </div>
+        <div className='four columns'>
+          <img alt='full-mesh peer-to-peer network topology' src={fullMesh} />
+          <p className='align-center'>Full-Mesh Peer-to-Peer Network Topology</p>
+        </div>
+      </div>
 
       <h2>Future Work</h2>
       <h3>Automated Testing for P2P Network</h3>

@@ -62,6 +62,10 @@ aside {
   text-align: center;
 }
 
+pre > code {
+  overflow-x: scroll;
+}
+
 // Lists, Tables, Forms
 ul {
   list-style: disc outside;
@@ -378,6 +382,26 @@ main.container {
 // Page-specific
 img.keyboard {
   max-width: 20rem;
+}
+
+.snake-heads, .head-sets {
+  text-align: center;
+  margin: 0 0 2.5rem 0;
+
+  img, span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  span {
+    font-size: 175%;
+    margin: 0.5rem 0.5%;
+  }
+
+  img {
+    width: 24%;
+    margin: 0.5rem 1.5%;
+  }
 }
 
 .hljs { // syntax highlighting
