@@ -9,9 +9,9 @@ import '../assets/styles/index.scss';
 import Header from './Header';
 import Game from './Game';
 import Incompatible from './Incompatible';
-import Troubleshooting from './Troubleshooting';
+import Help from './Help';
 import Home from './Home';
-import HowToPlay from './HowToPlay';
+import About from './About';
 
 class App extends React.Component {
   state = {
@@ -38,8 +38,8 @@ class App extends React.Component {
         <Header />
         <Switch>
           <Route exact path='/' component={Home} />
-          <Route exact path='/how-to-play' component={HowToPlay} />
-          <Route exact path='/troubleshooting' component={Troubleshooting} />
+          <Route exact path='/about' component={About} />
+          <Route exact path='/help' component={Help} />
           <Route
             path='/play/:peerId?'
             render={({ match }) => {

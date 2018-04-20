@@ -6,6 +6,9 @@ node_modules
 # testing
 coverage
 
+# compiled CSS
+src/assets/styles/index.css
+
 # misc
 .DS_Store
 .env
