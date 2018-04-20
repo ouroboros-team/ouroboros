@@ -38,17 +38,19 @@ const About = () => {
   };
 
   const tuKeysCode = `positions: {
-  140: { row: 5, column: 3 },
-  139: { row: 5, column: 4 },
-  138: { row: 5, column: 5 },
-  137: { row: 5, column: 6 }
+  10: { row: 6, column: 4 }, // coordinates of head at TU 10
+  9: { row: 6, column: 3 }, // coordinates of head at TU 9
+  8: { row: 5, column: 3 }, // etc...
+  7: { row: 4, column: 3 },
+  6: { row: 3, column: 3 },
 }`;
 
   const tuSnakeBodiesCode = `positions: {
-  140: { row: 5, column: 3 }, // head of snake
-  139: { row: 5, column: 4 }, // head from TU 139, now part of body
-  138: { row: 5, column: 5 }, // head from TU 138...
-  137: { row: 5, column: 6 }, // ...
+  10: { row: 6, column: 4 }, // coordinates of head at TU 10
+  9: { row: 6, column: 3 }, // head from TU 9, now part of body
+  8: { row: 5, column: 3 }, // head from TU 8...
+  7: { row: 4, column: 3 }, // etc...
+  6: { row: 3, column: 3 },
 }`;
 
   const currentStateCode = `{
@@ -77,21 +79,21 @@ const About = () => {
   newest: 25,
   oldest: 11,
   byKey: {
-    '11': { row: 17, column: 4 },
-    '12': { row: 17, column: 5 },
-    '13': { row: 17, column: 6 },
-    '14': { row: 16, column: 6 }, 
-    '15': { row: 15, column: 6 },
-    '16': { row: 15, column: 7 },
-    '17': { row: 15, column: 8 },
-    '18': { row: 15, column: 9 },
-    '19': { row: 15, column: 10 },
-    '20': { row: 14, column: 10 },
-    '21': { row: 14, column: 9 },
-    '22': { row: 14, column: 8 },
-    '23': { row: 14, column: 7 },
-    '24': { row: 15, column: 7 },
-    '25': { row: 15, column: 8 },
+    11: { row: 17, column: 4 },
+    12: { row: 17, column: 5 },
+    13: { row: 17, column: 6 },
+    14: { row: 16, column: 6 }, 
+    15: { row: 15, column: 6 },
+    16: { row: 15, column: 7 },
+    17: { row: 15, column: 8 },
+    18: { row: 15, column: 9 },
+    19: { row: 15, column: 10 },
+    20: { row: 14, column: 10 },
+    21: { row: 14, column: 9 },
+    22: { row: 14, column: 8 },
+    23: { row: 14, column: 7 },
+    24: { row: 15, column: 7 },
+    25: { row: 15, column: 8 },
   }
 }`;
 
@@ -239,9 +241,9 @@ const lookup = (snake, tu) => (
       <h3>TUs and Snake Bodies</h3>
       <p>In the classic snake game (and ours), the body of the snake follows the
         path of the head, so the coordinates of the body represent the history
-        of the coordinates of the head. For example, if a snake is 4 squares
-        long, those 4 squares are the current position of the head plus the
-        previous 3 positions. Therefore, to represent the position of each snake
+        of the coordinates of the head. For example, if a snake is 5 squares
+        long, those 5 squares are the current position of the head plus the
+        previous 4 positions. Therefore, to represent the position of each snake
         we track the coordinates of the head and store that history, flagging
         each with a TU. The snake’s body is the coordinate pair at the current
         TU (the head) plus as many of the coordinates from previous TUs as
@@ -250,17 +252,17 @@ const lookup = (snake, tu) => (
         {tuSnakeBodiesCode}
       </SyntaxHighlighter>
       <div className='snake-heads'>
-        <img src={head0} />
+        <span><img src={head0} alt='Snake Head at TU 10' /><p>Snake Head at TU 10</p></span>
         <span>+</span>
-        <img src={head1} />
+        <span><img src={head1} alt='Snake Head at TU 9' /><p>Snake Head at TU 9</p></span>
         <span>+</span>
-        <img src={head2} />
+        <span><img src={head2} alt='Snake Head at TU 8' /><p>Snake Head at TU 8</p></span>
         <span>+</span>
-        <img src={head3} />
+        <span><img src={head3} alt='Snake Head at TU 7' /><p>Snake Head at TU 7</p></span>
         <span>+</span>
-        <img src={head4} />
+        <span><img src={head4} alt='Snake Head at TU 6' /><p>Snake Head at TU 6</p></span>
         <span>=</span>
-        <img src={snakeBody} />
+        <span><img src={snakeBody} alt='Snake Body at TU 10' /><p>Snake Body at TU 10</p></span>
       </div>
       <h3>Collision Checking</h3>
       <p>In our game, a collision is defined as the head of your own snake
@@ -659,17 +661,17 @@ snakeInBoard = board[42];`}
         snake lengths increase, using them dramatically improves efficiency of
         aggregating boards for collision checking and display.</p>
       <div className='head-sets'>
-        <img src={headset0} />
+        <span><img src={headset0} alt='Snake Heads at TU 10' /><p>Snake Heads at TU 10</p></span>
         <span>+</span>
-        <img src={headset1} />
+        <span><img src={headset1} alt='Snake Heads at TU 9' /><p>Snake Heads at TU 9</p></span>
         <span>+</span>
-        <img src={headset2} />
+        <span><img src={headset2} alt='Snake Heads at TU 8' /><p>Snake Heads at TU 8</p></span>
         <span>+</span>
-        <img src={headset3} />
+        <span><img src={headset3} alt='Snake Heads at TU 7' /><p>Snake Heads at TU 7</p></span>
         <span>+</span>
-        <img src={headset4} />
+        <span><img src={headset4} alt='Snake Heads at TU 6' /><p>Snake Heads at TU 6</p></span>
         <span>=</span>
-        <img src={board} />
+        <span><img src={board} alt='Board at TU 10' /><p>Board at TU 10</p></span>
       </div>
       <p>The local snake is not included in the head sets to prevent the local
         snake from overwriting another snake’s coordinates, which would

@@ -388,19 +388,16 @@ img.keyboard {
   text-align: center;
   margin: 0 0 2.5rem 0;
 
-  img, span {
+  span {
     display: inline-block;
     vertical-align: middle;
-  }
-
-  span {
     font-size: 175%;
-    margin: 0.5rem 0.5%;
-  }
+    margin: 0.5rem 1%;
+    max-width: 24%;
 
-  img {
-    width: 24%;
-    margin: 0.5rem 1.5%;
+    p {
+      font-size: 1.5rem;
+    }
   }
 }
 
