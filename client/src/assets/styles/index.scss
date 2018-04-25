@@ -180,7 +180,6 @@ main.container {
 
   #player-list {
     margin: 0;
-    text-indent: 0;
     padding: 0;
     display: inline-block;
     width: 100%;
@@ -190,6 +189,7 @@ main.container {
     ul {
       width: 100%;
       text-align: center;
+      text-indent: 0;
       list-style: none;
       margin: 0;
       padding: 0;
