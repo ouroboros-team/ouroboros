@@ -32,6 +32,14 @@ export default class Citation extends React.Component {
     this.setState({ show: false });
   };
 
+  handleTouch = () => {
+    if (this.state.show) {
+      this.hideDisplay();
+    } else {
+      this.showDisplay();
+    }
+  };
+
   render() {
     const creator = (
       <tr>
@@ -90,6 +98,7 @@ export default class Citation extends React.Component {
         className='citation'
         onMouseOver={this.showDisplay}
         onMouseLeave={this.hideDisplay}
+        onTouchStart={this.handleTouch}
       >
         <a>&#10000;</a>
         {this.state.show ? display : ''}
