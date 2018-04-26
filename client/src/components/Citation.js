@@ -82,12 +82,12 @@ export default class Citation extends React.Component {
         <p>Citation</p>
         <table>
           <tbody>
-            {this.props.creator ? creator : ''}
-            {this.props.creationDate ? creationDate : ''}
-            {this.props.title ? title : ''}
-            {this.props.contributingOrganization ? contributingOrganization : ''}
-            {this.props.url ? url : ''}
-            {this.props.comment ? comment : ''}
+            {this.props.creator ? creator : undefined}
+            {this.props.creationDate ? creationDate : undefined}
+            {this.props.title ? title : undefined}
+            {this.props.contributingOrganization ? contributingOrganization : undefined}
+            {this.props.url ? url : undefined}
+            {this.props.comment ? comment : undefined}
           </tbody>
         </table>
       </div>
