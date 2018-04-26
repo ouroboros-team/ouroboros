@@ -588,7 +588,15 @@ const lookup = (snake, tu) => (
         or received out of order.</p>
       <h3 id='incorporating-a-crdt'>Incorporating a CRDT</h3>
       <p>Snake states are represented by a variation of the Grow-only Set
-        (G-set) CRDT. Whenever new snake data is received, any TUs newer than
+        (G-set) CRDT.
+        <Citation
+          creator='Marc Shapiro, Nuno Preguiça, Carlos Baquero, Marek Zawirski'
+          title='A Comprehensive Study of Convergent and Commutative Replicated Data Types'
+          contributingOrganization='INRIA: French Institute for Research in Computer Science and Automation'
+          url='https://hal.inria.fr/inria-00555588/document'
+          comment='Pages 21-22'
+        />
+        Whenever new snake data is received, any TUs newer than
         existing data are simply added to the collection. Changes in direction
         are made whenever the most recent TU in the message is the same or
         greater than the most recent TU in the local data structure.</p>
