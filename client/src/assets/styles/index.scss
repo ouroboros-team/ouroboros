@@ -105,6 +105,10 @@ table {
       text-align: center;
     }
   }
+
+  code {
+    white-space: normal;
+  }
 }
 
 .button, button, input[type="submit"], input[type="reset"], input[type="button"] {
@@ -314,7 +318,7 @@ main.container {
     border-radius: .5rem;
     width: 30rem;
 
-    p {
+    p, div.p {
       @include all-caps();
       text-align: center;
       color: $gray;
@@ -352,6 +356,11 @@ main.container {
 }
 
 // Miscellaneous
+div.p { // to prevent invalid nesting when using Citation component
+  margin-top: 0;
+  margin-bottom: 2.5rem;
+}
+
 #messages {
   min-height: 2.5rem;
   word-break: break-word;
@@ -427,7 +436,7 @@ img.keyboard {
     padding: 0.5rem 1%;
     max-width: 24%;
 
-    p {
+    p, div.p {
       font-size: 1.5rem;
     }
   }

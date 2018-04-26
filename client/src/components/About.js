@@ -54,9 +54,9 @@ const About = () => {
 }`;
 
   const currentStateCode = `{
-  Id: 1,
-  Direction: ‘left’,
-  Positions: {
+  id: 1,
+  direction: ‘left’,
+  positions: {
     139: { row: 5, column: 4 },
     138: { row: 5, column: 5 },
     // ...
@@ -64,9 +64,9 @@ const About = () => {
 }`;
 
   const receivedStateCode = `{
-  Id: 1,
-  Direction: ‘up’,
-  Positions: {
+  id: 1,
+  direction: ‘up’,
+  positions: {
     141: { row: 4, column: 3 },
     140: { row: 5, column: 3 },
     139: { row: 5, column: 4 },
@@ -117,7 +117,7 @@ const lookup = (snake, tu) => (
   return (
     <main className='container'>
       <h1>Building Ouroboros</h1>
-      <div class='toc row'>
+      <div className='toc row'>
         <aside>Hover over the blue circles for citations
           <Citation creator='Example Author' url='https://example.com' />
         </aside>
@@ -182,17 +182,21 @@ const lookup = (snake, tu) => (
         </ol>
       </div>
       <h2 id='introduction'>Introduction</h2>
-      <p>In distributed multiplayer gaming, the client-server model has long
+      <div className='p'>In distributed multiplayer gaming, the client-server
+        model has long
         been the dominant architecture. Clients send inputs to a central server
         that updates the game state accordingly and provides an authoritative
         view of the game to all connected clients. If a conflict arises between
         a player’s local state and the server state, the client must accept the
         server’s view of the game. Having a single source of truth guarantees
         consistency, meaning that all players will experience the same game
-        state.</p>
-      <p>Peer-to-peer gaming, on the other hand, has no central server that can
+        state.
+      </div>
+      <div className='p'>Peer-to-peer gaming, on the other hand, has no central
+        server that can
         offer this guarantee, but is nonetheless intriguing for several
-        reasons:</p>
+        reasons:
+      </div>
       <ul>
         <li>P2P architectures are cheaper to build and maintain because they
           rely on peers’ resources (processing, storage, network) rather than
@@ -206,8 +210,10 @@ const lookup = (snake, tu) => (
           intermediaries
         </li>
       </ul>
-      <p>These are significant advantages, both for players and game developers.
-        However, P2P gaming also poses many challenges:</p>
+      <div className='p'>These are significant advantages, both for players and
+        game developers.
+        However, P2P gaming also poses many challenges:
+      </div>
       <ul>
         <li>What are the security risks of P2P communications?</li>
         <li>How do we mitigate the effects of latency resulting from
@@ -217,7 +223,8 @@ const lookup = (snake, tu) => (
           game state maintained?
         </li>
       </ul>
-      <p>Our project, Ouroboros, is a real-time peer-to-peer multiplayer snake
+      <div className='p'>Our project, Ouroboros, is a real-time peer-to-peer
+        multiplayer snake
         game that was created to take on some of these challenges and explore
         this brave new world. We chose to implement a snake game because we
         wanted to push the limits of using the WebRTC data channel for
@@ -228,16 +235,19 @@ const lookup = (snake, tu) => (
         peer disconnections. Our use case necessitated efficiency of both local
         processing and peer-to-peer messaging, a prediction algorithm to fill in
         missing peer data, and data structures and algorithms that could ensure
-        eventual consistency across all peers.</p>
-      <p>In summary, our main challenges were</p>
+        eventual consistency across all peers.
+      </div>
+      <div className='p'>In summary, our main challenges were</div>
       <ul>
         <li>Synchronization</li>
         <li>Providing smooth gameplay even with missing peer data</li>
         <li>Replicating the game state across all peers</li>
       </ul>
 
-      <h2 id='background-webrtc'>Background: WebRTC</h2>
-      <p>Peer-to-peer communication has been available natively in some browsers
+      <h2 id='background-webrtc'>Getting Started: Connecting Peers with
+        WebRTC</h2>
+      <div className='p'>Peer-to-peer communication has been available natively
+        in some browsers
         since the introduction of WebRTC in 2010. WebRTC is a peer-to-peer API
         that is now supported natively in all major browsers
         <Citation
@@ -250,8 +260,10 @@ const lookup = (snake, tu) => (
         of audio- and video-conferencing, while the WebRTC data channel is
         typically used to support an accompanying chat box. However, the data
         channel is highly configurable and has a variety of use-cases, including
-        online gaming.</p>
-      <p>In Ouroboros, we use a link-sharing model to make connections between
+        online gaming.
+      </div>
+      <div className='p'>In Ouroboros, we use a link-sharing model to make
+        connections between
         peers. When a user sends an initial request to our server, a WebSocket
         connection is established and the app registers its location (public IP
         address) with the server. The server then assigns a random, unique ID to
@@ -260,8 +272,10 @@ const lookup = (snake, tu) => (
         ID is extracted from the URL and is passed to the server to request a
         connection to the peer that it represents. Once a connection is
         established between the two peers, a WebRTC data channel is opened and
-        direct peer-to-peer messaging can begin.</p>
-      <p>Under the hood, establishing a peer-to-peer connection over WebRTC is a
+        direct peer-to-peer messaging can begin.
+      </div>
+      <div className='p'>Under the hood, establishing a peer-to-peer connection
+        over WebRTC is a
         multi-step process. After a user follows a sharing link to the game
         site, she sends a request to a STUN (Session Traversal Utilities for
         NAT) server to determine her public IP address and whether or not she is
@@ -278,29 +292,38 @@ const lookup = (snake, tu) => (
           contributingOrganization='HTML5Rocks.com'
           title='WebRTC in the Real World: STUN, TURN and Signaling'
         />
-      </p>
+      </div>
       <img alt='peer connections via WebRTC' src={webrtc} />
 
       <h2 id='synchronization'>Synchronization</h2>
-      <p>Latency will always prevent peers from being precisely synchronized,
+      <div className='p'>Latency will always prevent peers from being precisely
+        synchronized,
         but an approximation is necessary for a multiplayer game to be coherent.
         In order to implement synchrony, we introduced sequence numbers that we
-        call ‘time units’ or TUs.</p>
-      <p>One TU corresponds to a snake moving forward by one square. Each
+        call ‘time units’ or TUs.
+      </div>
+      <div className='p'>One TU corresponds to a snake moving forward by one
+        square. Each
         instance of the game has a local timer that increments the TU after a
         regular interval. The real-time length of this interval is currently
         250ms (a quarter of a second), which was determined by balancing
-        performance considerations and user experience.</p>
-      <p>When messages are sent to other peers, TUs are used as keys for snake
-        position coordinates:</p>
+        performance considerations and user experience.
+      </div>
+      <div className='p'>When messages are sent to other peers, TUs are used as
+        keys for snake
+        position coordinates:
+      </div>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {tuKeysCode}
       </SyntaxHighlighter>
-      <p>When the message is received, the receiving peer will incorporate this
+      <div className='p'>When the message is received, the receiving peer will
+        incorporate this
         data into their local data structures, using the TUs to synchronize this
-        snake’s data with that of the other snakes in the game.</p>
+        snake’s data with that of the other snakes in the game.
+      </div>
       <h3 id='tus-and-snake-bodies'>TUs and Snake Bodies</h3>
-      <p>In the classic snake game (and ours), the body of the snake follows the
+      <div className='p'>In the classic snake game (and ours), the body of the
+        snake follows the
         path of the head, so the coordinates of the body represent the history
         of the coordinates of the head. For example, if a snake is 5 squares
         long, those 5 squares are the current position of the head plus the
@@ -308,67 +331,75 @@ const lookup = (snake, tu) => (
         we track the coordinates of the head and store that history, tagging
         each with a TU. The snake’s body is the coordinate pair at the current
         TU (the head) plus as many of the coordinates from previous TUs as
-        needed given the current length of the snake.</p>
+        needed given the current length of the snake.
+      </div>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {tuSnakeBodiesCode}
       </SyntaxHighlighter>
       <div className='snake-heads'>
         <span>
           <img src={head0} alt='Snake Head at TU 10' />
-          <p>Snake Head at TU 10</p>
+          <div className='p'>Snake Head at TU 10</div>
         </span>
         <span>+</span>
         <span>
           <img src={head1} alt='Snake Head at TU 9' />
-          <p>Snake Head at TU 9</p>
+          <div className='p'>Snake Head at TU 9</div>
         </span>
         <span>+</span>
         <span>
           <img src={head2} alt='Snake Head at TU 8' />
-          <p>Snake Head at TU 8</p>
+          <div className='p'>Snake Head at TU 8</div>
         </span>
         <span>+</span>
         <span>
           <img src={head3} alt='Snake Head at TU 7' />
-          <p>Snake Head at TU 7</p>
+          <div className='p'>Snake Head at TU 7</div>
         </span>
         <span>+</span>
         <span>
           <img src={head4} alt='Snake Head at TU 6' />
-          <p>Snake Head at TU 6</p>
+          <div className='p'>Snake Head at TU 6</div>
         </span>
         <span>=</span>
         <span>
           <img src={snakeBody} alt='Snake Body at TU 10' />
-          <p>Snake Body at TU 10, Body Length of 5</p>
+          <div className='p'>Snake Body at TU 10, Body Length of 5</div>
         </span>
       </div>
       <h3 id='collision-checking'>Collision Checking</h3>
-      <p>In our game, a collision is defined as the head of your own snake
+      <div className='p'>In our game, a collision is defined as the head of your
+        own snake
         occupying the same coordinates as a peer snake or another part of your
         own body. So, in order to check for collisions, we must aggregate peer
         snake positions and the position of your own snake, minus its head, into
         a board. Then, we simply check the coordinates of the head against this
         aggregate. If that position is occupied, there has been a collision and
-        your snake is now dead.</p>
+        your snake is now dead.
+      </div>
       <h3 id='living-snake-count-and-end-of-game'>Living Snake Count and End of
         Game</h3>
-      <p>A count of living snakes is maintained throughout the game. Each time a
+      <div className='p'>A count of living snakes is maintained throughout the
+        game. Each time a
         peer snake dies, the count is decremented. Maintaining this count allows
         us to check for the game over conditions with minimal processing. In a
         single-player game, the game ends when the sole snake dies. In a
         multi-player game, the game ends when one or zero snakes remain (two
-        snakes may die simultaneously in a head-on collision).</p>
+        snakes may die simultaneously in a head-on collision).
+      </div>
       <h3 id='death-buffer'>Death Buffer</h3>
-      <p>When your snake dies, you announce a TU of death to your peers. This is
+      <div className='p'>When your snake dies, you announce a TU of death to
+        your peers. This is
         immediately captured in your peers&apos; local snake data structure,
         but their living snake count is not decremented if they have not yet
         reached the TU at which your snake died. In that case, the TU is added
         to the death buffer. At every TU tick, the death buffer is checked and
         any corresponding deaths are applied by decrementing the living snake
-        count accordingly.</p>
+        count accordingly.
+      </div>
       <h3 id='game-over-buffer'>Game Over Buffer</h3>
-      <p>When the game over condition is reached, a player will announce this to
+      <div className='p'>When the game over condition is reached, a player will
+        announce this to
         the other players after a short delay. The delay is put in place to
         allow the announcing player to receive any pending peer messages so that
         the winner(s) is/are identified as accurately as possible. When players
@@ -378,22 +409,28 @@ const lookup = (snake, tu) => (
         every TU tick and any corresponding game over announcement is applied.
         This allows players that are slightly out of sync with their peers to
         complete the last few moves of the game, allowing all peers to have a
-        more complete and accurate view of the final game state.</p>
+        more complete and accurate view of the final game state.
+      </div>
       <h3 id='tus-for-latency-tolerance'>TUs for Latency Tolerance</h3>
-      <p>In order to ensure a good user experience, it is necessary to impose a
+      <div className='p'>In order to ensure a good user experience, it is
+        necessary to impose a
         latency threshold. There are mechanisms in place (discussed later) to
         provide smooth gameplay despite some latency. However, too much latency
         makes the game unplayable. Periodically, the local TU timer is compared
         to the most recent TUs from each peer snake. If the discrepancy between
         the local timer and a peer’s most recent TU exceeds latency threshold,
         that peer is removed from the current game; their snake is marked as
-        dead, and they are shown an ‘out-of-sync’ message.</p>
+        dead, and they are shown an ‘out-of-sync’ message.
+      </div>
       <h2 id='smooth-gameplay-with-missing-peer-data'>Smooth Gameplay with
         Missing Peer Data</h2>
-      <p>Network latency & interruptions can delay P2P messages, which means
+      <div className='p'>Network latency & interruptions can delay P2P messages,
+        which means
         that peer data may not always be available when it is needed. How do we
-        ensure a smooth gaming experience when peer data is missing?</p>
-      <p>The lockstep model of peer-to-peer gaming ensures consistency of game
+        ensure a smooth gaming experience when peer data is missing?
+      </div>
+      <div className='p'>The lockstep model of peer-to-peer gaming ensures
+        consistency of game
         state across all peers by waiting for all peer data before moving the
         game
         state forward. However, this method causes all players to move at the
@@ -401,8 +438,10 @@ const lookup = (snake, tu) => (
         result
         in a slow and irregular pace. This model is entirely incompatible with a
         fast, reflex-based game like ours, which must proceed at a quick and
-        steady pace to be enjoyable for players.</p>
-      <p>Because we cannot wait for data, we must be able to predict avatar
+        steady pace to be enjoyable for players.
+      </div>
+      <div className='p'>Because we cannot wait for data, we must be able to
+        predict avatar
         movements when peer data is absent. Then, when new peer data is
         received,
         these predictions must be discarded and new data must be incorporated
@@ -425,52 +464,58 @@ const lookup = (snake, tu) => (
         technique is a good fit for a snake game because the snake will continue
         moving in a single direction until its owner instructs it to do
         otherwise, making it easy for players to predict the other snakes’
-        movements with a fairly high degree of accuracy.</p>
+        movements with a fairly high degree of accuracy.
+      </div>
       <h3 id='prediction-algorithm'>Prediction Algorithm</h3>
-      <p>A snake avatar moves forward until its player tells it to change
+      <div className='p'>A snake avatar moves forward until its player tells it
+        to change
         direction by pressing an arrow key. As we have seen, the position of a
         snake’s head is represented by row-column coordinates. The next position
         can be calculated with the last known coordinates and direction. If the
         top-left square is <code>&#123;row: 0, column: 0&#125;</code> and your
         snake’s head coordinates are <code>&#123;row: 5, column: 3&#125;</code>,
-        it works like this:</p>
+        it works like this:
+      </div>
 
       <table className='align-center'>
         <thead>
-        <tr>
-          <th>Direction</th>
-          <th>Action</th>
-          <th>Next Head Position</th>
-        </tr>
+          <tr>
+            <th>Direction</th>
+            <th>Action</th>
+            <th>Next Head Position</th>
+          </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>left</td>
-          <td>decrement column</td>
-          <td><code>&#123;row: 5, column: 2&#125;</code></td>
-        </tr>
-        <tr>
-          <td>right</td>
-          <td>increment column</td>
-          <td><code>&#123;row: 5, column: 4&#125;</code></td>
-        </tr>
-        <tr>
-          <td>up</td>
-          <td>decrement row</td>
-          <td><code>&#123;row: 4, column: 3&#125;</code></td>
-        </tr>
-        <tr>
-          <td>down</td>
-          <td>increment row</td>
-          <td><code>&#123;row: 6, column: 3&#125;</code></td>
-        </tr>
+          <tr>
+            <td>left</td>
+            <td>decrement column</td>
+            <td><code>&#123;row: 5, column: 2&#125;</code></td>
+          </tr>
+          <tr>
+            <td>right</td>
+            <td>increment column</td>
+            <td><code>&#123;row: 5, column: 4&#125;</code></td>
+          </tr>
+          <tr>
+            <td>up</td>
+            <td>decrement row</td>
+            <td><code>&#123;row: 4, column: 3&#125;</code></td>
+          </tr>
+          <tr>
+            <td>down</td>
+            <td>increment row</td>
+            <td><code>&#123;row: 6, column: 3&#125;</code></td>
+          </tr>
         </tbody>
       </table>
 
-      <p>While peer data is unavailable, this prediction algorithm can be used
-        to fill in missing TUs until real data is received.</p>
+      <div className='p'>While peer data is unavailable, this prediction
+        algorithm can be used
+        to fill in missing TUs until real data is received.
+      </div>
       <h3 id='convergence-technique'>Convergence Technique</h3>
-      <p>When our predictions do not match the actual peer data that is later
+      <div className='p'>When our predictions do not match the actual peer data
+        that is later
         received, we need a convergence technique to reconcile the
         discrepancies. The easiest solution to resolving these differences is to
         keep predictions and canonical data separate. In this way, the board
@@ -479,29 +524,35 @@ const lookup = (snake, tu) => (
         separate structure and is only updated with real data from the peer.
         Every time snakes advance one square on the board, we discard the old
         board data, redraw the board with any new peer data, and then apply any
-        necessary predictions.</p>
+        necessary predictions.
+      </div>
       <h3 id='predictions-and-collision-checking'>Predictions and Collision
         Checking</h3>
-      <p>Predicted data is not used for collision checking. As a result,
+      <div className='p'>Predicted data is not used for collision checking. As a
+        result,
         apparent collisions in the board may not be confirmed by real peer data
         and will not cause a snake to die. Although this policy may seem
         counterintuitive in terms of user experience, it is necessary to
         preserve consistency across peers. Predictions are constantly corrected
         by incoming peer data, which means that observed collisions will be also
         be corrected, allowing players to understand the discrepancy and the
-        resulting behavior.</p>
+        resulting behavior.
+      </div>
 
       <h2 id='authority-and-consistency'>Authority and Consistency</h2>
-      <p>A client-server game uses its authoritative central server to ensure a
+      <div className='p'>A client-server game uses its authoritative central
+        server to ensure a
         consistent game state for all players. So who is the authority in a
         peer-to-peer game? In Ouroboros, each peer functions as the authority
         for his/her own avatar. Each time a move is committed (corresponding to
         a TU tick), this information is broadcast to the other peers. Each peer
         must then efficiently incorporate this data into her local data
-        structure in such a way that eventual consistency is ensured.</p>
+        structure in such a way that eventual consistency is ensured.
+      </div>
       <h3 id='peer-to-peer-messaging-transport-protocol'>Peer-to-Peer Messaging
         Transport Protocol</h3>
-      <p>The WebRTC data channel is implemented with Stream Control Transmission
+      <div className='p'>The WebRTC data channel is implemented with Stream
+        Control Transmission
         Protocol (SCTP), which can be configured to behave like TCP or UDP
         depending on the desired functionality. Using a reliable TCP-like
         configuration ensures ordered delivery of packets. Although this seems
@@ -509,8 +560,10 @@ const lookup = (snake, tu) => (
         series of confirmation and counter-confirmation messages from the
         involved parties, which would result in excessive peer-to-peer chatter
         that would take priority and most likely cause delays for game-relevant
-        messages.</p>
-      <p>Given the limitations of reliable messaging and its potential impact on
+        messages.
+      </div>
+      <div className='p'>Given the limitations of reliable messaging and its
+        potential impact on
         performance, we needed to choose the unreliable, UDP-like configuration
         for our peer-to-peer messages. However, this decision meant that we
         needed to implement ways to deal with lost and/or unordered messages.
@@ -520,9 +573,10 @@ const lookup = (snake, tu) => (
           creationDate='October 1, 2008'
           url='https://gafferongames.com/post/udp_vs_tcp/'
           comment='Gaffer On Games blog'
-        /></p>
+        /></div>
       <h3 id='peer-to-peer-message-content'>Peer-to-Peer Message Content</h3>
-      <p>As we discussed above, if a snake’s current position is known, only a
+      <div className='p'>As we discussed above, if a snake’s current position is
+        known, only a
         directional command is needed to know its next position. This suggests
         that once all snakes’ starting positions are known, peer-to-peer
         messages need only contain directional commands (operations). However,
@@ -532,8 +586,10 @@ const lookup = (snake, tu) => (
         receive only <code>left, up</code>, while another receives <code>left,
           up, right</code> and a third receives <code>left, left, right</code>.
         These discrepancies will cause the position of that snake to be very
-        different for the three peers, resulting in incoherent gameplay.</p>
-      <p>It is clear that sending directional commands alone can easily
+        different for the three peers, resulting in incoherent gameplay.
+      </div>
+      <div className='p'>It is clear that sending directional commands alone can
+        easily
         introduce state distortions and that this approach does not provide the
         means to detect and resolve these inconsistencies. A solution is that
         each peer broadcast not only directional commands, but also coordinate
@@ -547,13 +603,17 @@ const lookup = (snake, tu) => (
         />
         Absolute coordinates provide much more robust data than relative
         directional commands, and TUs allow us to coordinate data between all
-        the peers.</p>
-      <p>Moreover, we need strategies to prevent data loss when messages are
+        the peers.
+      </div>
+      <div className='p'>Moreover, we need strategies to prevent data loss when
+        messages are
         dropped, and to keep the game state from being distorted when messages
-        are duplicated or received out of order.</p>
+        are duplicated or received out of order.
+      </div>
       <h3 id='overlap-and-redundancy-in-peer-messages'>Overlap and Redundancy in
         Peer Messages</h3>
-      <p>Because our messaging protocol does not guarantee that messages will be
+      <div className='p'>Because our messaging protocol does not guarantee that
+        messages will be
         received, we must structure our messaging to provide redundancy so that
         dropped messages do not result in data loss. So, with each TU tick, each
         player broadcasts a range of coordinates including the most recent (the
@@ -567,10 +627,11 @@ const lookup = (snake, tu) => (
           title='Delta State Replicated Data Types'
           comment='Journal of Parallel and Distributed Computing, Volume 111, Pages 162-173'
         />
-      </p>
+      </div>
       <h3 id='ensuring-consistency-with-a-crdt'>Ensuring Consistency with a
         CRDT</h3>
-      <p>A conflict-free replicated data type, or <b>CRDT</b>, is any
+      <div className='p'>A conflict-free replicated data type, or <b>CRDT</b>,
+        is any
         distributed data structure that guarantees eventual consistency of
         replicas that are updated independently and without direct coordination.
         CRDTs are used by no-SQL databases (ex. Redis and Riak) and
@@ -580,64 +641,118 @@ const lookup = (snake, tu) => (
         option for our use case, we require a state-based CRDT. Also known as a
         convergent replicated data type (CvRDT), a state-based CRDT must merge
         new data with the local state with operations that
-        are <b>idempotent</b> (repeating the same operation does not distort the
-        data), <b>commutative</b> (operations can be done in any order),
+        are <b>idempotent</b> (repeating the same operation produces the same
+        result), <b>commutative</b> (operations can be done in any order),
         and <b>associative</b> (operations can be grouped in any way).
         Restricting operations to meet these criteria ensures that accurate
         replicas can be created for all peers even when messages are duplicated
-        or received out of order.</p>
+        or received out of order.
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Idempotency</td>
+            <td>operations will produce the same result no matter how many
+            times they are executed</td>
+            <td>x * 1 = x <br /> x * 1 * 1 * 1 = x</td>
+          </tr>
+          <tr>
+            <td>Commutitivity</td>
+            <td>operations will produce the same result no matter the order in
+              which they are executed</td>
+            <td>x + y = z <br /> y + x = z</td>
+          </tr>
+          <tr>
+            <td>Associativity</td>
+            <td>operations will produce the same result no matter how they are
+            grouped together</td>
+            <td>(a + b) + c = d <br /> a + (b + c) = d</td>
+          </tr>
+        </tbody>
+      </table>
       <h3 id='incorporating-a-crdt'>Incorporating a CRDT</h3>
-      <p>Snake states are represented by a variation of the Grow-only Set
-        (G-set) CRDT. Whenever new snake data is received, any TUs newer than
+      <div className='p'>Snake states are represented by a variation of the
+        Grow-only Set
+        (G-set) CRDT.
+        <Citation
+          creator='Marc Shapiro, Nuno Preguiça, Carlos Baquero, Marek Zawirski'
+          title='A Comprehensive Study of Convergent and Commutative Replicated Data Types'
+          contributingOrganization='INRIA: French Institute for Research in Computer Science and Automation'
+          url='https://hal.inria.fr/inria-00555588/document'
+          comment='Pages 21-22'
+        />
+        Whenever new snake data is received, any TUs newer than
         existing data are simply added to the collection. Changes in direction
         are made whenever the most recent TU in the message is the same or
-        greater than the most recent TU in the local data structure.</p>
-      <p>So, if the current state of <code>snake 1</code> is...</p>
+        greater than the most recent TU in the local data structure.
+      </div>
+      <div className='p'>So, if the current state of <code>snake 1</code> is...
+      </div>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {currentStateCode}
       </SyntaxHighlighter>
-      <p>...and we receive the following data from the peer controlling <code>
-        snake 1</code>...</p>
+      <div className='p'>...and we receive the following data from the peer
+        controlling <code>
+          snake 1</code>...
+      </div>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {receivedStateCode}
       </SyntaxHighlighter>
-      <p>...TUs <code>140</code> and <code>141</code> are added to our state and
-        the direction command is changed to <code>‘up’</code>. The operation
+      <div className='p'>...TUs <code>140</code> and <code>141</code> are added
+        to our state and
+        the direction command is changed to <code>up</code>. The operation
         here is adding
         new key-value pairs to a JavaScript object, which is idempotent,
         commutative, and associative, meeting all the criteria of a state-based
-        CRDT.</p>
-      <p>It is also important to note that states for old TUs will eventually be
+        CRDT.
+      </div>
+      <div className='p'>It is also important to note that states for old TUs
+        will eventually be
         discarded in order to prevent snake states from becoming excessively
         large and unwieldy (high space complexity). This operation does not
         strictly follow the constraints of a CRDT because it could introduce
         discrepancies between peers, but the nature of the game means that data
         from TUs that are more than a few seconds in the past are no longer
-        relevant to gameplay and can be safely discarded.</p>
+        relevant to gameplay and can be safely discarded.
+      </div>
 
       <h2 id='optimizations'>Optimizations</h2>
       <h3 id='data-structure-for-snake-bodies'>Data Structure for Snake
         Bodies</h3>
-      <p>We had three requirements for our snake data structure:</p>
+      <div className='p'>We had three requirements for our snake data
+        structure:
+      </div>
       <ul>
         <li>Fast insertion of new coordinates</li>
         <li>Fast deletion of old coordinates</li>
         <li>Fast lookup by TU for collision checking</li>
       </ul>
-      <p>Initially, we implemented snake bodies as queues using arrays. This
+      <div className='p'>Initially, we implemented snake bodies as queues using
+        arrays. This
         gave us the <code>O(1)</code> insertion and deletion we needed, but we
         did not have a correspondence between coordinates and TUs that allowed
-        fast lookup by TU.</p>
-      <p>Ideally, we wanted to use a linked hash map, which is the combination
+        fast lookup by TU.
+      </div>
+      <div className='p'>Ideally, we wanted to use a linked hash map, which is
+        the combination
         of a hash (key-value pairs) and a doubly-linked list with pointers to
         the head (first) and tail (last) elements that allow you to traverse
         through the hash elements in order. However, linked hash maps are not
         natively implemented in JavaScript, so we implemented an approximation
-        that fulfills all our requirements:</p>
+        that fulfills all our requirements:
+      </div>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {linkedHashMapCode}
       </SyntaxHighlighter>
-      <p>In the structure above, the <code>byKey</code> object is a hash where
+      <div className='p'>In the structure above, the <code>byKey</code> object
+        is a hash where
         TUs are the keys and coordinate pairs are the values.
         The <code>newest</code> and <code>oldest</code> values are simply
         integers that correspond with
@@ -650,138 +765,155 @@ const lookup = (snake, tu) => (
         (<code>newest</code>) or tail (<code>oldest</code>) as in a linked list.
         This structure meets all our criteria, giving
         us <code>O(1)</code> lookup by TU, <code>O(1)</code> insertion,
-        and <code>O(1)</code>deletion:</p>
+        and <code>O(1)</code>deletion:
+      </div>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {lhmOperationsCode}
       </SyntaxHighlighter>
       <h3 id='data-structure-for-the-game-board'>Data Structure for the Game
         Board</h3>
-      <p>The game board, which is used for display and for collision checking,
-        was initially implemented as a sparse matrix using nested arrays:</p>
+      <div className='p'>The game board, which is used for display and for
+        collision checking,
+        was initially implemented as a sparse matrix using nested arrays:
+      </div>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {`board = [[], [undefined, undefined, snake]];
 snakeInBoard = board[1][2];`}
       </SyntaxHighlighter>
-      <p>This provided us <code>O(1)</code> time complexity for lookup. However,
+      <div className='p'>This provided us <code>O(1)</code> time complexity for
+        lookup. However,
         this structure was not very space efficient because we had to insert
-        many<code>undefined</code> values and empty arrays in order to shift
+        many <code>undefined</code> values and empty arrays in order to shift
         data into the correct indexes.
-      </p>
-      <p>We improved the space efficiency by switching to a two-dimensional
-        hash:</p>
+      </div>
+      <div className='p'>We improved the space efficiency by switching to a
+        two-dimensional
+        hash, eliminating the need for <code>undefined</code> placeholders:
+      </div>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {`board = { 1: { 2: snake } };
 snakeInBoard = board[1][2];`}
       </SyntaxHighlighter>
-      <p>The only disadvantage to this structure was that merging such
+      <div className='p'>The only disadvantage to this structure was that
+        merging such
         structures necessitated a deep merge instead of a more efficient shallow
         merge. In order to convert this two-dimensional object into a
         one-dimensional object, we needed to shift away from using coordinates,
-        like this...</p>
+        like this...
+      </div>
       <table className='coordinates'>
         <thead>
-        <tr>
-          <th />
-          <th>0</th>
-          <th>1</th>
-          <th>2</th>
-        </tr>
+          <tr>
+            <th />
+            <th>0</th>
+            <th>1</th>
+            <th>2</th>
+          </tr>
         </thead>
         <tbody>
-        <tr>
-          <th>0</th>
-          <td>[ 0 ] [ 0 ]</td>
-          <td>[ 0 ] [ 1 ]</td>
-          <td>[ 0 ] [ 2 ]</td>
-        </tr>
-        <tr>
-          <th>1</th>
-          <td>[ 1 ] [ 0 ]</td>
-          <td>[ 1 ] [ 1 ]</td>
-          <td>[ 1 ] [ 2 ]</td>
-        </tr>
-        <tr>
-          <th>2</th>
-          <td>[ 2 ] [ 0 ]</td>
-          <td>[ 2 ] [ 1 ]</td>
-          <td>[ 2 ] [ 2 ]</td>
-        </tr>
+          <tr>
+            <th>0</th>
+            <td>[ 0 ] [ 0 ]</td>
+            <td>[ 0 ] [ 1 ]</td>
+            <td>[ 0 ] [ 2 ]</td>
+          </tr>
+          <tr>
+            <th>1</th>
+            <td>[ 1 ] [ 0 ]</td>
+            <td>[ 1 ] [ 1 ]</td>
+            <td>[ 1 ] [ 2 ]</td>
+          </tr>
+          <tr>
+            <th>2</th>
+            <td>[ 2 ] [ 0 ]</td>
+            <td>[ 2 ] [ 1 ]</td>
+            <td>[ 2 ] [ 2 ]</td>
+          </tr>
         </tbody>
       </table>
-      <p>...to using sequential numbers, which are easily converted to and from
-        coordinates (<code>squareNumber = row * gridSize + column</code>):</p>
+      <div className='p'>...to using sequential numbers, which are easily
+        converted to and from
+        coordinates (<code>squareNumber = row * gridSize + column</code>):
+      </div>
       <table className='numbers'>
         <tbody>
-        <tr>
-          <td>0</td>
-          <td>1</td>
-          <td>2</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>4</td>
-          <td>5</td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td>7</td>
-          <td>8</td>
-        </tr>
+          <tr>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>7</td>
+            <td>8</td>
+          </tr>
         </tbody>
       </table>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {`board = { 42: snake };
 snakeInBoard = board[42];`}
       </SyntaxHighlighter>
-      <p>This structure gave us <code>O(1)</code> lookup by square number and
+      <div className='p'>This structure gave us <code>O(1)</code> lookup by
+        square number and
         efficient shallow
-        merging.</p>
+        merging.
+      </div>
       <h3 id='head-sets-for-display-boards-and-collision-checking'>Head Sets for
         Display Boards and Collision Checking</h3>
-      <p>In order to display a game board or to check for snake collisions,
+      <div className='p'>In order to display a game board or to check for snake
+        collisions,
         snake data must be aggregated into boards. It would be very inefficient
         to re-aggregate boards from snake data each time a new board was needed,
-        so we implemented an in-between data structure: head sets.</p>
-      <p>Each head set is an aggregation of all snake heads for a particular TU.
+        so we implemented an in-between data structure: head sets.
+      </div>
+      <div className='p'>Each head set is an aggregation of all snake heads for
+        a particular TU.
         Because a snake body is actually a set of head positions for a range of
         TUs, aggregating snake data into boards becomes a matter of aggregating
         head sets. In other words, snake data is aggregated into head sets as it
         is received, and head sets are subsequently aggregated into boards.
         Because the head sets are reusable for a range of TUs that increases as
         snake lengths increase, using them dramatically improves efficiency of
-        aggregating boards for collision checking and display.</p>
+        aggregating boards for collision checking and display.
+      </div>
       <div className='head-sets'>
         <span>
           <img src={headset0} alt='Snake Heads at TU 10' />
-          <p>Snake Heads at TU 10</p>
+          <div className='p'>Snake Heads at TU 10</div>
         </span>
         <span>+</span>
         <span>
           <img src={headset1} alt='Snake Heads at TU 9' />
-          <p>Snake Heads at TU 9</p>
+          <div className='p'>Snake Heads at TU 9</div>
         </span>
         <span>+</span>
         <span>
           <img src={headset2} alt='Snake Heads at TU 8' />
-          <p>Snake Heads at TU 8</p>
+          <div className='p'>Snake Heads at TU 8</div>
         </span>
         <span>+</span>
         <span>
           <img src={headset3} alt='Snake Heads at TU 7' />
-          <p>Snake Heads at TU 7</p>
+          <div className='p'>Snake Heads at TU 7</div>
         </span>
         <span>+</span>
         <span>
           <img src={headset4} alt='Snake Heads at TU 6' />
-          <p>Snake Heads at TU 6</p>
+          <div className='p'>Snake Heads at TU 6</div>
         </span>
         <span>=</span>
         <span>
           <img src={board} alt='Board at TU 10' />
-          <p>Board at TU 10</p>
+          <div className='p'>Board at TU 10</div>
         </span>
       </div>
-      <p>The local snake is not included in the head sets to prevent the local
+      <div className='p'>The local snake is not included in the head sets to
+        prevent the local
         snake from overwriting another snake’s coordinates, which would
         complicate the detection of collisions. A board that will be used to
         check for collisions should include all head sets (all peer snake
@@ -789,8 +921,10 @@ snakeInBoard = board[42];`}
         the local snake except for the head. If the coordinates of the local
         snake’s head are present in this aggregation (despite the fact that the
         snake’s actual head was excluded from it), then the local snake’s head
-        has collided with another snake or another part of its own body.</p>
-      <p>In the case of a board that will be used for display, we must include
+        has collided with another snake or another part of its own body.
+      </div>
+      <div className='p'>In the case of a board that will be used for display,
+        we must include
         the relevant head sets, the entire local snake, and predictions for
         missing snake data. Because display boards contain this predicted data,
         they cannot be treated as authoritative and must be discarded when new
@@ -798,11 +932,13 @@ snakeInBoard = board[42];`}
         authoritative data, which is why head sets can be used for collision
         checking. Like snake bodies, head sets are also CRDTs, and operations on
         head sets are idempotent, commutative, and associative to protect their
-        integrity.</p>
+        integrity.
+      </div>
       <h3 id='p2p-network-topology'>P2P Network Topology</h3>
       <div className='row'>
         <div className='eight columns'>
-          <p>When selecting a P2P network topology, our goal was to minimize the
+          <div className='p'>When selecting a P2P network topology, our goal was
+            to minimize the
             effect of latency as much as possible by eliminating intermediaries
             between peers. The topology that best accomplishes this is a
             fully-connected or full-mesh structure. In this structure, each peer
@@ -816,19 +952,22 @@ snakeInBoard = board[42];`}
             bandwidth overhead because each message is sent individually (no
             message
             aggregation), but this is not a concern for the small, text-based
-            messages that are exchanged in Ouroboros.</p>
+            messages that are exchanged in Ouroboros.
+          </div>
         </div>
         <div className='four columns'>
           <img alt='full-mesh peer-to-peer network topology' src={fullMesh} />
-          <p className='align-center'>Full-Mesh Peer-to-Peer Network
-            Topology</p>
+          <div className='p align-center'>Full-Mesh Peer-to-Peer Network
+            Topology
+          </div>
         </div>
       </div>
 
       <h2 id='future-work'>Future Work</h2>
       <h3 id='automated-testing-for-p2p-network'>Automated Testing for P2P
         Network</h3>
-      <p>All of the testing of our P2P network was manual, which is inefficient
+      <div className='p'>All of the testing of our P2P network was manual, which
+        is inefficient
         and error prone. Our initial research suggests that simulating P2P
         networks is a very complex task,
         <Citation
@@ -840,26 +979,29 @@ snakeInBoard = board[42];`}
         />
         but we are interested in exploring the possibilities in more depth
         in the future.
-      </p>
+      </div>
       <h3 id='latency-testing'>Latency Testing</h3>
-      <p>We have chosen game settings to broadly accommodate peer groups with
+      <div className='p'>We have chosen game settings to broadly accommodate
+        peer groups with
         moderate-to-low latency. If we were able to test the latency
         between peers in a particular group, we could adjust the game settings
         to optimize performance for that specific group. This could be as
         simple as implementing a simple peer-to-peer ping test and developing
         criteria for adjusting game settings accordingly.
-      </p>
+      </div>
       <h3 id='migrate-to-a-more-current-library-for-webrtc'>Migrate to a More
         Current Library for WebRTC</h3>
-      <p>We are currently using <a href='https://github.com/peers'>Peer.js</a>,
+      <div className='p'>We are currently using <a
+        href='https://github.com/peers'>Peer.js</a>,
         a library that provides a wrapper for the WebRTC API and code to
         broker peer-to-peer connections on our signalling server. Unfortunately,
         Peer.js is not actively mantained and is now woefully out of date. We
         hope that the recent expansion in support for WebRTC will give rise to
         new tools and libraries that we can use to replace Peer.js.
-      </p>
+      </div>
       <h3 id='scaling'>Scaling</h3>
-      <p>Ouroboros currently supports up to 15 players on a 40x40 grid. Scaling
+      <div className='p'>Ouroboros currently supports up to 15 players on a
+        40x40 grid. Scaling
         up the number of players or expanding the game world would offer several
         interesting challenges. For one, increasing the number of players would
         make our full-mesh peer-to-peer topology impractical. We would need to
@@ -874,7 +1016,7 @@ snakeInBoard = board[42];`}
         computation is reduced. If the playing grid were only one small part of
         a larger game world, we would require an interest algorithm to reduce
         the amount of game state held by each individual player.
-      </p>
+      </div>
     </main>
   );
 };
