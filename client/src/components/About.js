@@ -437,33 +437,33 @@ const lookup = (snake, tu) => (
 
       <table className='align-center'>
         <thead>
-        <tr>
-          <th>Direction</th>
-          <th>Action</th>
-          <th>Next Head Position</th>
-        </tr>
+          <tr>
+            <th>Direction</th>
+            <th>Action</th>
+            <th>Next Head Position</th>
+          </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>left</td>
-          <td>decrement column</td>
-          <td><code>&#123;row: 5, column: 2&#125;</code></td>
-        </tr>
-        <tr>
-          <td>right</td>
-          <td>increment column</td>
-          <td><code>&#123;row: 5, column: 4&#125;</code></td>
-        </tr>
-        <tr>
-          <td>up</td>
-          <td>decrement row</td>
-          <td><code>&#123;row: 4, column: 3&#125;</code></td>
-        </tr>
-        <tr>
-          <td>down</td>
-          <td>increment row</td>
-          <td><code>&#123;row: 6, column: 3&#125;</code></td>
-        </tr>
+          <tr>
+            <td>left</td>
+            <td>decrement column</td>
+            <td><code>&#123;row: 5, column: 2&#125;</code></td>
+          </tr>
+          <tr>
+            <td>right</td>
+            <td>increment column</td>
+            <td><code>&#123;row: 5, column: 4&#125;</code></td>
+          </tr>
+          <tr>
+            <td>up</td>
+            <td>decrement row</td>
+            <td><code>&#123;row: 4, column: 3&#125;</code></td>
+          </tr>
+          <tr>
+            <td>down</td>
+            <td>increment row</td>
+            <td><code>&#123;row: 6, column: 3&#125;</code></td>
+          </tr>
         </tbody>
       </table>
 
@@ -580,12 +580,41 @@ const lookup = (snake, tu) => (
         option for our use case, we require a state-based CRDT. Also known as a
         convergent replicated data type (CvRDT), a state-based CRDT must merge
         new data with the local state with operations that
-        are <b>idempotent</b> (repeating the same operation does not distort the
-        data), <b>commutative</b> (operations can be done in any order),
+        are <b>idempotent</b> (repeating the same operation produces the same
+        result), <b>commutative</b> (operations can be done in any order),
         and <b>associative</b> (operations can be grouped in any way).
         Restricting operations to meet these criteria ensures that accurate
         replicas can be created for all peers even when messages are duplicated
         or received out of order.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Idempotency</td>
+            <td>operations will produce the same result no matter how many
+            times they are executed</td>
+            <td>x * 1 = x <br /> x * 1 * 1 * 1 = x</td>
+          </tr>
+          <tr>
+            <td>Commutitivity</td>
+            <td>operations will produce the same result no matter the order in
+              which they are executed</td>
+            <td>x + y = z <br /> y + x = z</td>
+          </tr>
+          <tr>
+            <td>Associativity</td>
+            <td>operations will produce the same result no matter how they are
+            grouped together</td>
+            <td>(a + b) + c = d <br /> a + (b + c) = d</td>
+          </tr>
+        </tbody>
+      </table>
       <h3 id='incorporating-a-crdt'>Incorporating a CRDT</h3>
       <p>Snake states are represented by a variation of the Grow-only Set
         (G-set) CRDT.
@@ -610,7 +639,7 @@ const lookup = (snake, tu) => (
         {receivedStateCode}
       </SyntaxHighlighter>
       <p>...TUs <code>140</code> and <code>141</code> are added to our state and
-        the direction command is changed to <code>‘up’</code>. The operation
+        the direction command is changed to <code>up</code>. The operation
         here is adding
         new key-value pairs to a JavaScript object, which is idempotent,
         commutative, and associative, meeting all the criteria of a state-based
@@ -672,11 +701,11 @@ snakeInBoard = board[1][2];`}
       </SyntaxHighlighter>
       <p>This provided us <code>O(1)</code> time complexity for lookup. However,
         this structure was not very space efficient because we had to insert
-        many<code>undefined</code> values and empty arrays in order to shift
+        many <code>undefined</code> values and empty arrays in order to shift
         data into the correct indexes.
       </p>
       <p>We improved the space efficiency by switching to a two-dimensional
-        hash:</p>
+        hash, eliminating the need for <code>undefined</code> placeholders:</p>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
         {`board = { 1: { 2: snake } };
 snakeInBoard = board[1][2];`}
@@ -688,53 +717,53 @@ snakeInBoard = board[1][2];`}
         like this...</p>
       <table className='coordinates'>
         <thead>
-        <tr>
-          <th />
-          <th>0</th>
-          <th>1</th>
-          <th>2</th>
-        </tr>
+          <tr>
+            <th />
+            <th>0</th>
+            <th>1</th>
+            <th>2</th>
+          </tr>
         </thead>
         <tbody>
-        <tr>
-          <th>0</th>
-          <td>[ 0 ] [ 0 ]</td>
-          <td>[ 0 ] [ 1 ]</td>
-          <td>[ 0 ] [ 2 ]</td>
-        </tr>
-        <tr>
-          <th>1</th>
-          <td>[ 1 ] [ 0 ]</td>
-          <td>[ 1 ] [ 1 ]</td>
-          <td>[ 1 ] [ 2 ]</td>
-        </tr>
-        <tr>
-          <th>2</th>
-          <td>[ 2 ] [ 0 ]</td>
-          <td>[ 2 ] [ 1 ]</td>
-          <td>[ 2 ] [ 2 ]</td>
-        </tr>
+          <tr>
+            <th>0</th>
+            <td>[ 0 ] [ 0 ]</td>
+            <td>[ 0 ] [ 1 ]</td>
+            <td>[ 0 ] [ 2 ]</td>
+          </tr>
+          <tr>
+            <th>1</th>
+            <td>[ 1 ] [ 0 ]</td>
+            <td>[ 1 ] [ 1 ]</td>
+            <td>[ 1 ] [ 2 ]</td>
+          </tr>
+          <tr>
+            <th>2</th>
+            <td>[ 2 ] [ 0 ]</td>
+            <td>[ 2 ] [ 1 ]</td>
+            <td>[ 2 ] [ 2 ]</td>
+          </tr>
         </tbody>
       </table>
       <p>...to using sequential numbers, which are easily converted to and from
         coordinates (<code>squareNumber = row * gridSize + column</code>):</p>
       <table className='numbers'>
         <tbody>
-        <tr>
-          <td>0</td>
-          <td>1</td>
-          <td>2</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>4</td>
-          <td>5</td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td>7</td>
-          <td>8</td>
-        </tr>
+          <tr>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>7</td>
+            <td>8</td>
+          </tr>
         </tbody>
       </table>
       <SyntaxHighlighter {...syntaxHighlighterProps}>
