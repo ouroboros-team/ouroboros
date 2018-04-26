@@ -54,9 +54,9 @@ const About = () => {
 }`;
 
   const currentStateCode = `{
-  Id: 1,
-  Direction: ‘left’,
-  Positions: {
+  id: 1,
+  direction: ‘left’,
+  positions: {
     139: { row: 5, column: 4 },
     138: { row: 5, column: 5 },
     // ...
@@ -64,9 +64,9 @@ const About = () => {
 }`;
 
   const receivedStateCode = `{
-  Id: 1,
-  Direction: ‘up’,
-  Positions: {
+  id: 1,
+  direction: ‘up’,
+  positions: {
     141: { row: 4, column: 3 },
     140: { row: 5, column: 3 },
     139: { row: 5, column: 4 },
@@ -117,7 +117,7 @@ const lookup = (snake, tu) => (
   return (
     <main className='container'>
       <h1>Building Ouroboros</h1>
-      <div class='toc row'>
+      <div className='toc row'>
         <aside>Hover over the blue circles for citations
           <Citation creator='Example Author' url='https://example.com' />
         </aside>
