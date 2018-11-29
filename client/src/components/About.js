@@ -989,16 +989,6 @@ snakeInBoard = board[42];`}
         simple as implementing a simple peer-to-peer ping test and developing
         criteria for adjusting game settings accordingly.
       </div>
-      <h3 id='migrate-to-a-more-current-library-for-webrtc'>Migrate to a More
-        Current Library for WebRTC</h3>
-      <div className='p'>We are currently using <a
-        href='https://github.com/peers'>Peer.js</a>,
-        a library that provides a wrapper for the WebRTC API and code to
-        broker peer-to-peer connections on our signalling server. Unfortunately,
-        Peer.js is not actively mantained and is now woefully out of date. We
-        hope that the recent expansion in support for WebRTC will give rise to
-        new tools and libraries that we can use to replace Peer.js.
-      </div>
       <h3 id='scaling'>Scaling</h3>
       <div className='p'>Ouroboros currently supports up to 15 players on a
         40x40 grid. Scaling
