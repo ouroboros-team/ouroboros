@@ -174,9 +174,6 @@ const lookup = (snake, tu) => (
               for
               P2P Network</a></li>
             <li><a href='#latency-testing'>Latency Testing</a></li>
-            <li><a href='#migrate-to-a-more-current-library-for-webrtc'>Migrate
-              to
-              a More Current Library for WebRTC</a></li>
             <li><a href='#scaling'>Scaling</a></li>
           </ol>
         </ol>
