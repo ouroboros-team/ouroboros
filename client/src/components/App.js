@@ -15,7 +15,7 @@ import About from './About';
 
 class App extends React.Component {
   state = {
-    compatible: (util.browser === 'Chrome' || util.browser === 'Firefox'),
+    compatible: util.browser === 'Firefox',
   };
 
   componentDidMount() {

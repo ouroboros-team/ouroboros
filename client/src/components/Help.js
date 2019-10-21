@@ -41,14 +41,8 @@ const Help = () => (
       behaviors on occasion.</p>
     <h3>General Recommendations</h3>
     <ul>
-      <li><b>Use <a href='https://www.google.com/chrome/'>Chrome</a> or <a
-        href='https://www.mozilla.org/firefox'>Firefox</a></b>.
-        No other browsers are supported.
-      </li>
-      <li>All players should <b>use the same browser</b>. Peer-to-peer
-        communication
-        between Firefox and Chrome is supported, but is less reliable than
-        Firefox-to-Firefox or Chrome-to-Chrome.
+      <li><b>Use <a href='https://www.mozilla.org/firefox'>Firefox</a></b>.
+        No other browsers are currently supported.
       </li>
     </ul>
 
