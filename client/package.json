@@ -35,5 +35,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "devDependencies": {}
+  "engines": {
+    "node": "8.x"
+  }
 }
