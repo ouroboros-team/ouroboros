@@ -10,7 +10,7 @@ real-time, direct peer-to-peer data exchange over the WebRTC data channel.
 ## Deployment
 
 To read about the engineering challenges of building Ouroboros and to play the
-game, visit [https://ouroboros-game.herokuapp.com/](https://ouroboros-game.herokuapp.com/).
+game, visit [https://ouroboros-app.herokuapp.com/](https://ouroboros-app.herokuapp.com/).
 
 ## Running Locally
 
